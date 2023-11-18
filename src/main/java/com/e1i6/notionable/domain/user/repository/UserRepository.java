@@ -1,0 +1,1 @@
+package com.e1i6.notionable.domain.user.repository;import org.springframework.data.jpa.repository.JpaRepository;import com.e1i6.notionable.domain.user.entity.User;public interface UserRepository extends JpaRepository<User, Long> {}
