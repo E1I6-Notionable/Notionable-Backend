@@ -34,4 +34,5 @@ public class User extends BaseTimeEntity {
 	private Role role;
 	private String nickName;
 	private String profile;
+	private String phoneNumber;
 }
