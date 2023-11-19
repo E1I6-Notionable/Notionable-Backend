@@ -1,0 +1,1 @@
+package com.e1i6.notionable.domain.user.service;import com.e1i6.notionable.domain.user.data.dto.EmailLoginDto;public interface UserService {	EmailLoginDto userLoginWithEmail(String email, String password);}
