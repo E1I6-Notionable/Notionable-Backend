@@ -18,7 +18,7 @@ public class UserSMSAuthController {
     private UserSMSAuthService userSMSAuthService;
 
     // 문자 인증번호 전송 API
-    @PostMapping("/users/signup/send-code")
+    @PostMapping("/signup/send-code")
     public BaseResponse<?> sendAuthCode(@RequestBody UserSMSAuthDto userSMSAuthDto) {
 
         try {
