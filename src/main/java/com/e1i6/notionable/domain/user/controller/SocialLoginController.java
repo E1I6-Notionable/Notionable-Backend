@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.http.HttpServletResponse;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 public class SocialLoginController {
     private final SocialLoginService socialLoginService;
     @GetMapping(value = "/code/kakao", produces = "application/json")
-    public BaseResponse<KakaoLoginDto> kakaoCallback(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    public BaseResponse<KakaoLoginDto> kakaoCallback(@RequestParam String code) throws JsonProcessingException {
         JsonNode accessTokenResponse = socialLoginService.getAccessTokenResponse(code); // code를 통해 얻은 response(access token과 여러 key들 존재)
         JsonNode userInfoResponse = socialLoginService.getUserInfoByAccessTokenResponse(accessTokenResponse); // access token을 통해 얻은 response(유저 정보 존재)
         KakaoLoginDto kakaoLoginDto = socialLoginService.kakaoLogin(userInfoResponse);

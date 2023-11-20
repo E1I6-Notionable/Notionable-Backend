@@ -44,6 +44,6 @@ public class User extends BaseTimeEntity {
 		this.userType = 2;
 		this.nickName = kakaoLoginDto.getNickName();
 		this.profile = kakaoLoginDto.getProfile();
-		// phone number, usertype
+		// phone number, role
 	}
 }

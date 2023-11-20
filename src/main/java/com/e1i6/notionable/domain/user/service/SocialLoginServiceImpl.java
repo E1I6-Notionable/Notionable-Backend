@@ -118,11 +118,15 @@ public class SocialLoginServiceImpl implements SocialLoginService{
                         .password(bCryptPasswordEncoder.encode(UUID.randomUUID().toString()))
                         .nickName(nickName)
                         .build();
-                userRepository.save(new User(newKakaoUserDto));
-                return newKakaoUserDto;
+                User newKakaouser = new User(newKakaoUserDto);
+                userRepository.save(newKakaouser);
+                return KakaoLoginDto.builder()
+                        .jwtDto(jwtProvider.generateToken(newKakaouser.getUserId()))
+                        .email(newKakaouser.getEmail())
+                        .nickName(newKakaouser.getNickName())
+                        .build();
             }
         }
-
         return null;
     }
 
