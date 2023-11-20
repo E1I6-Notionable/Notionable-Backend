@@ -16,10 +16,12 @@ public class CoolSMSController {
     private CoolSMSService coolSMSService;
 
     @PostMapping("/users/signup/send-code")
-    public SingleMessageSentResponse sendAuthCode(@RequestBody CoolSMSDto coolSMSDto) {
+    public String sendAuthCode(@RequestBody CoolSMSDto coolSMSDto) {
 
         SingleMessageSentResponse response = coolSMSService.sendAuthCode(coolSMSDto);
 
-        return response;
+        if(response == null)
+            return "failed!";
+        return "success!";
     }
 }
