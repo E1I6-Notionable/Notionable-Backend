@@ -18,4 +18,7 @@ if [ -z "$CURRENT_PID" ]; then
 else
   echo "$TIME_NOW > 실행중인 $CURRENT_PID 애플리케이션 종료 " >> "$DEPLOY_LOG"
   kill -15 "$CURRENT_PID"
+
+  wait "$CURRENT_PID"
+  echo "$TIME_NOW > 프로세스 종료 대기 완료" >> "$DEPLOY_LOG"
 fi
