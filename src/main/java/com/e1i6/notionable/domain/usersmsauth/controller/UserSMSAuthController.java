@@ -30,8 +30,7 @@ public class UserSMSAuthController {
 		} catch (ResponseException e) {
 			return new BaseResponse<>(e.getErrorCode());
 		} catch (Exception e) {
-			log.info("error msg: {}", e.getMessage());
-			return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR);
+			return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 }
