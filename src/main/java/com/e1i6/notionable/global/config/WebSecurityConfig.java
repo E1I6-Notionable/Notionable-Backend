@@ -25,7 +25,8 @@ public class WebSecurityConfig {
 		"/",
 		"/login/**",
 		"/signup/**",
-		"/test/*"
+		"/test/*",
+		"/favicon.ico"
 	};
 
 	@Bean
