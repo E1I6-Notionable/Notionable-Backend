@@ -23,8 +23,8 @@ public class WebSecurityConfig {
 
 	private static final String[] PERMITTED_URLS = {
 		"/",
-		"/login/*",
-		"/signup",
+		"/login/**",
+		"/signup/**",
 		"/test/*"
 	};
 
