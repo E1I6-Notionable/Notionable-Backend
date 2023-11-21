@@ -8,7 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+
 import com.e1i6.notionable.domain.user.data.dto.KakaoLoginDto;
+import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.global.common.entity.BaseTimeEntity;
 import com.sun.istack.NotNull;
 
@@ -36,7 +38,6 @@ public class User extends BaseTimeEntity {
 	private String nickName;
 	private String profile;
 	private String phoneNumber;
-
 
 	public User(KakaoLoginDto kakaoLoginDto) {
 		this.email = kakaoLoginDto.getEmail();
