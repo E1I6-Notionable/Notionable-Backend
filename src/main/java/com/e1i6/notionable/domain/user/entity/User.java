@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+
+import com.e1i6.notionable.domain.user.data.dto.KakaoLoginDto;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.global.common.entity.BaseTimeEntity;
 import com.sun.istack.NotNull;
@@ -37,4 +39,12 @@ public class User extends BaseTimeEntity {
 	private String profile;
 	private String phoneNumber;
 
+	public User(KakaoLoginDto kakaoLoginDto) {
+		this.email = kakaoLoginDto.getEmail();
+		this.password = kakaoLoginDto.getPassword();
+		this.userType = 2;
+		this.nickName = kakaoLoginDto.getNickName();
+		this.profile = kakaoLoginDto.getProfile();
+		// phone number, role
+	}
 }

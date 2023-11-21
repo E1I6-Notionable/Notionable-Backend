@@ -29,6 +29,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
+
     # MYSQL 설정
     - name: Setup MySQL
       uses: samin/mysql-action@v1
@@ -38,7 +39,7 @@ jobs:
         mysql user: "${{ secrets.RDS_ADMIN }}"
         mysql password: "${{ secrets.RDS_PASSWORD }}"
     - uses : actions/checkout@v3
-    
+
      #1
     # 해당 부분은 상당히 중요함
     # application.properties는 외부에 노출되면 안되므로 Actions가 빌드될때마다 해당 Repository의 Secret 설정을
