@@ -25,6 +25,7 @@ public class WebSecurityConfig {
 		"/",
 		"/login/**",
 		"/signup/**",
+		"/auth/email",
 		"/test/*",
 		"/favicon.ico"
 	};
