@@ -26,4 +26,10 @@ public class SocialLoginController {
         SocialLoginResDto socialLoginResDto = socialLoginService.socialLogin(code,"naver");
         return new BaseResponse<>(socialLoginResDto);
     }
+
+    @GetMapping(value = "/code/google", produces = "application/json")
+    public BaseResponse<SocialLoginResDto> googleCallback(@RequestParam String code) throws JsonProcessingException {
+        SocialLoginResDto socialLoginResDto = socialLoginService.socialLogin(code,"google");
+        return new BaseResponse<>(socialLoginResDto);
+    }
 }

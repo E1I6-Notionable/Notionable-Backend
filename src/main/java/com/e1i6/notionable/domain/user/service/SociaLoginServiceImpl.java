@@ -52,6 +52,17 @@ public class SociaLoginServiceImpl implements SocialLoginService{
     private String NAVER_RESOURCE_URI;
     @Value("${oauth.naver.user-resource-uri}")
     private String NAVER_USER_INFO;
+    //Google
+    @Value("${oauth.google.client-id}")
+    private String GOOGLE_CLIENT_ID;
+    @Value("${oauth.google.client-secret}")
+    private String GOOGLE_CLIENT_SECRET;
+    @Value("${oauth.google.redirect-uri}")
+    private String GOOGLE_REDIRECT_URI;
+    @Value("${oauth.google.resource-uri}")
+    private String GOOGLE_RESOURCE_URI;
+    @Value("${oauth.google.user-resource-uri}")
+    private String GOOGLE_USER_INFO;
 
     private String TYPE;
     private String CLIENT_ID;
@@ -69,11 +80,17 @@ public class SociaLoginServiceImpl implements SocialLoginService{
             USER_INFO = KAKAO_USER_INFO;
 
         }
-        else{
+        else if(type == "naver"){
             CLIENT_ID = NAVER_CLIENT_ID;
             REDIRECT_URI = NAVER_REDIRECT_URI;
             RESOURCE_URI = NAVER_RESOURCE_URI;
             USER_INFO = NAVER_USER_INFO;
+        }
+        else if(type == "google"){
+            CLIENT_ID = GOOGLE_CLIENT_ID;
+            REDIRECT_URI = GOOGLE_REDIRECT_URI;
+            RESOURCE_URI = GOOGLE_RESOURCE_URI;
+            USER_INFO = GOOGLE_USER_INFO;
         }
 
         String accessTokenResponse = getAccessTokenResponse(code);
@@ -81,8 +98,11 @@ public class SociaLoginServiceImpl implements SocialLoginService{
         if(type == "kakao"){
             return kakaoLogin(userInfoResponse);
         }
-        else{ //naver
+        else if(type == "naver"){
             return NaverLogin(userInfoResponse);
+        }
+        else{ //google
+            return GoogleLogin(userInfoResponse);
         }
 
     }
@@ -98,6 +118,9 @@ public class SociaLoginServiceImpl implements SocialLoginService{
         params.add("client_id", CLIENT_ID);
         if (TYPE =="naver"){
             params.add("client_secret", NAVER_CLIENT_SECRET);
+        }
+        else if (TYPE =="google"){
+            params.add("client_secret", GOOGLE_CLIENT_SECRET);
         }
         params.add("redirect_uri", REDIRECT_URI);
         params.add("code", code);
@@ -124,18 +147,23 @@ public class SociaLoginServiceImpl implements SocialLoginService{
     }
 
     public JsonNode getUserInfoByAccessTokenResponse(String accessToken) throws JsonProcessingException {
-
         log.info("accesstoken = {}", accessToken);
+
+        RestTemplate restTemplate = new RestTemplate();
+
         // HttpHeader object 생성
         HttpHeaders headers = new HttpHeaders();;
         headers.add("Authorization", "Bearer "+accessToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        HttpEntity<MultiValueMap<String, String>> userInfoRequest = new HttpEntity<>(headers);
-
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.exchange(USER_INFO, HttpMethod.POST, userInfoRequest, JsonNode.class).getBody(); // 유저 정보를 json으로 가져옴.
-
+        if(TYPE =="google") {
+            HttpEntity userInfoRequest = new HttpEntity(headers);
+            return restTemplate.exchange(USER_INFO, HttpMethod.GET, userInfoRequest, JsonNode.class).getBody();
+        }
+        else { //kakao, naver
+            headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+            HttpEntity<MultiValueMap<String, String>> userInfoRequest = new HttpEntity<>(headers);
+            return restTemplate.exchange(USER_INFO, HttpMethod.POST, userInfoRequest, JsonNode.class).getBody(); // 유저 정보를 json으로 가져옴.
+        }
     }
 
     public SocialLoginResDto kakaoLogin(JsonNode userResourceNode) throws JsonProcessingException {
@@ -164,17 +192,17 @@ public class SociaLoginServiceImpl implements SocialLoginService{
                         .email(email)
                         .password(bCryptPasswordEncoder.encode(UUID.randomUUID().toString()))
                         .userType(2)
-                        .phoneNumber(profile_image)
+                        .profile(profile_image)
                         .nickName(nickName)
                         .build();
-                User newKakaouser = new User(newKakaoUserDto);
-                userRepository.save(newKakaouser);
+                User newKakaoUser = new User(newKakaoUserDto);
+                userRepository.save(newKakaoUser);
                 return SocialLoginResDto.builder()
-                        .jwtDto(jwtProvider.generateToken(newKakaouser.getUserId()))
-                        .email(newKakaouser.getEmail())
-                        .nickName(newKakaouser.getNickName())
-                        .phoneNumber(newKakaouser.getPhoneNumber())
-                        .profile(newKakaouser.getProfile())
+                        .jwtDto(jwtProvider.generateToken(newKakaoUser.getUserId()))
+                        .email(newKakaoUser.getEmail())
+                        .nickName(newKakaoUser.getNickName())
+                        .phoneNumber(newKakaoUser.getPhoneNumber())
+                        .profile(newKakaoUser.getProfile())
                         .build();
             }
         }
@@ -208,18 +236,58 @@ public class SociaLoginServiceImpl implements SocialLoginService{
                     .profile(profile_image)
                     .nickName(nickName)
                     .build();
-            User newNaveruser = new User(newNaverUserDto);
-            userRepository.save(newNaveruser);
+            User newNaverUser = new User(newNaverUserDto);
+            userRepository.save(newNaverUser);
             return SocialLoginResDto.builder()
-                    .jwtDto(jwtProvider.generateToken(newNaveruser.getUserId()))
-                    .email(newNaveruser.getEmail())
-                    .nickName(newNaveruser.getNickName())
-                    .phoneNumber(newNaveruser.getPhoneNumber())
-                    .profile(newNaveruser.getProfile())
+                    .jwtDto(jwtProvider.generateToken(newNaverUser.getUserId()))
+                    .email(newNaverUser.getEmail())
+                    .nickName(newNaverUser.getNickName())
+                    .phoneNumber(newNaverUser.getPhoneNumber())
+                    .profile(newNaverUser.getProfile())
                     .build();
         }
     }
 
+    public SocialLoginResDto GoogleLogin(JsonNode userResourceNode) throws JsonProcessingException {
+        log.info("userResorceNode = {}", userResourceNode);
+
+        String email = userResourceNode.get("email").asText();
+        String nickName = userResourceNode.get("given_name").asText();
+        String profile_image = userResourceNode.get("picture").asText();
+        String is_email_verified = userResourceNode.get("verified_email").asText();
+
+        // 구글 서버 상에서 검증된 이메일인 경우
+        if (is_email_verified.equals("true")) {
+            Optional<User> userByGoogle = userRepository.findUserByEmail(email);
+
+            if (userByGoogle.isPresent()) {
+                User user = userByGoogle.get();
+                return SocialLoginResDto.builder()
+                        .jwtDto(jwtProvider.generateToken(user.getUserId()))
+                        .email(user.getEmail())
+                        .nickName(user.getNickName())
+                        .profile(user.getProfile())
+                        .build();
+            } else {
+                SocialLoginReqDto newGoogleUserDto = SocialLoginReqDto.builder()
+                        .email(email)
+                        .password(bCryptPasswordEncoder.encode(UUID.randomUUID().toString()))
+                        .userType(1)
+                        .nickName(nickName)
+                        .profile(profile_image)
+                        .build();
+                User newGoogleUser = new User(newGoogleUserDto);
+                userRepository.save(newGoogleUser);
+                return SocialLoginResDto.builder()
+                        .jwtDto(jwtProvider.generateToken(newGoogleUser.getUserId()))
+                        .email(newGoogleUser.getEmail())
+                        .nickName(newGoogleUser.getNickName())
+                        .profile(newGoogleUser.getProfile())
+                        .build();
+            }
+        }
+        return null;
+    }
 
 }
 
