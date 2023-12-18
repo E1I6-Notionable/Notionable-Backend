@@ -36,7 +36,7 @@ jobs:
       run: chmod +x gradlew
 
   test:
-    need: Setup
+    needs: Setup
     runs-on: ubuntu-latest
     steps:
       - name: Test with Gradle
