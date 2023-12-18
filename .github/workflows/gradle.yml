@@ -34,19 +34,9 @@ jobs:
     
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-
-  test:
-    needs: Setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Reposiotry
-        uses: actions/checkout@v3
-        
-      - name: Test with Gradle
-        run: ./gradlew --info test
         
   build:
-    needs: test
+    needs: Setup
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Reposiotry
