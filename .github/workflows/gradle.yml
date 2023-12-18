@@ -39,6 +39,9 @@ jobs:
     needs: Setup
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Reposiotry
+        uses: actions/checkout@v3
+        
       - name: Test with Gradle
         run: ./gradlew test
         
@@ -46,6 +49,9 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Reposiotry
+        uses: actions/checkout@v3
+        
       - run : touch ./src/main/resources/application.properties
       - run : echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
       - run : cat ./src/main/resources/application.properties
@@ -58,6 +64,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Reposiotry
+        uses: actions/checkout@v3
+        
       - name: Make zip file
         run: zip -r ./$GITHUB_SHA.zip .
         shell: bash
