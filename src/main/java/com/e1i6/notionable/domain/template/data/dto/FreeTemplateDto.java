@@ -7,9 +7,10 @@ import java.util.List;
 
 @Data
 @Builder
-public class FreeTemplateResDto {
+public class FreeTemplateDto {
     private String title;
     private String content;
+    private String category;
     private String thumbnail;
     private List<String> images;
 }
