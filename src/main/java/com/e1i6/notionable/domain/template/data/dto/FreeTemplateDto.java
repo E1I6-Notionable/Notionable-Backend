@@ -12,5 +12,5 @@ public class FreeTemplateDto {
     private String content;
     private String category;
     private String thumbnail;
-    private List<String> images;
+    private String createdAt;
 }
