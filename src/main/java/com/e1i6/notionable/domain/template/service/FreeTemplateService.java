@@ -1,6 +1,7 @@
 package com.e1i6.notionable.domain.template.service;
 
-import com.e1i6.notionable.domain.template.data.dto.FreeTemplateResDto;
+import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDto;
+import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDto;
 import com.e1i6.notionable.domain.template.data.dto.UploadFreeTemplateReqDto;
 import com.e1i6.notionable.domain.template.entity.FreeTemplate;
 import com.e1i6.notionable.domain.template.repository.FreeTemplateRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,8 +39,24 @@ public class FreeTemplateService {
         return "upload success";
     }
 
-    public List<FreeTemplateResDto> findRecommendTemplate() {
-        return null;
+    public List<FreeTemplateDto> findRecommendTemplate() {
+
+        List<FreeTemplate> freeTemplates = freeTemplateRepository.findTop5ByOrderByCreatedAtDesc();
+        List<FreeTemplateDto> freeTemplateDtos = new ArrayList<>();
+
+        for (FreeTemplate freeTemplate : freeTemplates) {
+            FreeTemplateDto resDto = FreeTemplateDto.builder()
+                    .title(freeTemplate.getTitle())
+                    .content(freeTemplate.getContent())
+                    .category(freeTemplate.getCategory())
+                    .thumbnail(freeTemplate.getTunmbnail())
+                    .images(freeTemplate.getImages())
+                    .build();
+
+            freeTemplateDtos.add(resDto);
+        }
+
+        return freeTemplateDtos;
     }
 
 }

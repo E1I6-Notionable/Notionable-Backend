@@ -1,6 +1,6 @@
 package com.e1i6.notionable.domain.template.controller;
 
-import com.e1i6.notionable.domain.template.data.dto.FreeTemplateResDto;
+import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDto;
 import com.e1i6.notionable.domain.template.data.dto.UploadFreeTemplateReqDto;
 import com.e1i6.notionable.domain.template.service.FreeTemplateService;
 import com.e1i6.notionable.global.common.response.BaseResponse;
@@ -31,8 +31,8 @@ public class FreeTemplateController {
     }
 
     @GetMapping("/recommend")
-    public BaseResponse<List<FreeTemplateResDto>> getRecommendedFreeTemplate() {
-        List<FreeTemplateResDto> result = freeTemplateService.findRecommendTemplate();
-        return new BaseResponse<>(result);
+    public BaseResponse<List<FreeTemplateDto>> getRecommendedFreeTemplate() {
+        List<FreeTemplateDto> recommendedFreeTemplates = freeTemplateService.findRecommendTemplate();
+        return new BaseResponse<>(recommendedFreeTemplates);
     }
 }

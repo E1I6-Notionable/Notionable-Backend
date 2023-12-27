@@ -22,11 +22,12 @@ import lombok.RequiredArgsConstructor;
 public class WebSecurityConfig {
 
 	private static final String[] PERMITTED_URLS = {
-		"/",
-		"/login/**",
-		"/signup/**",
-		"/test/*",
-		"/favicon.ico"
+			"/",
+			"/login/**",
+			"/signup/**",
+			"/free-template/recommend",
+			"/test/*",
+			"/favicon.ico"
 	};
 
 	@Bean
