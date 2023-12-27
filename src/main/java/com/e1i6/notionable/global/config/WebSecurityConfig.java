@@ -26,6 +26,7 @@ public class WebSecurityConfig {
 			"/login/**",
 			"/signup/**",
 			"/free-template/recommend",
+			"/free-template",
 			"/test/*",
 			"/favicon.ico"
 	};

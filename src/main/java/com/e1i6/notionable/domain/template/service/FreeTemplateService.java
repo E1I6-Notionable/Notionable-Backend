@@ -8,6 +8,10 @@ import com.e1i6.notionable.domain.template.repository.FreeTemplateRepository;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
 import com.e1i6.notionable.global.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +28,11 @@ public class FreeTemplateService {
     private final FreeTemplateRepository freeTemplateRepository;
 
     @Transactional
-    public String uploadFreeTemplate(Long userId, List<MultipartFile> multipartFiles, UploadFreeTemplateReqDto reqDto) {
+    public String uploadFreeTemplate(
+            Long userId,
+            List<MultipartFile> multipartFiles,
+            UploadFreeTemplateReqDto reqDto) {
+
         List<String> uploadedUrls = awsS3Service.uploadFiles(multipartFiles);
 
         freeTemplateRepository.save(FreeTemplate.builder()
@@ -50,7 +58,7 @@ public class FreeTemplateService {
                     .content(freeTemplate.getContent())
                     .category(freeTemplate.getCategory())
                     .thumbnail(freeTemplate.getTunmbnail())
-                    .images(freeTemplate.getImages())
+                    .createdAt(freeTemplate.getCreatedAt().toString())
                     .build();
 
             freeTemplateDtos.add(resDto);
@@ -59,4 +67,28 @@ public class FreeTemplateService {
         return freeTemplateDtos;
     }
 
+    public List<FreeTemplateDto> getFreeTemplatesWithCriteria(
+            int pageNo,
+            String category,
+            String criteria) {
+
+        Pageable pageable = PageRequest.of(pageNo, 9, Sort.Direction.DESC, criteria);
+        Page<FreeTemplate> page;
+        if (category.equals("all")) {
+            page = freeTemplateRepository.findAll(pageable);
+        } else {
+            page = freeTemplateRepository.findAllByCategory(category, pageable);
+        }
+
+        List<FreeTemplateDto> result = new ArrayList<>();
+        page.map(freeTemplate -> result.add(FreeTemplateDto.builder()
+                .title(freeTemplate.getTitle())
+                .content(freeTemplate.getContent())
+                .thumbnail(freeTemplate.getTunmbnail())
+                .category(freeTemplate.getCategory())
+                .createdAt(freeTemplate.getCreatedAt().toString())
+                .build()));
+
+        return result;
+    }
 }
