@@ -25,6 +25,7 @@ public class WebSecurityConfig {
 			"/",
 			"/login/**",
 			"/signup/**",
+		  "/auth/email",
 			"/free-template/recommend",
 			"/free-template",
 			"/test/*",

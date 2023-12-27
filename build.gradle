@@ -47,6 +47,13 @@ dependencies {
 
     // coolSMS
     implementation 'net.nurigo:sdk:4.3.0'
+
+    // gmail smtp
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    // json-simple: json 데이터 처리를 위한 자바 라이브러리
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 }
 
 tasks.named('bootBuildImage') {

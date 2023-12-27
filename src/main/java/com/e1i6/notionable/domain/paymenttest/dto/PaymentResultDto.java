@@ -1,0 +1,1 @@
+package com.e1i6.notionable.domain.paymenttest.dto;import lombok.Builder;import lombok.Data;@Data@Builderpublic class PaymentResultDto {	private String paymentKey;	private String method;	private String orderName;	private String approvedAt;	private Integer price;	private String status;}
