@@ -42,6 +42,7 @@ public class FreeTemplateService {
                 .tunmbnail(uploadedUrls.get(0))
                 .images(uploadedUrls)
                 .category(reqDto.getCategory())
+                .notionUrl(reqDto.getNotionUrl())
                 .build());
 
         return "upload success";
@@ -54,6 +55,7 @@ public class FreeTemplateService {
 
         for (FreeTemplate freeTemplate : freeTemplates) {
             FreeTemplateDto resDto = FreeTemplateDto.builder()
+                    .freeTemplateId(freeTemplate.getFreeTemplateId())
                     .title(freeTemplate.getTitle())
                     .content(freeTemplate.getContent())
                     .category(freeTemplate.getCategory())
@@ -82,6 +84,7 @@ public class FreeTemplateService {
 
         List<FreeTemplateDto> result = new ArrayList<>();
         page.map(freeTemplate -> result.add(FreeTemplateDto.builder()
+                .freeTemplateId(freeTemplate.getFreeTemplateId())
                 .title(freeTemplate.getTitle())
                 .content(freeTemplate.getContent())
                 .thumbnail(freeTemplate.getTunmbnail())

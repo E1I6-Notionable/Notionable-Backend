@@ -33,6 +33,8 @@ public class FreeTemplate extends BaseTimeEntity {
 
     private String category;
 
+    private String notionUrl;
+
     @ElementCollection
     private List<String> images = new ArrayList<>();
 }

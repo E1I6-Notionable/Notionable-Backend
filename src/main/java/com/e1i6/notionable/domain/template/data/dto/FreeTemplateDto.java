@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 @Builder
 public class FreeTemplateDto {
+    private Long freeTemplateId;
     private String title;
     private String content;
     private String category;
