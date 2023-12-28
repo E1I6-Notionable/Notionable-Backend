@@ -24,9 +24,13 @@ public enum ResponseCode {
 	// payment
 	PAYMENT_ERROR(2001, HttpStatus.BAD_REQUEST, "payment fail"),
   
-  // s3
+    // s3
 	AWS_S3_UPLOAD_FAIL(3001, HttpStatus.INTERNAL_SERVER_ERROR, "업로드 요청 실패"),
-	AWS_S3_WRONG_FILENAME(3002, HttpStatus.BAD_REQUEST, "잘못된 파일 정보");
+	AWS_S3_WRONG_FILENAME(3002, HttpStatus.BAD_REQUEST, "잘못된 파일 정보"),
+
+	// comment
+	NO_SUCH_COMMENT(4001, HttpStatus.BAD_REQUEST, "해당 commentId를 찾을 수 없습니다."),
+	NO_AUTHORIZATION(4002, HttpStatus.BAD_REQUEST, "해당 권한이 없습니다.");
 
 	private final Integer code;
 	private final HttpStatus httpStatus;
