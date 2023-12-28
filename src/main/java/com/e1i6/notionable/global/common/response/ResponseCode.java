@@ -22,7 +22,7 @@ public enum ResponseCode {
 	LOGIN_WITH_WRONG_PASSWORD(1001, HttpStatus.BAD_REQUEST, "wrong password"),
 
 	// payment
-	PAYMENT_ERROR(2001, HttpStatus.BAD_REQUEST, "payment fail");
+	PAYMENT_ERROR(2001, HttpStatus.BAD_REQUEST, "payment fail"),
   
   // s3
 	AWS_S3_UPLOAD_FAIL(3001, HttpStatus.INTERNAL_SERVER_ERROR, "업로드 요청 실패"),
