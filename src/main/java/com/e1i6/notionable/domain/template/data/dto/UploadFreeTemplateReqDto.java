@@ -9,4 +9,5 @@ public class UploadFreeTemplateReqDto {
     private String title;
     private String content;
     private String category;
+    private String notionUrl;
 }
