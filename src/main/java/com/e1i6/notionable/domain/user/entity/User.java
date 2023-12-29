@@ -1,13 +1,8 @@
 package com.e1i6.notionable.domain.user.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+import com.e1i6.notionable.domain.cart.Entity.Cart;
 import com.e1i6.notionable.domain.user.data.dto.request.SocialLoginReqDto;
 import com.e1i6.notionable.global.common.entity.BaseTimeEntity;
 import com.sun.istack.NotNull;
@@ -16,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -46,4 +43,7 @@ public class User extends BaseTimeEntity {
 		this.phoneNumber = socialLoginReqDto.getPhoneNumber();
 		//role
 	}
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Cart> cartItems;
 }
