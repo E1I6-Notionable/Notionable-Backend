@@ -63,9 +63,34 @@ public class TemplateCommentService {
     public TemplateCommentDto updateComment(
             Long userId,
             Long commentId,
-            TemplateCommentDto reqDto,
+            TemplateCommentDto updateDto,
             List<MultipartFile> multipartFiles) {
 
+        TemplateComment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMENT));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+
+        if (comment.getUserId() == userId) {
+            if (updateDto.getRate() != comment.getRate()) {
+                comment.setRate(updateDto.getRate());
+            }
+            if (updateDto.getContent() != comment.getContent()) {
+                comment.setContent(updateDto.getContent());
+            }
+
+            commentRepository.save(comment);
+            return TemplateCommentDto.builder()
+                    .commentId(commentId)
+                    .nickName(user.getNickName())
+                    .profile(user.getProfile())
+                    .rate(comment.getRate())
+                    .content(comment.getContent())
+                    .images(comment.getImages())
+                    .build();
+        } else {
+            throw new ResponseException(ResponseCode.NO_AUTHORIZATION);
+        }
     }
 
     public String deleteComment(Long userId, Long commentId) {
