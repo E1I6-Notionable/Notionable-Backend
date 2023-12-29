@@ -16,10 +16,10 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FreeTemplate extends BaseTimeEntity {
+public class PaidTemplate extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long freeTemplateId;
+    private Long paidTemplateId;
 
     @NotNull
     private Long userId;
@@ -32,6 +32,8 @@ public class FreeTemplate extends BaseTimeEntity {
     private String tunmbnail;
 
     private String category;
+
+    private Integer price;
 
     private String notionUrl;
 

@@ -1,13 +1,17 @@
 package com.e1i6.notionable.domain.template.data.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class UploadFreeTemplateReqDto {
+@Builder
+public class FreeTemplateDto {
+    private Long freeTemplateId;
     private String title;
     private String content;
     private String category;
-    private String notionUrl;
+    private String thumbnail;
+    private String createdAt;
 }
