@@ -38,8 +38,8 @@ public class WebSecurityConfig {
 	public SecurityFilterChain filterChain(
 		HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
 		http
-			.csrf().disable()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.csrf().disable() // // token을 사용하는 방식이기 때문에 csrf를 disable
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션을 사용하지 않기 때문에 STATELESS로 설정
 
 			.and()
 			.formLogin().disable()
