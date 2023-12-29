@@ -10,5 +10,4 @@ import java.util.List;
 public class TemplateCommentReqDto {
     private String rate;
     private String content;
-    private Long templateId;
 }

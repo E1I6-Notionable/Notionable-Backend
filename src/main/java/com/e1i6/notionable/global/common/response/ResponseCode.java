@@ -19,6 +19,7 @@ public enum ResponseCode {
 	SUCCESS_SEND_AUTH_CODE(2000, HttpStatus.OK, "인증 번호 전송에 성공하였습니다."),
 
 	// user
+	NO_SUCH_USER(1000, HttpStatus.BAD_REQUEST, "잘못된 유저 번호"),
 	LOGIN_WITH_WRONG_PASSWORD(1001, HttpStatus.BAD_REQUEST, "wrong password"),
 
 	// payment

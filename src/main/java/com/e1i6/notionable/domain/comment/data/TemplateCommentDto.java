@@ -9,6 +9,8 @@ import java.util.List;
 @Builder
 public class TemplateCommentDto {
     private Long commentId;
+    private String nickName;
+    private String profile;
     private String rate;
     private String content;
     private List<String> images;

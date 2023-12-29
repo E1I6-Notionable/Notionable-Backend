@@ -19,14 +19,15 @@ public class TemplateCommentController {
 
     private final TemplateCommentService templateCommentService;
 
-    @PostMapping("")
+    @PostMapping("/{templateId}")
     public BaseResponse<TemplateCommentDto> createComment(
+            @PathVariable Long templateId,
             @RequestPart TemplateCommentReqDto reqDto,
             @RequestPart("files") List<MultipartFile> multipartFiles) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.parseLong(authentication.getName());
 
-        TemplateCommentDto resDto = templateCommentService.createComment(userId, reqDto, multipartFiles);
+        TemplateCommentDto resDto = templateCommentService.createComment(userId, templateId, reqDto, multipartFiles);
         return new BaseResponse<>(resDto);
     }
 
@@ -35,6 +36,10 @@ public class TemplateCommentController {
             @PathVariable Long commentId,
             @RequestPart TemplateCommentDto reqDto,
             @RequestPart("files") List<MultipartFile> multipartFiles) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+
+        return null;
     }
 
     @DeleteMapping("/{commentId}")
