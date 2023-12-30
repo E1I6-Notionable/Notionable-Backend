@@ -1,5 +1,6 @@
 package com.e1i6.notionable.domain.template.service;
 
+import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDetailDto;
 import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDto;
 import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDto;
 import com.e1i6.notionable.domain.template.data.dto.UploadFreeTemplateReqDto;
@@ -51,7 +52,7 @@ public class FreeTemplateService {
         return "upload success";
     }
 
-    public List<FreeTemplateDto> findRecommendTemplate() {
+    public List<FreeTemplateDto> getRecommendTemplate() {
 
         List<FreeTemplate> freeTemplates = freeTemplateRepository.findTop5ByOrderByCreatedAtDesc();
         List<FreeTemplateDto> freeTemplateDtos = new ArrayList<>();
@@ -64,7 +65,6 @@ public class FreeTemplateService {
                     .nickName(user.getNickName())
                     .profile(user.getProfile())
                     .title(freeTemplate.getTitle())
-                    .content(freeTemplate.getContent())
                     .category(freeTemplate.getCategory())
                     .thumbnail(freeTemplate.getTunmbnail())
                     .createdAt(freeTemplate.getCreatedAt().toString())
@@ -98,7 +98,6 @@ public class FreeTemplateService {
                     .nickName(user.getNickName())
                     .profile(user.getProfile())
                     .title(freeTemplate.getTitle())
-                    .content(freeTemplate.getContent())
                     .thumbnail(freeTemplate.getTunmbnail())
                     .category(freeTemplate.getCategory())
                     .createdAt(freeTemplate.getCreatedAt().toString())
@@ -106,5 +105,24 @@ public class FreeTemplateService {
         }
 
         return result;
+    }
+
+    public FreeTemplateDetailDto getFreeTemplateDetail(Long freeTemplateId) {
+        FreeTemplate freeTemplate = freeTemplateRepository.findById(freeTemplateId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_TEMPLATE));
+        User user = userRepository.findById(freeTemplate.getUserId())
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+
+        return FreeTemplateDetailDto.builder()
+                .freeTemplateId(freeTemplateId)
+                .nickName(user.getNickName())
+                .profile(user.getProfile())
+                .thumbnail(freeTemplate.getTunmbnail())
+                .title(freeTemplate.getTitle())
+                .content(freeTemplate.getContent())
+                .images(freeTemplate.getImages())
+                .category(freeTemplate.getCategory())
+                .createdAt(freeTemplate.getCreatedAt().toString())
+                .build();
     }
 }

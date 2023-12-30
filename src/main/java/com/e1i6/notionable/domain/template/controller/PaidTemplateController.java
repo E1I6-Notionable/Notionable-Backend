@@ -1,9 +1,13 @@
 package com.e1i6.notionable.domain.template.controller;
 
+import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDetailDto;
+import com.e1i6.notionable.domain.template.data.dto.PaidTemplateDetailDto;
 import com.e1i6.notionable.domain.template.data.dto.PaidTemplateDto;
 import com.e1i6.notionable.domain.template.data.dto.UploadPaidTemplateReqDto;
 import com.e1i6.notionable.domain.template.service.PaidTemplateService;
 import com.e1i6.notionable.global.common.response.BaseResponse;
+import com.e1i6.notionable.global.common.response.ResponseCode;
+import com.e1i6.notionable.global.common.response.ResponseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,7 +36,7 @@ public class PaidTemplateController {
 
     @GetMapping("/recommend")
     public BaseResponse<List<PaidTemplateDto>> getRecommendedPaidTemplate() {
-        List<PaidTemplateDto> recommendedPaidTemplates = paidTemplateService.findRecommendTemplate();
+        List<PaidTemplateDto> recommendedPaidTemplates = paidTemplateService.getRecommendTemplate();
         return new BaseResponse<>(recommendedPaidTemplates);
     }
 
@@ -43,5 +47,17 @@ public class PaidTemplateController {
             @RequestParam(value = "criteria", required = false, defaultValue = "createdAt") String criteria) {
 
         return new BaseResponse<>(paidTemplateService.getPaidTemplatesWithCriteria(page, category, criteria));
+    }
+
+    @GetMapping("/detail/{templateId}")
+    public BaseResponse<PaidTemplateDetailDto> getFreeTemplateDetail(@PathVariable Long templateId) {
+        try {
+            PaidTemplateDetailDto resDto = paidTemplateService.getPaidTemplateDetail(templateId);
+            return new BaseResponse<>(resDto);
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR);
+        }
     }
 }
