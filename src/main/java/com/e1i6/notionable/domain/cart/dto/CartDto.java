@@ -1,10 +1,15 @@
 package com.e1i6.notionable.domain.cart.dto;
 
+import com.e1i6.notionable.domain.cart.Entity.Cart;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CartDto {
     private Long itemId;
     private String thumbnail;
@@ -13,4 +18,16 @@ public class CartDto {
     private String template_url;
     private Integer price;
     private String title;
+
+    public static CartDto mapCartToDto(Cart cart) {
+        return CartDto.builder()
+                .itemId(cart.getItemId())
+                .thumbnail(cart.getThumbnail())
+                .creator(cart.getCreator())
+                .attribute(cart.getAttribute())
+                .template_url(cart.getTemplate_url())
+                .price(cart.getPrice())
+                .title(cart.getTitle())
+                .build();
+    }
 }
