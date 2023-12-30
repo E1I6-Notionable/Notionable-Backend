@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-
 import com.e1i6.notionable.domain.user.data.dto.request.SocialLoginReqDto;
 import com.e1i6.notionable.global.common.entity.BaseTimeEntity;
 import com.sun.istack.NotNull;

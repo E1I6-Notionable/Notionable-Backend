@@ -1,0 +1,1 @@
+package com.e1i6.notionable.domain.usermailauth.dto;import lombok.Data;@Datapublic class EmailReqDto {	private String email;}
