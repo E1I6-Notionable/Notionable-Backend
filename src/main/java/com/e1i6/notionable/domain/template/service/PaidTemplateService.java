@@ -1,13 +1,13 @@
 package com.e1i6.notionable.domain.template.service;
 
-import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDto;
-import com.e1i6.notionable.domain.template.data.dto.PaidTemplateDto;
-import com.e1i6.notionable.domain.template.data.dto.UploadFreeTemplateReqDto;
-import com.e1i6.notionable.domain.template.data.dto.UploadPaidTemplateReqDto;
+import com.e1i6.notionable.domain.template.data.dto.*;
 import com.e1i6.notionable.domain.template.entity.FreeTemplate;
 import com.e1i6.notionable.domain.template.entity.PaidTemplate;
 import com.e1i6.notionable.domain.template.repository.PaidTemplateRepository;
+import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
+import com.e1i6.notionable.global.common.response.ResponseCode;
+import com.e1i6.notionable.global.common.response.ResponseException;
 import com.e1i6.notionable.global.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -50,16 +50,19 @@ public class PaidTemplateService {
         return "upload success";
     }
 
-    public List<PaidTemplateDto> findRecommendTemplate() {
+    public List<PaidTemplateDto> getRecommendTemplate() {
 
         List<PaidTemplate> paidTemplates = paidTemplateRepository.findTop5ByOrderByCreatedAtDesc();
         List<PaidTemplateDto> paidTemplateDtos = new ArrayList<>();
 
         for (PaidTemplate paidTemplate : paidTemplates) {
+            User user = userRepository.findById(paidTemplate.getUserId()).get();
+
             PaidTemplateDto resDto = PaidTemplateDto.builder()
                     .paidTemplateId(paidTemplate.getPaidTemplateId())
+                    .nickName(user.getNickName())
+                    .profile(user.getProfile())
                     .title(paidTemplate.getTitle())
-                    .content(paidTemplate.getContent())
                     .category(paidTemplate.getCategory())
                     .thumbnail(paidTemplate.getTunmbnail())
                     .price(paidTemplate.getPrice())
@@ -89,7 +92,6 @@ public class PaidTemplateService {
         page.map(paidTemplate -> result.add(PaidTemplateDto.builder()
                 .paidTemplateId(paidTemplate.getPaidTemplateId())
                 .title(paidTemplate.getTitle())
-                .content(paidTemplate.getContent())
                 .thumbnail(paidTemplate.getTunmbnail())
                 .category(paidTemplate.getCategory())
                 .price(paidTemplate.getPrice())
@@ -97,5 +99,25 @@ public class PaidTemplateService {
                 .build()));
 
         return result;
+    }
+
+    public PaidTemplateDetailDto getPaidTemplateDetail(Long paidTemplateId) {
+        PaidTemplate paidTemplate = paidTemplateRepository.findById(paidTemplateId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_TEMPLATE));
+        User user = userRepository.findById(paidTemplate.getUserId())
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+
+        return PaidTemplateDetailDto.builder()
+                .paidTemplateId(paidTemplateId)
+                .nickName(user.getNickName())
+                .profile(user.getProfile())
+                .thumbnail(paidTemplate.getTunmbnail())
+                .title(paidTemplate.getTitle())
+                .content(paidTemplate.getContent())
+                .images(paidTemplate.getImages())
+                .category(paidTemplate.getCategory())
+                .price(paidTemplate.getPrice())
+                .createdAt(paidTemplate.getCreatedAt().toString())
+                .build();
     }
 }

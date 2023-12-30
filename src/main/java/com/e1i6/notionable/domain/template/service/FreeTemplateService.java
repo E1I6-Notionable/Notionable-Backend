@@ -1,11 +1,15 @@
 package com.e1i6.notionable.domain.template.service;
 
+import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDetailDto;
 import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDto;
 import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDto;
 import com.e1i6.notionable.domain.template.data.dto.UploadFreeTemplateReqDto;
 import com.e1i6.notionable.domain.template.entity.FreeTemplate;
 import com.e1i6.notionable.domain.template.repository.FreeTemplateRepository;
+import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
+import com.e1i6.notionable.global.common.response.ResponseCode;
+import com.e1i6.notionable.global.common.response.ResponseException;
 import com.e1i6.notionable.global.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -48,16 +52,19 @@ public class FreeTemplateService {
         return "upload success";
     }
 
-    public List<FreeTemplateDto> findRecommendTemplate() {
+    public List<FreeTemplateDto> getRecommendTemplate() {
 
         List<FreeTemplate> freeTemplates = freeTemplateRepository.findTop5ByOrderByCreatedAtDesc();
         List<FreeTemplateDto> freeTemplateDtos = new ArrayList<>();
 
         for (FreeTemplate freeTemplate : freeTemplates) {
+            User user = userRepository.findById(freeTemplate.getUserId()).get();
+
             FreeTemplateDto resDto = FreeTemplateDto.builder()
                     .freeTemplateId(freeTemplate.getFreeTemplateId())
+                    .nickName(user.getNickName())
+                    .profile(user.getProfile())
                     .title(freeTemplate.getTitle())
-                    .content(freeTemplate.getContent())
                     .category(freeTemplate.getCategory())
                     .thumbnail(freeTemplate.getTunmbnail())
                     .createdAt(freeTemplate.getCreatedAt().toString())
@@ -83,15 +90,39 @@ public class FreeTemplateService {
         }
 
         List<FreeTemplateDto> result = new ArrayList<>();
-        page.map(freeTemplate -> result.add(FreeTemplateDto.builder()
-                .freeTemplateId(freeTemplate.getFreeTemplateId())
-                .title(freeTemplate.getTitle())
-                .content(freeTemplate.getContent())
-                .thumbnail(freeTemplate.getTunmbnail())
-                .category(freeTemplate.getCategory())
-                .createdAt(freeTemplate.getCreatedAt().toString())
-                .build()));
+        for (FreeTemplate freeTemplate : page) {
+            User user = userRepository.findById(freeTemplate.getUserId()).get();
+
+            result.add(FreeTemplateDto.builder()
+                    .freeTemplateId(freeTemplate.getFreeTemplateId())
+                    .nickName(user.getNickName())
+                    .profile(user.getProfile())
+                    .title(freeTemplate.getTitle())
+                    .thumbnail(freeTemplate.getTunmbnail())
+                    .category(freeTemplate.getCategory())
+                    .createdAt(freeTemplate.getCreatedAt().toString())
+                    .build());
+        }
 
         return result;
+    }
+
+    public FreeTemplateDetailDto getFreeTemplateDetail(Long freeTemplateId) {
+        FreeTemplate freeTemplate = freeTemplateRepository.findById(freeTemplateId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_TEMPLATE));
+        User user = userRepository.findById(freeTemplate.getUserId())
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+
+        return FreeTemplateDetailDto.builder()
+                .freeTemplateId(freeTemplateId)
+                .nickName(user.getNickName())
+                .profile(user.getProfile())
+                .thumbnail(freeTemplate.getTunmbnail())
+                .title(freeTemplate.getTitle())
+                .content(freeTemplate.getContent())
+                .images(freeTemplate.getImages())
+                .category(freeTemplate.getCategory())
+                .createdAt(freeTemplate.getCreatedAt().toString())
+                .build();
     }
 }

@@ -9,9 +9,10 @@ import java.util.List;
 @Builder
 public class FreeTemplateDto {
     private Long freeTemplateId;
-    private String title;
-    private String content;
-    private String category;
+    private String nickName;
+    private String profile;
     private String thumbnail;
+    private String title;
+    private String category;
     private String createdAt;
 }

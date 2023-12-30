@@ -28,8 +28,10 @@ public class WebSecurityConfig {
 		    "/auth/email",
 			"/free-template/recommend",
 			"/free-template",
+			"/free-template/detail/*",
 			"/paid-template/recommend",
 			"/paid-template",
+			"/paid-template/detail/*",
 			"/test/*",
 			"/favicon.ico"
 	};

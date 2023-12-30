@@ -1,13 +1,17 @@
 package com.e1i6.notionable.domain.template.controller;
 
+import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDetailDto;
 import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDto;
 import com.e1i6.notionable.domain.template.data.dto.UploadFreeTemplateReqDto;
 import com.e1i6.notionable.domain.template.service.FreeTemplateService;
 import com.e1i6.notionable.global.common.response.BaseResponse;
+import com.e1i6.notionable.global.common.response.ResponseCode;
+import com.e1i6.notionable.global.common.response.ResponseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +39,7 @@ public class FreeTemplateController {
 
     @GetMapping("/recommend")
     public BaseResponse<List<FreeTemplateDto>> getRecommendedFreeTemplate() {
-        List<FreeTemplateDto> recommendedFreeTemplates = freeTemplateService.findRecommendTemplate();
+        List<FreeTemplateDto> recommendedFreeTemplates = freeTemplateService.getRecommendTemplate();
         return new BaseResponse<>(recommendedFreeTemplates);
     }
 
@@ -46,5 +50,17 @@ public class FreeTemplateController {
             @RequestParam(value = "criteria", required = false, defaultValue = "createdAt") String criteria) {
 
         return new BaseResponse<>(freeTemplateService.getFreeTemplatesWithCriteria(page, category, criteria));
+    }
+
+    @GetMapping("/detail/{templateId}")
+    public BaseResponse<FreeTemplateDetailDto> getFreeTemplateDetail(@PathVariable Long templateId) {
+        try {
+            FreeTemplateDetailDto resDto = freeTemplateService.getFreeTemplateDetail(templateId);
+            return new BaseResponse<>(resDto);
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR);
+        }
     }
 }
