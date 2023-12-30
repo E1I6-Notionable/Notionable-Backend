@@ -7,6 +7,7 @@ import com.e1i6.notionable.domain.template.data.dto.UploadPaidTemplateReqDto;
 import com.e1i6.notionable.domain.template.entity.FreeTemplate;
 import com.e1i6.notionable.domain.template.entity.PaidTemplate;
 import com.e1i6.notionable.domain.template.repository.PaidTemplateRepository;
+import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
 import com.e1i6.notionable.global.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
@@ -56,8 +57,12 @@ public class PaidTemplateService {
         List<PaidTemplateDto> paidTemplateDtos = new ArrayList<>();
 
         for (PaidTemplate paidTemplate : paidTemplates) {
+            User user = userRepository.findById(paidTemplate.getUserId()).get();
+
             PaidTemplateDto resDto = PaidTemplateDto.builder()
                     .paidTemplateId(paidTemplate.getPaidTemplateId())
+                    .nickName(user.getNickName())
+                    .profile(user.getProfile())
                     .title(paidTemplate.getTitle())
                     .content(paidTemplate.getContent())
                     .category(paidTemplate.getCategory())
