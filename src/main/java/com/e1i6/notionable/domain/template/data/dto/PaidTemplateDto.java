@@ -7,6 +7,8 @@ import lombok.Data;
 @Builder
 public class PaidTemplateDto {
     private Long paidTemplateId;
+    private String nickName;
+    private String profile;
     private String title;
     private String content;
     private String category;
