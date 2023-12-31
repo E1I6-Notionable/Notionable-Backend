@@ -11,6 +11,7 @@ import com.e1i6.notionable.global.common.response.ResponseException;
 import com.e1i6.notionable.global.service.AwsS3Service;
 import com.mysql.cj.PreparedQuery;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class TemplateService {
     private final UserRepository userRepository;
@@ -51,14 +53,15 @@ public class TemplateService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
 
-        List<String> uploadedUrls = awsS3Service.uploadFiles(multipartFiles);
+        List<String> uploadedFileNames = awsS3Service.uploadFiles(multipartFiles);
+        String thumbnailUrl = awsS3Service.getUrlFromFileName(uploadedFileNames.get(0));
 
         templateRepository.save(Template.builder()
                 .user(user)
                 .title(reqDto.getTitle())
                 .content(reqDto.getContent())
-                .tunmbnail(uploadedUrls.get(0))
-                .images(uploadedUrls)
+                .thumbnail(thumbnailUrl)
+                .images(uploadedFileNames)
                 .price(reqDto.getPrice())
                 .notionUrl(reqDto.getNotionUrl())
                 .category(reqDto.getCategory())
@@ -133,7 +136,10 @@ public class TemplateService {
         Template template = templateRepository.findById(templateId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_TEMPLATE));
 
-        return Template.toDetailTemplateDto(template);
+        List<String> imageUrlList = new ArrayList<>();
+        template.getImages().forEach(image -> imageUrlList.add(awsS3Service.getUrlFromFileName(image)));
+
+        return Template.toDetailTemplateDto(template, imageUrlList);
     }
 
     @Transactional
