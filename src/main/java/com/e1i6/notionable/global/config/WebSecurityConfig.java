@@ -26,12 +26,14 @@ public class WebSecurityConfig {
 			"/login/**",
 			"/signup/**",
 		    "/auth/email",
-			"/free-template/recommend",
-			"/free-template",
-			"/free-template/detail/*",
-			"/paid-template/recommend",
-			"/paid-template",
-			"/paid-template/detail/*",
+
+			// template
+			"/template/recommend-free",
+			"/template/recommend-paid",
+			"/template/free",
+			"/template/paid",
+			"/template/detail/*",
+
 			"/test/*",
 			"/favicon.ico"
 	};

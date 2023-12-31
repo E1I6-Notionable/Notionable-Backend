@@ -49,26 +49,26 @@ public class AwsS3Service {
             fileNameList.add(fileName);
         });
 
-        for (String fileName : fileNameList) {
-            String url = amazonS3Client.getUrl(bucketName, fileName).toString();
-            urlList.add(url);
-        }
-        return urlList;
+        return fileNameList;
     }
 
-    public String createFileName(String fileName) {
+    public void deleteFile(String fileName) {
+        amazonS3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
+    }
+
+    public String getUrlFromFileName(String fileName) {
+        return amazonS3Client.getUrl(bucketName, fileName).toString();
+    }
+
+    private String createFileName(String fileName) {
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
     }
 
-    public String getFileExtension(String fileName) {
+    private String getFileExtension(String fileName) {
         try {
             return fileName.substring(fileName.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e) {
             throw new ResponseException(ResponseCode.BAD_REQUEST);
         }
-    }
-
-    public void deleteFile(String fileName) {
-        amazonS3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
     }
 }
