@@ -7,14 +7,15 @@ import java.util.List;
 
 @Data
 @Builder
-public class FreeTemplateDetailDto {
-    private Long freeTemplateId;
+public class TemplateDetailDto {
+    private Long templateId;
     private String nickName;
     private String profile;
     private String thumbnail;
     private String title;
+    private String category;
+    private Integer price;
     private String content;
     private List<String> images;
-    private String category;
     private String createdAt;
 }
