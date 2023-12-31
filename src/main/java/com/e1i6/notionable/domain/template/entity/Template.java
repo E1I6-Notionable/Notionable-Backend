@@ -35,7 +35,7 @@ public class Template extends BaseTimeEntity {
     private String content;
 
     @NotNull
-    private String tunmbnail;
+    private String thumbnail;
 
     @NotNull
     private String category;
@@ -56,23 +56,23 @@ public class Template extends BaseTimeEntity {
                 .profile(template.user.getProfile())
                 .title(template.getTitle())
                 .category(template.getCategory())
-                .thumbnail(template.getTunmbnail())
+                .thumbnail(template.getThumbnail())
                 .price(template.getPrice())
                 .createdAt(template.getCreatedAt().toString())
                 .build();
     }
 
-    public static TemplateDetailDto toDetailTemplateDto(Template template) {
+    public static TemplateDetailDto toDetailTemplateDto(Template template, List<String> imageUrlList) {
         return TemplateDetailDto.builder()
                 .templateId(template.getTemplateId())
                 .nickName(template.user.getNickName())
                 .profile(template.user.getProfile())
                 .title(template.getTitle())
                 .category(template.getCategory())
-                .thumbnail(template.getTunmbnail())
+                .thumbnail(template.getThumbnail())
                 .price(template.getPrice())
                 .content(template.getContent())
-                .images(template.getImages())
+                .imageUrls(imageUrlList)
                 .createdAt(template.getCreatedAt().toString())
                 .build();
     }

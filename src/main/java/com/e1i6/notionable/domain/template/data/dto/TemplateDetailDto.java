@@ -16,6 +16,6 @@ public class TemplateDetailDto {
     private String category;
     private Integer price;
     private String content;
-    private List<String> images;
+    private List<String> imageUrls;
     private String createdAt;
 }
