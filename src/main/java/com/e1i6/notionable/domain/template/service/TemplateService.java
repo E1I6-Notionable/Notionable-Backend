@@ -33,7 +33,7 @@ public class TemplateService {
     private final TemplateRepository templateRepository;
 
     private final List<String> categoryList = Arrays.asList(
-            "all",
+            "", // all
             "studyManagement",
             "plan",
             "account",
@@ -42,6 +42,11 @@ public class TemplateService {
             "habit",
             "reading",
             "travel"
+    );
+
+    private final List<String> criteriaList = Arrays.asList(
+            "createdAt",
+            "price"
     );
 
     @Transactional
@@ -88,10 +93,50 @@ public class TemplateService {
         return templateDtoList;
     }
 
+    public List<TemplateDto> getTemplatesWithFilter(
+            int pageNo,
+            String keyword,
+            String templateType,
+            String category,
+            String criteria,
+            String criteriaOption) {
+
+        if (!categoryList.contains(category))
+            throw new ResponseException(ResponseCode.NO_SUCH_CATEGORY);
+        if (!criteriaList.contains(criteria))
+            throw new ResponseException(ResponseCode.WRONG_CRITERIA);
+        if (!criteriaOption.equals("desc") && !criteriaOption.equals("asc"))
+            throw new ResponseException(ResponseCode.WRONG_CRITERIA_OPTION);
+
+        Pageable pageable;
+        if (criteriaOption.equals("asc")) {
+            pageable = PageRequest.of(pageNo, 9, Sort.Direction.ASC, criteria);
+        } else {
+            pageable = PageRequest.of(pageNo, 9, Sort.Direction.DESC, criteria);
+        }
+
+        Page<Template> page;
+        // 모든 템플릿
+        if (templateType.isEmpty())
+            page = templateRepository.findTemplateWithFilter(category, keyword, pageable);
+        // 무료
+        else if (templateType.equals("free"))
+            page = templateRepository.findFreeTemplateWithFilter(category, keyword, pageable);
+        // 유료
+        else
+            page = templateRepository.findPaidTemplateWithFilter(category, keyword, pageable);
+
+        List<TemplateDto> templateDtoList = new ArrayList<>();
+        page.map(template -> templateDtoList.add(Template.toTemplateDto(template)));
+
+        return templateDtoList;
+    }
+/*
     public List<TemplateDto> getFreeTemplatesWithCriteria(
             int pageNo,
             String category,
-            String criteria) {
+            String criteria,
+            String criteriaOption) {
 
         if (!categoryList.contains(category))
             throw new ResponseException(ResponseCode.NO_SUCH_CATEGORY);
@@ -113,7 +158,8 @@ public class TemplateService {
     public List<TemplateDto> getPaidTemplatesWithCriteria(
             int pageNo,
             String category,
-            String criteria) {
+            String criteria,
+            String criteriaOption) {
 
         if (!categoryList.contains(category))
             throw new ResponseException(ResponseCode.NO_SUCH_CATEGORY);
@@ -130,7 +176,7 @@ public class TemplateService {
         page.map(template -> templateDtoList.add(Template.toTemplateDto(template)));
 
         return templateDtoList;
-    }
+    }*/
 
     public TemplateDetailDto getTemplateDetail(Long templateId) {
         Template template = templateRepository.findById(templateId)
