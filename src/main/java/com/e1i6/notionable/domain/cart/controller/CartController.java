@@ -86,13 +86,14 @@ public class CartController {
             if (jwtProvider.validateToken(accessToken))
                 userDto = jwtUtil.getUserFromToken(accessToken);
 
-            // 장바구니 삭제 로직
-            String response = cartService.deleteMyCartInformation(userDto.getUserId(), cartDto.getItemId());
+            log.info("user_id={}", userDto.getUserId());
 
-            // 장바구니에 추가된 데이터 반환
+            // 장바구니 삭제 로직
+            String response = cartService.deleteMyCartInformation(userDto.getUserId(), cartDto.getItem_id());
+
             return new BaseResponse<>(response);
         } catch (ResponseException e) {
-            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+            return new BaseResponse<>(ResponseCode.DELETE_CART_ITEM_FAILED, e.getMessage());
         } catch (Exception e) {
             return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
