@@ -33,8 +33,8 @@ public enum ResponseCode {
 	NO_SUCH_TEMPLATE(4001, HttpStatus.BAD_REQUEST, "해당 템플릿을 찾을 수 없습니다."),
 	NO_SUCH_CATEGORY(4002, HttpStatus.BAD_REQUEST, "해당 카테고리가 없습니다."),
 
-	// comment
-	NO_SUCH_COMMENT(5001, HttpStatus.BAD_REQUEST, "해당 댓글을 찾을 수 없습니다."),
+	// review
+	NO_SUCH_REVIEW(5001, HttpStatus.BAD_REQUEST, "해당 리뷰를 찾을 수 없습니다."),
 	NO_AUTHORIZATION(5002, HttpStatus.BAD_REQUEST, "해당 권한이 없습니다.");
 
 	private final Integer code;

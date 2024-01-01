@@ -1,5 +1,6 @@
 package com.e1i6.notionable.domain.template.entity;
 
+import com.e1i6.notionable.domain.review.entity.Review;
 import com.e1i6.notionable.domain.template.data.dto.TemplateDetailDto;
 import com.e1i6.notionable.domain.template.data.dto.TemplateDto;
 import com.e1i6.notionable.domain.user.entity.User;
@@ -24,9 +25,12 @@ public class Template extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long templateId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviewList = new ArrayList<>();
 
     @NotNull
     private String title;
