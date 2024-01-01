@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -62,5 +61,9 @@ public class CartService {
         Cart savedCart = cartRepository.save(cart);
 
         return CartDto.mapCartToDto(savedCart);
+    }
+
+    public CartDto deleteMyCartInformation(Long user_id, Long item_id) {
+
     }
 }
