@@ -55,15 +55,17 @@ public class CartController {
             // 토큰이 유효한 경우, 사용자 정보 얻기
             UserDto userDto = jwtUtil.getUserFromToken(accessToken);
 
-            // 사용자 정보를 기반으로 장바구니 정보 가져오기
+            // 장바구니 추가 로직
             CartDto cartInformation = cartService.addMyCartInformation(userDto.getUserId(), cartDto);
 
+            // 장바구니에 추가된 데이터 반환
             return new BaseResponse<>(cartInformation);
         } else {
             // 토큰이 유효하지 않은 경우에 대한 처리
             return new BaseResponse<>(ResponseCode.NOT_FOUND, "Not valid token");
         }
-
     }
+
+    // @DeleteMapping()
 
 }

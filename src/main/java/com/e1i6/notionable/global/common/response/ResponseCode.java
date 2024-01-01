@@ -19,7 +19,8 @@ public enum ResponseCode {
 	SUCCESS_SEND_AUTH_CODE(2000, HttpStatus.OK, "인증 번호 전송에 성공하였습니다."),
 
 	// user
-	LOGIN_WITH_WRONG_PASSWORD(1001, HttpStatus.BAD_REQUEST, "wrong password"),
+	NO_SUCH_USER(1001, HttpStatus.BAD_REQUEST, "해당 유저가 없습니다."),
+	LOGIN_WITH_WRONG_PASSWORD(1002, HttpStatus.BAD_REQUEST, "잘못된 비밀번호 입니다."),
 
 	// payment
 	PAYMENT_ERROR(2001, HttpStatus.BAD_REQUEST, "payment fail"),
@@ -28,9 +29,13 @@ public enum ResponseCode {
 	AWS_S3_UPLOAD_FAIL(3001, HttpStatus.INTERNAL_SERVER_ERROR, "업로드 요청 실패"),
 	AWS_S3_WRONG_FILENAME(3002, HttpStatus.BAD_REQUEST, "잘못된 파일 정보"),
 
-	// comment
-	NO_SUCH_COMMENT(4001, HttpStatus.BAD_REQUEST, "해당 commentId를 찾을 수 없습니다."),
-	NO_AUTHORIZATION(4002, HttpStatus.BAD_REQUEST, "해당 권한이 없습니다.");
+	// template
+	NO_SUCH_TEMPLATE(4001, HttpStatus.BAD_REQUEST, "해당 템플릿을 찾을 수 없습니다."),
+	NO_SUCH_CATEGORY(4002, HttpStatus.BAD_REQUEST, "해당 카테고리가 없습니다."),
+
+	// review
+	NO_SUCH_REVIEW(5001, HttpStatus.BAD_REQUEST, "해당 리뷰를 찾을 수 없습니다."),
+	NO_AUTHORIZATION(5002, HttpStatus.BAD_REQUEST, "해당 권한이 없습니다.");
 
 	private final Integer code;
 	private final HttpStatus httpStatus;

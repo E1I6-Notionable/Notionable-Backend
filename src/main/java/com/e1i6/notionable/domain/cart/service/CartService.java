@@ -3,8 +3,7 @@ package com.e1i6.notionable.domain.cart.service;
 import com.e1i6.notionable.domain.cart.Entity.Cart;
 import com.e1i6.notionable.domain.cart.Repository.CartRepository;
 import com.e1i6.notionable.domain.cart.dto.CartDto;
-import com.e1i6.notionable.domain.template.data.dto.FreeTemplateDto;
-import com.e1i6.notionable.domain.template.entity.FreeTemplate;
+import com.e1i6.notionable.domain.template.repository.TemplateRepository;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +19,8 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
+    private final TemplateRepository templateRepository;
+
     public List<CartDto> getMyCartInformation(Long userId) {
         List<Cart> cartItems = cartRepository.findListByUserUserId(userId);
         List<CartDto> cartItemsDtos = new ArrayList<>();
@@ -45,6 +46,7 @@ public class CartService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        cartDto.setThumbnail(templateRepository.findThumbnailByTemplateId(cartDto.getTemplate_id()));
 
         Cart cart = Cart.builder()
                 .title(cartDto.getTitle())
@@ -54,6 +56,7 @@ public class CartService {
                 .creator(cartDto.getCreator())
                 .template_url(cartDto.getTemplate_url())
                 .user(user)
+                .template_id(cartDto.getTemplate_id())
                 .build();
 
         Cart savedCart = cartRepository.save(cart);

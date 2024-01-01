@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CartDto {
     private Long itemId;
+    private Long template_id;
     private String thumbnail;
     private String creator;
     private String attribute;
@@ -22,6 +23,7 @@ public class CartDto {
     public static CartDto mapCartToDto(Cart cart) {
         return CartDto.builder()
                 .itemId(cart.getItemId())
+                .template_id(cart.getTemplate_id())
                 .thumbnail(cart.getThumbnail())
                 .creator(cart.getCreator())
                 .attribute(cart.getAttribute())

@@ -20,6 +20,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private Long itemId;
+    private Long template_id;
 
     private String thumbnail;
     private String creator;
