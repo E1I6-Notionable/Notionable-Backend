@@ -44,6 +44,7 @@ public class TemplateController {
         List<TemplateDto> recommendedTemplates = templateService.getRecommendPaidTemplates();
         return new BaseResponse<>(recommendedTemplates);
     }
+/*
 
     @GetMapping("/free")
     public BaseResponse<List<TemplateDto>> getFreeTemplateListWithFilter (
@@ -58,9 +59,24 @@ public class TemplateController {
     public BaseResponse<List<TemplateDto>> getPaidTemplateListWithFilter (
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "category", required = false, defaultValue = "all") String category,
-            @RequestParam(value = "criteria", required = false, defaultValue = "createdAt") String criteria) {
+            @RequestParam(value = "criteria", required = false, defaultValue = "createdAt") String criteria,
+            @RequestParam(value = "criteria-option", required = false, defaultValue = "DESC") String criteriaOption) {
 
-        return new BaseResponse<>(templateService.getPaidTemplatesWithCriteria(page, category, criteria));
+        return new BaseResponse<>(templateService.getPaidTemplatesWithCriteria(page, category, criteria, criteriaOption));
+    }
+*/
+
+    @GetMapping("/filter")
+    public BaseResponse<List<TemplateDto>> getTemplateListWithFilter (
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+            @RequestParam(value = "template-type", required = false, defaultValue = "") String templateType,
+            @RequestParam(value = "category", required = false, defaultValue = "") String category,
+            @RequestParam(value = "criteria", required = false, defaultValue = "createdAt") String criteria,
+            @RequestParam(value = "criteria-option", required = false, defaultValue = "desc") String criteriaOption) {
+
+        return new BaseResponse<>(templateService.getTemplatesWithFilter(
+                page, keyword, templateType, category, criteria, criteriaOption));
     }
 
     @GetMapping("/detail/{templateId}")
@@ -74,6 +90,8 @@ public class TemplateController {
             return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/search/")
 
     @PostMapping("/delete/{templateId}")
     public BaseResponse<String> deleteTemplate(@PathVariable Long templateId) {

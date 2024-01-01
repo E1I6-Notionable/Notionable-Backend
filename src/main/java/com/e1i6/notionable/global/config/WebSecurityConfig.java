@@ -30,8 +30,7 @@ public class WebSecurityConfig {
 			// template
 			"/template/recommend-free",
 			"/template/recommend-paid",
-			"/template/free",
-			"/template/paid",
+			"/template/filter",
 			"/template/detail/*",
 
 			// review
