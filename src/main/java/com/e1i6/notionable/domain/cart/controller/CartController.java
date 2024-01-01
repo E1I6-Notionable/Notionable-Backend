@@ -75,25 +75,26 @@ public class CartController {
     }
 
     @DeleteMapping("/my-cart/delete")
-    public BaseResponse<> deleteMyCartInformation(@RequestHeader("Authorization") String authorizationHeader, @RequestBody CartDto cartDto){
+    public BaseResponse<String> deleteMyCartInformation(@RequestHeader("Authorization") String authorizationHeader, @RequestBody CartDto cartDto) {
 
-        String accessToken = authorizationHeader.replace("Bearer ", "");
+        try {
+            // 헤더에서 JWT 토큰 추출
+            String accessToken = authorizationHeader.replace("Bearer ", "");
+            UserDto userDto = null;
 
-        // 토큰 검증
-        if (jwtProvider.validateToken(accessToken)) {
-
-            // 토큰이 유효한 경우, 사용자 정보 얻기
-            UserDto userDto = jwtUtil.getUserFromToken(accessToken);
+            // 토큰 검증
+            if (jwtProvider.validateToken(accessToken))
+                userDto = jwtUtil.getUserFromToken(accessToken);
 
             // 장바구니 삭제 로직
-            CartDto cartInformation = cartService.deleteMyCartInformation(userDto.getUserId(), cartDto.getItemId());
+            String response = cartService.deleteMyCartInformation(userDto.getUserId(), cartDto.getItemId());
 
             // 장바구니에 추가된 데이터 반환
-            return new BaseResponse<>(cartInformation);
-        } else {
-            // 토큰이 유효하지 않은 경우에 대한 처리
-            return new BaseResponse<>(ResponseCode.NOT_FOUND, "Not valid token");
+            return new BaseResponse<>(response);
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
-
 }

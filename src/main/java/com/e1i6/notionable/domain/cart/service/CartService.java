@@ -6,6 +6,7 @@ import com.e1i6.notionable.domain.cart.dto.CartDto;
 import com.e1i6.notionable.domain.template.repository.TemplateRepository;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
+import com.e1i6.notionable.global.common.response.ResponseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +64,12 @@ public class CartService {
         return CartDto.mapCartToDto(savedCart);
     }
 
-    public CartDto deleteMyCartInformation(Long user_id, Long item_id) {
-
+    public String deleteMyCartInformation(Long user_id, Long item_id) {
+        try {
+            cartRepository.deleteCartItem(user_id, item_id);
+            return "Deleted successfully";
+        } catch (Exception e) {
+            throw new ResponseException(ResponseCode., "Failed to delete item from cart");
+        }
     }
 }
