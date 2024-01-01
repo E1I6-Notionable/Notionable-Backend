@@ -2,6 +2,7 @@ package com.e1i6.notionable.domain.user.entity;
 
 import javax.persistence.*;
 
+import com.e1i6.notionable.domain.review.entity.Review;
 import com.e1i6.notionable.domain.template.entity.Template;
 import com.e1i6.notionable.domain.user.data.dto.request.SocialLoginReqDto;
 import com.e1i6.notionable.global.common.entity.BaseTimeEntity;
@@ -36,7 +37,10 @@ public class User extends BaseTimeEntity {
 	private String phoneNumber;
 
 	@OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true)
-	private List<Template> templateEntity = new ArrayList<>();
+	private List<Template> templateList = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true)
+	private List<Review> reviewList = new ArrayList<>();
 
 	public User(SocialLoginReqDto socialLoginReqDto) {
 		this.email = socialLoginReqDto.getEmail();

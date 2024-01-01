@@ -34,6 +34,9 @@ public class WebSecurityConfig {
 			"/template/paid",
 			"/template/detail/*",
 
+			// review
+			"/template/review/list/*",
+
 			"/test/*",
 			"/favicon.ico"
 	};
