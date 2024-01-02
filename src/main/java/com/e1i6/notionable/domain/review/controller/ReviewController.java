@@ -1,12 +1,11 @@
 package com.e1i6.notionable.domain.review.controller;
 
 import com.e1i6.notionable.domain.review.data.ReviewDto;
-import com.e1i6.notionable.domain.review.data.ReviewReqDto;
+import com.e1i6.notionable.domain.review.data.ReviewUploadReqDto;
 import com.e1i6.notionable.domain.review.service.ReviewService;
 import com.e1i6.notionable.global.common.response.BaseResponse;
 import com.e1i6.notionable.global.common.response.ResponseCode;
 import com.e1i6.notionable.global.common.response.ResponseException;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +23,7 @@ public class ReviewController {
 
     @PostMapping("")
     public BaseResponse<String> createReview(
-            @RequestPart ReviewReqDto reqDto,
+            @RequestPart ReviewUploadReqDto reqDto,
             @RequestPart("files") List<MultipartFile> multipartFiles) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.parseLong(authentication.getName());
@@ -49,13 +48,21 @@ public class ReviewController {
         }
     }
 
-
-    @PatchMapping("/{commentId}")
-    public BaseResponse<ReviewDto> updateReview(
+    @PutMapping("/{commentId}")
+    public BaseResponse<String> updateReview(
             @PathVariable Long commentId,
-            @RequestPart ReviewDto reqDto,
+            @RequestPart ReviewUploadReqDto reqDto,
             @RequestPart("files") List<MultipartFile> multipartFiles) {
-        return null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+
+        try {
+            return new BaseResponse<>(reviewService.updateReview(userId, commentId, reqDto, multipartFiles));
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @DeleteMapping("/{commentId}")
@@ -66,8 +73,10 @@ public class ReviewController {
         try {
             String result = reviewService.deleteReview(userId, commentId);
             return new BaseResponse<>(result);
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
-            return new BaseResponse<>(e.getMessage());
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 }

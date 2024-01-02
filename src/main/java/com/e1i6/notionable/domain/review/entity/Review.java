@@ -1,6 +1,7 @@
 package com.e1i6.notionable.domain.review.entity;
 
 import com.e1i6.notionable.domain.review.data.ReviewDto;
+import com.e1i6.notionable.domain.review.data.ReviewUpdateDto;
 import com.e1i6.notionable.domain.template.entity.Template;
 import com.e1i6.notionable.domain.user.entity.User;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,12 @@ public class Review {
 
     @ElementCollection
     private List<String> images = new ArrayList<>();
+
+    public void updateReview(ReviewUpdateDto reqDto) {
+        this.rate = reqDto.getRate();
+        this.content = reqDto.getContent();
+        this.images = reqDto.getImages();
+    }
 
     public static ReviewDto toReviewDto(Review review, User user, List<String> imageUrls) {
         return ReviewDto.builder()

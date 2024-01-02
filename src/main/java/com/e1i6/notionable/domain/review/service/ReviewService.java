@@ -1,7 +1,8 @@
 package com.e1i6.notionable.domain.review.service;
 
 import com.e1i6.notionable.domain.review.data.ReviewDto;
-import com.e1i6.notionable.domain.review.data.ReviewReqDto;
+import com.e1i6.notionable.domain.review.data.ReviewUploadReqDto;
+import com.e1i6.notionable.domain.review.data.ReviewUpdateDto;
 import com.e1i6.notionable.domain.review.entity.Review;
 import com.e1i6.notionable.domain.review.repository.ReviewRepository;
 import com.e1i6.notionable.domain.template.entity.Template;
@@ -19,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +33,7 @@ public class ReviewService {
 
     public String createComment(
             Long userId,
-            ReviewReqDto reqDto,
+            ReviewUploadReqDto reqDto,
             List<MultipartFile> multipartFiles) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
@@ -70,10 +70,11 @@ public class ReviewService {
         return reviewDtoList;
     }
 
+    @Transactional
     public String updateReview(
             Long userId,
             Long reviewId,
-            ReviewReqDto reqDto,
+            ReviewUploadReqDto reqDto,
             List<MultipartFile> multipartFiles) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_REVIEW));
@@ -84,7 +85,11 @@ public class ReviewService {
             throw new ResponseException(ResponseCode.NO_AUTHORIZATION);
         }
 
-        return null;
+        review.getImages().forEach(awsS3Service::deleteFile);
+        List<String> uploadedFiles = awsS3Service.uploadFiles(multipartFiles);
+        review.updateReview(new ReviewUpdateDto(reqDto, uploadedFiles));
+
+        return "update review success";
     }
 
     @Transactional
