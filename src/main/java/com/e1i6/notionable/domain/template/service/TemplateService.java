@@ -1,15 +1,16 @@
 package com.e1i6.notionable.domain.template.service;
 
-import com.e1i6.notionable.domain.template.data.dto.*;
+import com.e1i6.notionable.domain.template.data.TemplateDetailDto;
+import com.e1i6.notionable.domain.template.data.TemplateDto;
+import com.e1i6.notionable.domain.template.data.TemplateUpdateReqDto;
+import com.e1i6.notionable.domain.template.data.TemplateUploadReqDto;
 import com.e1i6.notionable.domain.template.entity.Template;
 import com.e1i6.notionable.domain.template.repository.TemplateRepository;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
-import com.e1i6.notionable.global.common.response.BaseResponse;
 import com.e1i6.notionable.global.common.response.ResponseCode;
 import com.e1i6.notionable.global.common.response.ResponseException;
 import com.e1i6.notionable.global.service.AwsS3Service;
-import com.mysql.cj.PreparedQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -53,7 +54,7 @@ public class TemplateService {
     public String uploadTemplate(
             Long userId,
             List<MultipartFile> multipartFiles,
-            UploadTemplateReqDto reqDto) {
+            TemplateUploadReqDto reqDto) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
@@ -119,10 +120,10 @@ public class TemplateService {
         // 모든 템플릿
         if (templateType.isEmpty())
             page = templateRepository.findTemplateWithFilter(category, keyword, pageable);
-        // 무료
+            // 무료
         else if (templateType.equals("free"))
             page = templateRepository.findFreeTemplateWithFilter(category, keyword, pageable);
-        // 유료
+            // 유료
         else
             page = templateRepository.findPaidTemplateWithFilter(category, keyword, pageable);
 
@@ -131,52 +132,6 @@ public class TemplateService {
 
         return templateDtoList;
     }
-/*
-    public List<TemplateDto> getFreeTemplatesWithCriteria(
-            int pageNo,
-            String category,
-            String criteria,
-            String criteriaOption) {
-
-        if (!categoryList.contains(category))
-            throw new ResponseException(ResponseCode.NO_SUCH_CATEGORY);
-
-        Pageable pageable = PageRequest.of(pageNo, 9, Sort.Direction.DESC, criteria);
-        Page<Template> page;
-        if (category.equals("all")) {
-            page = templateRepository.findAllByPriceEquals(0, pageable);
-        } else {
-            page = templateRepository.findAllByCategoryAndPriceEquals(category, 0, pageable);
-        }
-
-        List<TemplateDto> templateDtoList = new ArrayList<>();
-        page.map(template -> templateDtoList.add(Template.toTemplateDto(template)));
-
-        return templateDtoList;
-    }
-
-    public List<TemplateDto> getPaidTemplatesWithCriteria(
-            int pageNo,
-            String category,
-            String criteria,
-            String criteriaOption) {
-
-        if (!categoryList.contains(category))
-            throw new ResponseException(ResponseCode.NO_SUCH_CATEGORY);
-
-        Pageable pageable = PageRequest.of(pageNo, 9, Sort.Direction.DESC, criteria);
-        Page<Template> page;
-        if (category.equals("all")) {
-            page = templateRepository.findAllByPriceGreaterThan(0, pageable);
-        } else {
-            page = templateRepository.findAllByCategoryAndPriceGreaterThan(category, 0, pageable);
-        }
-
-        List<TemplateDto> templateDtoList = new ArrayList<>();
-        page.map(template -> templateDtoList.add(Template.toTemplateDto(template)));
-
-        return templateDtoList;
-    }*/
 
     public TemplateDetailDto getTemplateDetail(Long templateId) {
         Template template = templateRepository.findById(templateId)
@@ -186,6 +141,34 @@ public class TemplateService {
         template.getImages().forEach(image -> imageUrlList.add(awsS3Service.getUrlFromFileName(image)));
 
         return Template.toDetailTemplateDto(template, imageUrlList);
+    }
+
+    @Transactional
+    public String updateTemplate(
+            Long userId,
+            Long templateId,
+            TemplateUploadReqDto reqDto,
+            List<MultipartFile> multipartFiles) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+        Template template = templateRepository.findById(templateId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_TEMPLATE));
+
+        if (user.getUserId() != template.getUser().getUserId()) {
+            throw new ResponseException(ResponseCode.NO_AUTHORIZATION);
+        }
+
+        // s3에 업로드된 파일 삭제
+        template.getImages().forEach(awsS3Service::deleteFile);
+
+        // 새로 사진 업로드
+        List<String> uploadedFileNames = awsS3Service.uploadFiles(multipartFiles);
+        String thumbnailUrl = awsS3Service.getUrlFromFileName(uploadedFileNames.get(0));
+
+        template.updateTemplate(new TemplateUpdateReqDto(reqDto, thumbnailUrl, uploadedFileNames));
+        templateRepository.save(template);
+
+        return "template update success";
     }
 
     @Transactional
@@ -200,11 +183,10 @@ public class TemplateService {
         }
 
         // s3에 업로드된 파일 삭제
-        for (String fileName : template.getImages()) {
-            awsS3Service.deleteFile(fileName);
-        }
+        template.getImages().forEach(awsS3Service::deleteFile);
 
         templateRepository.delete(template);
         return "template delete success";
     }
+
 }
