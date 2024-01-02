@@ -31,7 +31,7 @@ public class ReviewService {
     private final TemplateRepository templateRepository;
     private final AwsS3Service awsS3Service;
 
-    public String createComment(
+    public String createReview(
             Long userId,
             ReviewUploadReqDto reqDto,
             List<MultipartFile> multipartFiles) {
@@ -42,7 +42,7 @@ public class ReviewService {
 
         List<String> uploadedFiles = awsS3Service.uploadFiles(multipartFiles);
 
-        Review newComment = Review.builder()
+        Review newReview = Review.builder()
                 .template(template)
                 .user(user)
                 .content(reqDto.getContent())
@@ -50,7 +50,7 @@ public class ReviewService {
                 .images(uploadedFiles)
                 .build();
 
-        reviewRepository.save(newComment);
+        reviewRepository.save(newReview);
 
         return "review create success";
     }

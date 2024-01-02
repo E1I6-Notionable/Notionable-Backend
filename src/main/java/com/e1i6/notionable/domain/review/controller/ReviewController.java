@@ -29,7 +29,7 @@ public class ReviewController {
         Long userId = Long.parseLong(authentication.getName());
 
         try {
-            return new BaseResponse<>(reviewService.createComment(userId, reqDto, multipartFiles));
+            return new BaseResponse<>(reviewService.createReview(userId, reqDto, multipartFiles));
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
@@ -48,16 +48,16 @@ public class ReviewController {
         }
     }
 
-    @PutMapping("/{commentId}")
+    @PutMapping("/{reviewId}")
     public BaseResponse<String> updateReview(
-            @PathVariable Long commentId,
+            @PathVariable Long reviewId,
             @RequestPart ReviewUploadReqDto reqDto,
             @RequestPart("files") List<MultipartFile> multipartFiles) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.parseLong(authentication.getName());
 
         try {
-            return new BaseResponse<>(reviewService.updateReview(userId, commentId, reqDto, multipartFiles));
+            return new BaseResponse<>(reviewService.updateReview(userId, reviewId, reqDto, multipartFiles));
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
@@ -65,13 +65,13 @@ public class ReviewController {
         }
     }
 
-    @DeleteMapping("/{commentId}")
-    public BaseResponse<String> deleteReview(@PathVariable Long commentId) {
+    @DeleteMapping("/{reviewId}")
+    public BaseResponse<String> deleteReview(@PathVariable Long reviewId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.parseLong(authentication.getName());
 
         try {
-            String result = reviewService.deleteReview(userId, commentId);
+            String result = reviewService.deleteReview(userId, reviewId);
             return new BaseResponse<>(result);
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());
