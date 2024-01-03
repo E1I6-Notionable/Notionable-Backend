@@ -75,8 +75,4 @@ public class AwsS3Service {
             throw new ResponseException(ResponseCode.BAD_REQUEST);
         }
     }
-
-    public String getFileNameFromUrl(String url) {
-        return url.substring(url.lastIndexOf('/') + 1);
-    }
 }
