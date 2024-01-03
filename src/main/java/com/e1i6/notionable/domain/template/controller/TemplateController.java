@@ -1,13 +1,12 @@
 package com.e1i6.notionable.domain.template.controller;
 
-import com.e1i6.notionable.domain.template.data.TemplateDetailDto;
-import com.e1i6.notionable.domain.template.data.TemplateDto;
-import com.e1i6.notionable.domain.template.data.TemplateUploadReqDto;
+import com.e1i6.notionable.domain.template.data.*;
 import com.e1i6.notionable.domain.template.service.TemplateService;
 import com.e1i6.notionable.global.common.response.BaseResponse;
 import com.e1i6.notionable.global.common.response.ResponseCode;
 import com.e1i6.notionable.global.common.response.ResponseException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("/template")
 @RequiredArgsConstructor
 public class TemplateController {
@@ -90,11 +90,13 @@ public class TemplateController {
     @PutMapping("/{templateId}")
     public BaseResponse<String> updateTemplate(
             @PathVariable Long templateId,
-            @RequestPart TemplateUploadReqDto reqDto,
-            @RequestPart("files") List<MultipartFile> multipartFiles) {
+            @RequestPart TemplateUpdateReqDto reqDto,
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.parseLong(authentication.getName());
 
+        log.info("multipartfile: {}", multipartFiles);
+        log.info("req.images: {}", reqDto.getImageUrls());
         try {
             return new BaseResponse<>(templateService.updateTemplate(userId, templateId, reqDto, multipartFiles));
         } catch (ResponseException e) {

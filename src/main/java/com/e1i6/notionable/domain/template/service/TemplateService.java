@@ -1,9 +1,6 @@
 package com.e1i6.notionable.domain.template.service;
 
-import com.e1i6.notionable.domain.template.data.TemplateDetailDto;
-import com.e1i6.notionable.domain.template.data.TemplateDto;
-import com.e1i6.notionable.domain.template.data.TemplateUpdateReqDto;
-import com.e1i6.notionable.domain.template.data.TemplateUploadReqDto;
+import com.e1i6.notionable.domain.template.data.*;
 import com.e1i6.notionable.domain.template.entity.Template;
 import com.e1i6.notionable.domain.template.repository.TemplateRepository;
 import com.e1i6.notionable.domain.user.entity.User;
@@ -147,8 +144,13 @@ public class TemplateService {
     public String updateTemplate(
             Long userId,
             Long templateId,
-            TemplateUploadReqDto reqDto,
+            TemplateUpdateReqDto reqDto,
             List<MultipartFile> multipartFiles) {
+        // 이미지가 하나도 없을 때
+        if (reqDto.getImageUrls().isEmpty() && multipartFiles == null) {
+            throw new ResponseException(ResponseCode.NO_IMAGES);
+        }
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
         Template template = templateRepository.findById(templateId)
@@ -158,16 +160,45 @@ public class TemplateService {
             throw new ResponseException(ResponseCode.NO_AUTHORIZATION);
         }
 
-        // s3에 업로드된 파일 삭제
-        template.getImages().forEach(awsS3Service::deleteFile);
+        if (reqDto.getImageUrls().isEmpty()) {
+            // s3에 업로드된 파일 삭제
+            template.getImages().forEach(awsS3Service::deleteFile);
 
-        // 새로 사진 업로드
-        List<String> uploadedFileNames = awsS3Service.uploadFiles(multipartFiles);
-        String thumbnailUrl = awsS3Service.getUrlFromFileName(uploadedFileNames.get(0));
+            // 새로 사진 업로드
+            List<String> uploadedFileNames = awsS3Service.uploadFiles(multipartFiles);
+            String thumbnail = awsS3Service.getUrlFromFileName(uploadedFileNames.get(0));
 
-        template.updateTemplate(new TemplateUpdateReqDto(reqDto, thumbnailUrl, uploadedFileNames));
+            template.updateTemplate(new TemplateUpdateDto(reqDto, thumbnail, uploadedFileNames));
+        }
+        else {
+            List<String> newImages = new ArrayList<>();
+            List<String> beforeImages = template.getImages();
+
+            // 기존의 사진이 사라졌다면 삭제
+            reqDto.getImageUrls().forEach(imageUrl -> {
+                String fileName = awsS3Service.getFileNameFromUrl(imageUrl);
+
+                if (beforeImages.contains(fileName)) {
+                    log.info("added file: {}", fileName);
+                    newImages.add(fileName);
+                }
+                else {
+                    awsS3Service.deleteFile(fileName);
+                    log.info("deleted file: {}", fileName);
+                }
+            });
+
+            // 새로 추가된 사진이 있을 떄
+            if (multipartFiles != null) {
+                List<String> uploadedFileNames = awsS3Service.uploadFiles(multipartFiles);
+                newImages.addAll(uploadedFileNames);
+            }
+
+            String thumbnail = template.getThumbnail();
+            template.updateTemplate(new TemplateUpdateDto(reqDto, thumbnail, newImages));
+        }
+
         templateRepository.save(template);
-
         return "template update success";
     }
 
