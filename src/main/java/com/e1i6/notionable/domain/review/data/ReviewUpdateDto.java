@@ -8,11 +8,11 @@ import java.util.List;
 public class ReviewUpdateDto {
     private String rate;
     private String content;
-    private List<String> images;
+    private List<String> imageUrls;
 
-    public ReviewUpdateDto(ReviewUploadReqDto reqDto, List<String> images) {
+    public ReviewUpdateDto(ReviewUpdateReqDto reqDto, List<String> images) {
         this.rate = reqDto.getRate();
         this.content = reqDto.getContent();
-        this.images = images;
+        this.imageUrls = images;
     }
 }

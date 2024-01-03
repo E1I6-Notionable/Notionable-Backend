@@ -1,6 +1,7 @@
 package com.e1i6.notionable.domain.review.controller;
 
 import com.e1i6.notionable.domain.review.data.ReviewDto;
+import com.e1i6.notionable.domain.review.data.ReviewUpdateReqDto;
 import com.e1i6.notionable.domain.review.data.ReviewUploadReqDto;
 import com.e1i6.notionable.domain.review.service.ReviewService;
 import com.e1i6.notionable.global.common.response.BaseResponse;
@@ -24,7 +25,7 @@ public class ReviewController {
     @PostMapping("")
     public BaseResponse<String> createReview(
             @RequestPart ReviewUploadReqDto reqDto,
-            @RequestPart("files") List<MultipartFile> multipartFiles) {
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.parseLong(authentication.getName());
 
@@ -51,8 +52,8 @@ public class ReviewController {
     @PutMapping("/{reviewId}")
     public BaseResponse<String> updateReview(
             @PathVariable Long reviewId,
-            @RequestPart ReviewUploadReqDto reqDto,
-            @RequestPart("files") List<MultipartFile> multipartFiles) {
+            @RequestPart ReviewUpdateReqDto reqDto,
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.parseLong(authentication.getName());
 

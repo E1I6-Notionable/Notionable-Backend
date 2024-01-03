@@ -41,7 +41,7 @@ public class Review {
     public void updateReview(ReviewUpdateDto reqDto) {
         this.rate = reqDto.getRate();
         this.content = reqDto.getContent();
-        this.images = reqDto.getImages();
+        this.images = reqDto.getImageUrls();
     }
 
     public static ReviewDto toReviewDto(Review review, User user, List<String> imageUrls) {
