@@ -6,15 +6,18 @@ import com.e1i6.notionable.domain.cart.dto.CartDto;
 import com.e1i6.notionable.domain.template.repository.TemplateRepository;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
+import com.e1i6.notionable.global.common.response.ResponseCode;
+import com.e1i6.notionable.global.common.response.ResponseException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CartService {
 
     private final CartRepository cartRepository;
@@ -27,7 +30,7 @@ public class CartService {
 
         for(Cart cartItem : cartItems){
             CartDto cartDto = CartDto.builder()
-                    .itemId(cartItem.getItemId())
+                    .item_id(cartItem.getItem_Id())
                     .thumbnail(cartItem.getThumbnail())
                     .creator(cartItem.getCreator())
                     .attribute(cartItem.getAttribute())
@@ -62,5 +65,15 @@ public class CartService {
         Cart savedCart = cartRepository.save(cart);
 
         return CartDto.mapCartToDto(savedCart);
+    }
+
+    public String deleteMyCartInformation(Long user_id, Long item_Id) {
+
+        if (cartRepository.existsByUserIdAndItemId(user_id, item_Id)) {
+            cartRepository.deleteCartItem(user_id, item_Id);
+            return "Deleted successfully";
+        } else {
+            return "Item not found";
+        }
     }
 }
