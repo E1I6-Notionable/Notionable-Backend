@@ -1,11 +1,10 @@
-package com.e1i6.notionable.domain.template.data.dto;
+package com.e1i6.notionable.domain.template.data;
 
 import lombok.Data;
 import lombok.Getter;
 
 @Data
-@Getter
-public class UploadTemplateReqDto {
+public class TemplateUploadReqDto {
     private String title;
     private String content;
     private String category;

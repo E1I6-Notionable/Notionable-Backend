@@ -35,6 +35,7 @@ public enum ResponseCode {
 	WRONG_CRITERIA(4003, HttpStatus.BAD_REQUEST, "잘못된 정렬 기준(가능 정렬 기준 목룍: createdAt, price)"),
 	WRONG_CRITERIA_OPTION(4004, HttpStatus.BAD_REQUEST, "잘못된 정렬 방식(가능 정렬 방식: desc, asc)"),
 	WRONG_TEMPLATE_TYPE(4005, HttpStatus.BAD_REQUEST, "잘못된 템플릿 타입(타입: free, paid)"),
+	NO_IMAGES(4006, HttpStatus.BAD_REQUEST, "적어도 하나의 사진이 필요합니다"),
 
 	// review
 	NO_SUCH_REVIEW(5001, HttpStatus.BAD_REQUEST, "해당 리뷰를 찾을 수 없습니다."),

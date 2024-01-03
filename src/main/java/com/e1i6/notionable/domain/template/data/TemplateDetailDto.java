@@ -1,4 +1,4 @@
-package com.e1i6.notionable.domain.template.data.dto;
+package com.e1i6.notionable.domain.template.data;
 
 import lombok.Builder;
 import lombok.Data;

@@ -60,6 +60,10 @@ public class AwsS3Service {
         return amazonS3Client.getUrl(bucketName, fileName).toString();
     }
 
+    public String getFileNameFromUrl(String url) {
+        return url.substring(url.lastIndexOf('/') + 1);
+    }
+
     private String createFileName(String fileName) {
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
     }

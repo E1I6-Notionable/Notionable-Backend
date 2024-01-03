@@ -1,8 +1,9 @@
 package com.e1i6.notionable.domain.template.entity;
 
 import com.e1i6.notionable.domain.review.entity.Review;
-import com.e1i6.notionable.domain.template.data.dto.TemplateDetailDto;
-import com.e1i6.notionable.domain.template.data.dto.TemplateDto;
+import com.e1i6.notionable.domain.template.data.TemplateDetailDto;
+import com.e1i6.notionable.domain.template.data.TemplateDto;
+import com.e1i6.notionable.domain.template.data.TemplateUpdateDto;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.global.common.entity.BaseTimeEntity;
 import lombok.AllArgsConstructor;
@@ -52,6 +53,16 @@ public class Template extends BaseTimeEntity {
 
     @ElementCollection
     private List<String> images = new ArrayList<>();
+
+    public void updateTemplate(TemplateUpdateDto reqDto) {
+        this.title = reqDto.getTitle();
+        this.content = reqDto.getContent();
+        this.category = reqDto.getCategory();
+        this.price = reqDto.getPrice();
+        this.notionUrl = reqDto.getNotionUrl();
+        this.thumbnail = reqDto.getThumbnail();
+        this.images = reqDto.getImageUrls();
+    }
 
     public static TemplateDto toTemplateDto(Template template) {
         return TemplateDto.builder()
