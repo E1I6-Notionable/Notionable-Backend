@@ -51,6 +51,8 @@ public class Template extends BaseTimeEntity {
     @NotNull
     private String notionUrl;
 
+    private Integer goodRateCount;
+
     @ElementCollection
     private List<String> images = new ArrayList<>();
 
@@ -90,5 +92,13 @@ public class Template extends BaseTimeEntity {
                 .imageUrls(imageUrlList)
                 .createdAt(template.getCreatedAt().toString())
                 .build();
+    }
+
+    public void plusGoodRateCount() {
+        this.goodRateCount++;
+    }
+
+    public void minusGoodRateCount() {
+        this.goodRateCount--;
     }
 }
