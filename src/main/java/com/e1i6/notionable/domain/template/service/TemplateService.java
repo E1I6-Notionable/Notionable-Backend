@@ -221,4 +221,14 @@ public class TemplateService {
         return "template delete success";
     }
 
+    public Integer getGoodReviewPercent(Long templateId) {
+        Template template = templateRepository.findById(templateId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_TEMPLATE));
+
+        Integer reviewCount = template.getReviewList().size();
+        if (reviewCount == 0)
+            return 0;
+
+        return ((template.getGoodRateCount() * 100) / reviewCount);
+    }
 }
