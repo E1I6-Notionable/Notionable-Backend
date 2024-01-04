@@ -32,6 +32,7 @@ public class ReviewService {
     private final TemplateRepository templateRepository;
     private final AwsS3Service awsS3Service;
 
+    @Transactional
     public String createReview(
             Long userId,
             ReviewUploadReqDto reqDto,
@@ -65,6 +66,11 @@ public class ReviewService {
 
         reviewRepository.save(newReview);
 
+        if (newReview.getRate().equals("만족해요")) {
+            template.plusGoodRateCount();
+            templateRepository.save(template);
+        }
+
         return "review create success";
     }
 
@@ -96,6 +102,20 @@ public class ReviewService {
 
         if (userId != user.getUserId()) {
             throw new ResponseException(ResponseCode.NO_AUTHORIZATION);
+        }
+
+        // rate 변경된 경우
+        if (!reqDto.getRate().equals(review.getRate())) {
+            if (reqDto.getRate().equals("만족해요")) {
+                log.info("plus Good Rate count {}", review.getTemplate().getGoodRateCount());
+                review.getTemplate().plusGoodRateCount();
+                log.info("after {}", review.getTemplate().getGoodRateCount());
+            }
+            else {
+                log.info("minus Good Rate count {}", review.getTemplate().getGoodRateCount());
+                review.getTemplate().minusGoodRateCount();
+                log.info("after {}", review.getTemplate().getGoodRateCount());
+            }
         }
 
         List<String> newImages = new ArrayList<>();
@@ -142,7 +162,6 @@ public class ReviewService {
             }
         }
 
-        reviewRepository.save(review);
         return "update review success";
     }
 
@@ -159,6 +178,10 @@ public class ReviewService {
 
         review.getImages().forEach(awsS3Service::deleteFile);
 
+        if (review.getRate().equals("만족해요")) {
+            review.getTemplate().minusGoodRateCount();
+            templateRepository.save(review.getTemplate());
+        }
         reviewRepository.delete(review);
         return "review delete success";
     }

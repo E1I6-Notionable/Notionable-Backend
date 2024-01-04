@@ -67,6 +67,7 @@ public class TemplateService {
                 .images(uploadedFileNames)
                 .price(reqDto.getPrice())
                 .notionUrl(reqDto.getNotionUrl())
+                .goodRateCount(0)
                 .category(reqDto.getCategory())
                 .build());
 
@@ -74,8 +75,8 @@ public class TemplateService {
     }
 
     public List<TemplateDto> getRecommendFreeTemplates() {
-        // 가장 최근 무료 템플릿 5개
-        List<Template> templateList = templateRepository.findRecentFree();
+        // "만족해요" 평가가 가장 많은 리뷰 수를 가진 무료 템플릿 5개
+        List<Template> templateList = templateRepository.findTop5ByPriceEqualsOrderByGoodRateCountDesc(0);
         List<TemplateDto> templateDtoList = new ArrayList<>();
         templateList.forEach(template -> templateDtoList.add(Template.toTemplateDto(template)));
 
@@ -83,8 +84,8 @@ public class TemplateService {
     }
 
     public List<TemplateDto> getRecommendPaidTemplates() {
-        // 가장 최근 유료 템플릿 5개
-        List<Template> templateList = templateRepository.findRecentPaid();
+        // "만족해요" 평가가 가장 많은 리뷰 수를 가진 유료 템플릿 5개
+        List<Template> templateList = templateRepository.findTop5ByPriceGreaterThanOrderByGoodRateCountDesc(0);
         List<TemplateDto> templateDtoList = new ArrayList<>();
         templateList.forEach(template -> templateDtoList.add(Template.toTemplateDto(template)));
 
