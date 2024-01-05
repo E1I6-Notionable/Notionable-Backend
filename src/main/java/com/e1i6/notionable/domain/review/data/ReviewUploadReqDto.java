@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ReviewReqDto {
+public class ReviewUploadReqDto {
     private Long templateId;
     private String rate;
     private String content;
