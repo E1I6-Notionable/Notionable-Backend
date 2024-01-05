@@ -26,6 +26,7 @@ public class WebSecurityConfig {
 			"/login/**",
 			"/signup/**",
 		    "/auth/email",
+			"/find-password",
 
 			// template
 			"/template/recommend-free",
