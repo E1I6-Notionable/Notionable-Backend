@@ -22,10 +22,12 @@ import lombok.RequiredArgsConstructor;
 public class WebSecurityConfig {
 
 	private static final String[] PERMITTED_URLS = {
+			// user
 			"/",
 			"/login/**",
 			"/signup/**",
 		    "/auth/email",
+			"/social/login",
 
 			// template
 			"/template/recommend-free",
