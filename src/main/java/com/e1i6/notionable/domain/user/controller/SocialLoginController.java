@@ -15,6 +15,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(value = "/login/oauth2")
 public class SocialLoginController {
     private final SocialLoginService socialLoginService;
+
+    @GetMapping("")
+    public BaseResponse<String> getAllCommunity() {
+        log.info("여기왔나?");
+        return new BaseResponse<>("성공했습니다");
+    }
+
     @GetMapping(value = "/code/kakao", produces = "application/json")
     public BaseResponse<SocialLoginResDto> kakaoCallback(@RequestParam String code) throws JsonProcessingException {
         SocialLoginResDto socialLoginResDto = socialLoginService.socialLogin(code,"kakao");
