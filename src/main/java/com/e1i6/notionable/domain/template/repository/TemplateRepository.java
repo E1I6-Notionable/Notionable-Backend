@@ -32,6 +32,29 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
 
     Page<Template> findAllByCategoryAndPriceGreaterThan(String category, Integer price, Pageable pageable);
 
+
+    List<Template> findTop5ByPriceEqualsOrderByGoodRateCountDesc(Integer price);
+
+    List<Template> findTop5ByPriceGreaterThanOrderByGoodRateCountDesc(Integer price);
+
+    @Query("SELECT template FROM Template template " +
+            "WHERE LOWER(REPLACE(template.category, ' ', '')) LIKE LOWER(CONCAT('%', :category, '%')) AND " +
+                "LOWER(REPLACE(template.title, ' ', '')) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<Template> findTemplateWithFilter(String category, String keyword, Pageable pageable);
+
+    @Query("SELECT template FROM Template template " +
+            "WHERE template.price = 0 AND " +
+                "LOWER(REPLACE(template.category, ' ', '')) LIKE LOWER(CONCAT('%', :category, '%')) AND " +
+                "LOWER(REPLACE(template.title, ' ', '')) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<Template> findFreeTemplateWithFilter(String category, String keyword, Pageable pageable);
+
+    @Query("SELECT template FROM Template template " +
+            "WHERE template.price > 0 AND " +
+                "LOWER(REPLACE(template.category, ' ', '')) LIKE LOWER(CONCAT('%', :category, '%')) AND " +
+                "LOWER(REPLACE(template.title, ' ', '')) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<Template> findPaidTemplateWithFilter(String category, String keyword, Pageable pageable);
+
     @Query("SELECT thumbnail FROM Template WHERE templateId = :templateId")
     String findThumbnailByTemplateId(@Param("templateId") Long templateId);
+
 }
