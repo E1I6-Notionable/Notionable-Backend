@@ -5,7 +5,7 @@ import javax.persistence.*;
 import com.e1i6.notionable.domain.cart.Entity.Cart;
 import com.e1i6.notionable.domain.review.entity.Review;
 import com.e1i6.notionable.domain.template.entity.Template;
-import com.e1i6.notionable.domain.user.data.dto.request.SocialLoginReqDto;
+import com.e1i6.notionable.domain.user.data.dto.request.AddSocialLoginUserReqDto;
 import com.e1i6.notionable.global.common.entity.BaseTimeEntity;
 import com.sun.istack.NotNull;
 
@@ -43,16 +43,20 @@ public class User extends BaseTimeEntity {
 	@OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true)
 	private List<Review> reviewList = new ArrayList<>();
 
-	public User(SocialLoginReqDto socialLoginReqDto) {
-		this.email = socialLoginReqDto.getEmail();
-		this.password = socialLoginReqDto.getPassword();
-		this.userType = socialLoginReqDto.getUserType();
-		this.nickName = socialLoginReqDto.getNickName();
-		this.profile = socialLoginReqDto.getProfile();
-		this.phoneNumber = socialLoginReqDto.getPhoneNumber();
+	public User(AddSocialLoginUserReqDto addSocialLoginUserReqDto) {
+		this.email = addSocialLoginUserReqDto.getEmail();
+		this.password = addSocialLoginUserReqDto.getPassword();
+		this.userType = addSocialLoginUserReqDto.getUserType();
+		this.nickName = addSocialLoginUserReqDto.getNickName();
+		this.profile = addSocialLoginUserReqDto.getProfile();
+		this.phoneNumber = addSocialLoginUserReqDto.getPhoneNumber();
 		//role
 	}
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Cart> cartItems;
+
+	public void changePassword(String newPassword) {
+		this.password = newPassword;
+	}
 }

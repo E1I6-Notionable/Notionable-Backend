@@ -1,5 +1,6 @@
 package com.e1i6.notionable.domain.user.controller;
 
+import com.e1i6.notionable.domain.user.data.dto.request.SocialLoginReqDto;
 import com.e1i6.notionable.domain.user.data.dto.response.SocialLoginResDto;
 import com.e1i6.notionable.domain.user.service.SocialLoginService;
 import com.e1i6.notionable.global.common.response.BaseResponse;
@@ -16,10 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 public class SocialLoginController {
     private final SocialLoginService socialLoginService;
 
-    @GetMapping("")
-    public BaseResponse<String> getAllCommunity() {
-        log.info("여기왔나?");
-        return new BaseResponse<>("성공했습니다");
+    @PostMapping("/social/login")
+    public BaseResponse<SocialLoginResDto> socialLogin (
+            @RequestBody SocialLoginReqDto reqDto) throws JsonProcessingException {
+        SocialLoginResDto socialLoginResDto = socialLoginService.socialLogin(reqDto.getCode(),reqDto.getSocialType());
+        return new BaseResponse<>(socialLoginResDto);
     }
 
     @GetMapping(value = "/code/kakao", produces = "application/json")

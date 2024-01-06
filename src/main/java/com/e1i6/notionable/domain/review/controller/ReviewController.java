@@ -1,12 +1,12 @@
 package com.e1i6.notionable.domain.review.controller;
 
 import com.e1i6.notionable.domain.review.data.ReviewDto;
-import com.e1i6.notionable.domain.review.data.ReviewReqDto;
+import com.e1i6.notionable.domain.review.data.ReviewUpdateReqDto;
+import com.e1i6.notionable.domain.review.data.ReviewUploadReqDto;
 import com.e1i6.notionable.domain.review.service.ReviewService;
 import com.e1i6.notionable.global.common.response.BaseResponse;
 import com.e1i6.notionable.global.common.response.ResponseCode;
 import com.e1i6.notionable.global.common.response.ResponseException;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,13 +24,13 @@ public class ReviewController {
 
     @PostMapping("")
     public BaseResponse<String> createReview(
-            @RequestPart ReviewReqDto reqDto,
-            @RequestPart("files") List<MultipartFile> multipartFiles) {
+            @RequestPart ReviewUploadReqDto reqDto,
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.parseLong(authentication.getName());
 
         try {
-            return new BaseResponse<>(reviewService.createComment(userId, reqDto, multipartFiles));
+            return new BaseResponse<>(reviewService.createReview(userId, reqDto, multipartFiles));
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
@@ -49,25 +49,35 @@ public class ReviewController {
         }
     }
 
-
-    @PatchMapping("/{commentId}")
-    public BaseResponse<ReviewDto> updateReview(
-            @PathVariable Long commentId,
-            @RequestPart ReviewDto reqDto,
-            @RequestPart("files") List<MultipartFile> multipartFiles) {
-        return null;
-    }
-
-    @DeleteMapping("/{commentId}")
-    public BaseResponse<String> deleteReview(@PathVariable Long commentId) {
+    @PutMapping("/{reviewId}")
+    public BaseResponse<String> updateReview(
+            @PathVariable Long reviewId,
+            @RequestPart ReviewUpdateReqDto reqDto,
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.parseLong(authentication.getName());
 
         try {
-            String result = reviewService.deleteReview(userId, commentId);
-            return new BaseResponse<>(result);
+            return new BaseResponse<>(reviewService.updateReview(userId, reviewId, reqDto, multipartFiles));
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
-            return new BaseResponse<>(e.getMessage());
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public BaseResponse<String> deleteReview(@PathVariable Long reviewId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+
+        try {
+            String result = reviewService.deleteReview(userId, reviewId);
+            return new BaseResponse<>(result);
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 }
