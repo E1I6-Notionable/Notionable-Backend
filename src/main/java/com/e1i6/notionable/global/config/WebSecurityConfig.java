@@ -36,8 +36,13 @@ public class WebSecurityConfig {
 			// review
 			"/template/review/list/*",
 
+			//community
+			"/community/**",
+
 			"/test/*",
 			"/favicon.ico"
+
+
 	};
 
 	@Bean
