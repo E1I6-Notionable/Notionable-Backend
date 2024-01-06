@@ -25,7 +25,11 @@ public class Creator {
     private String creatorType; // 입점형태(크리에이터 타입)
     private String bank; // 은행
     private String accountNumber; // 계좌번호
-    private String bankStatementUrl; // 통장 사본 링크
+    private String backPaperUrl; // 통장 사본 링크
     private String identificationUrl; // 신분증 사본 링크
+    private String status; // accepted, rejected, waited
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

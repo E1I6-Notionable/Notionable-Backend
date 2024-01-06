@@ -3,6 +3,7 @@ package com.e1i6.notionable.domain.user.entity;
 import javax.persistence.*;
 
 import com.e1i6.notionable.domain.cart.entity.Cart;
+import com.e1i6.notionable.domain.creator.entity.Creator;
 import com.e1i6.notionable.domain.review.entity.Review;
 import com.e1i6.notionable.domain.template.entity.Template;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
@@ -65,5 +66,15 @@ public class User extends BaseTimeEntity {
 
 		this.nickName = userDto.getNickName();
 		this.profile = userDto.getProfile();
+	}
+
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Creator creator;
+
+	// 나머지 필드...
+
+	public void linkCreator(Creator creator) {
+		this.creator = creator;
+		creator.setUser(this);
 	}
 }

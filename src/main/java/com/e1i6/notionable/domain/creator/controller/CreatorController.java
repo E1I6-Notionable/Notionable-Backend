@@ -1,7 +1,11 @@
 package com.e1i6.notionable.domain.creator.controller;
 
+import com.e1i6.notionable.domain.cart.dto.CartDto;
+import com.e1i6.notionable.domain.creator.dto.CreatorDto;
 import com.e1i6.notionable.domain.creator.service.CreatorService;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
+import com.e1i6.notionable.global.auth.JwtProvider;
+import com.e1i6.notionable.global.auth.JwtUtil;
 import com.e1i6.notionable.global.common.response.BaseResponse;
 import com.e1i6.notionable.global.common.response.ResponseCode;
 import com.e1i6.notionable.global.common.response.ResponseException;
@@ -17,9 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class CreatorController {
 
     private final CreatorService creatorService;
+    private final JwtProvider jwtProvider;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/creator/register")
-    public BaseResponse<UserDto> getMyProfile(@RequestHeader("Authorization") String authorizationHeader) {
+    public BaseResponse<UserDto> creatorRegister(@RequestHeader("Authorization") String authorizationHeader,
+                                              CreatorDto creatorDto) {
         try {
             // 헤더에서 JWT 토큰 추출
             String accessToken = authorizationHeader.replace("Bearer ", "");
@@ -29,7 +36,7 @@ public class CreatorController {
             if (jwtProvider.validateToken(accessToken))
                 userIdDto = jwtUtil.getUserFromToken(accessToken);
 
-            UserDto userDto = profileService.getMyProfile(userIdDto.getUserId());
+
 
 
             return new BaseResponse<>(userDto);
