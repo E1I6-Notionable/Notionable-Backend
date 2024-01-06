@@ -22,6 +22,7 @@ public enum ResponseCode {
 	NO_SUCH_USER(1001, HttpStatus.BAD_REQUEST, "해당 유저가 없습니다."),
 	WRONG_PASSWORD(1002, HttpStatus.BAD_REQUEST, "잘못된 비밀번호 입니다."),
 	SAME_EMAIL_EXIST(1003, HttpStatus.BAD_REQUEST, "해당 이메일의 계정이 이미 존재합니다"),
+	PASSWORD_CHECK_FAIL(1004, HttpStatus.BAD_REQUEST, "비밀번호와 비밀번호 확인이 일치하지 않습니다"),
 
 	// payment
 	PAYMENT_ERROR(2001, HttpStatus.BAD_REQUEST, "payment fail"),

@@ -42,16 +42,6 @@ public class MailService {
 		return randomString; //인증 코드 반환
 	}
 
-	public String sendPasswordEmail(String toEmail, String password)
-			throws MessagingException, UnsupportedEncodingException {
-		//메일전송에 필요한 정보 설정
-		MimeMessage emailForm = createPasswordMail(toEmail, password);
-		//실제 메일 전송
-		javaMailSender.send(emailForm);
-
-		return randomString; //인증 코드 반환
-	}
-
 	private MimeMessage createAuthMail(String mail) throws MessagingException, UnsupportedEncodingException {
 		generateRandomCode();
 		MimeMessage message = javaMailSender.createMimeMessage();
@@ -59,33 +49,26 @@ public class MailService {
 		message.setFrom(new InternetAddress(senderEmail, "notionable"));
 		message.setRecipients(MimeMessage.RecipientType.TO, mail);
 		message.setSubject("[notionable] 이메일 인증");
-		message.setText(setContext(randomString), "utf-8", "html");
+		message.setText(setContext(randomString, "authMail"), "utf-8", "html");
 
 		return message;
-
-		/*
-		String body = "";
-		body += "<h3>" + "요청하신 인증코드입니다." + "</h3>";
-		body += "<h1>" + randomString + "</h1>";
-		body += "<h3>" + "감사합니다." + "</h3>";
-		message.setText(body, "UTF-8", "html");*/
-
 	}
 
-	private MimeMessage createPasswordMail(String mail, String password)
-			throws MessagingException, UnsupportedEncodingException {
+	public void sendNewPasswordEmail(String email, String newPassword) throws MessagingException, UnsupportedEncodingException {
+		//메일전송에 필요한 정보 설정
+		MimeMessage emailForm = createNewPasswordMail(email, newPassword);
+		//실제 메일 전송
+		javaMailSender.send(emailForm);
+	}
 
+	private MimeMessage createNewPasswordMail(String mail, String newPassword) throws MessagingException, UnsupportedEncodingException {
+		generateRandomCode();
 		MimeMessage message = javaMailSender.createMimeMessage();
 		senderEmail = env.getProperty("spring.mail.username");
-
 		message.setFrom(new InternetAddress(senderEmail, "notionable"));
 		message.setRecipients(MimeMessage.RecipientType.TO, mail);
-		message.setSubject("[notionable] 이메일 인증");
-		String body = "";
-		body += "<h3>" + "임시로 설정된 비밀번호입니다. 이후에 비밀번호를 변경해 주세요." + "</h3>";
-		body += "<h1>" + password + "</h1>";
-		body += "<h3>" + "감사합니다." + "</h3>";
-		message.setText(body, "UTF-8", "html");
+		message.setSubject("[notionable] 비밀번호 변경 안내");
+		message.setText(setContext(newPassword, "findPasswordMail"), "utf-8", "html");
 
 		return message;
 	}
@@ -104,10 +87,10 @@ public class MailService {
 	}
 
 	//타임리프를 이용한 context 설정
-	public String setContext(String code) {
+	public String setContext(String code, String template) {
 		Context context = new Context();
 		context.setVariable("code", code);
 
-		return templateEngine.process("mail", context); //mail.html
+		return templateEngine.process(template, context); //authMail.html
 	}
 }
