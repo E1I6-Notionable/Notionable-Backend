@@ -25,7 +25,7 @@ public class CreatorController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/creator/register")
-    public BaseResponse<UserDto> creatorRegister(@RequestHeader("Authorization") String authorizationHeader,
+    public BaseResponse<CreatorDto> creatorRegister(@RequestHeader("Authorization") String authorizationHeader,
                                               CreatorDto creatorDto) {
         try {
             // 헤더에서 JWT 토큰 추출
@@ -36,10 +36,9 @@ public class CreatorController {
             if (jwtProvider.validateToken(accessToken))
                 userIdDto = jwtUtil.getUserFromToken(accessToken);
 
+            CreatorDto creatordto = creatorService.creatorRegister(userIdDto.getUserId(), creatorDto);
 
-
-
-            return new BaseResponse<>(userDto);
+            return new BaseResponse<>(creatordto);
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode());
         } catch (Exception e) {
