@@ -1,7 +1,7 @@
 package com.e1i6.notionable.domain.community.controller;
 
-import com.e1i6.notionable.domain.community.dto.CommunityReq;
-import com.e1i6.notionable.domain.community.dto.CommunityRes;
+import com.e1i6.notionable.domain.community.dto.community.CommunityReq;
+import com.e1i6.notionable.domain.community.dto.community.CommunityListRes;
 import com.e1i6.notionable.domain.community.service.CommunityServiceImpl;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.global.auth.JwtProvider;
@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,15 +28,15 @@ public class CommunityController {
     private final JwtProvider jwtProvider;
     private final JwtUtil jwtUtil;
 
-//    게시글 조회
+//    게시글 목록 조회
     @GetMapping("/all")
-    public BaseResponse<?> getAllCommunity(@RequestParam(required = false) String keyword,
+    public BaseResponse<?> getCommunity(@RequestParam(required = false) String keyword,
                                                             @RequestParam(required = false) String filter,
                                                          @PageableDefault(size = 5, sort = "createdAt",
                                                                     direction = Sort.Direction.DESC)
                                                             Pageable pageable) {
         try {
-            List<CommunityRes> communityList = communityService.getAllCommunity(keyword, filter, pageable);
+            List<CommunityListRes> communityList = communityService.getCommunity(keyword, filter, pageable);
             return new BaseResponse<>(communityList);
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());
@@ -44,11 +45,12 @@ public class CommunityController {
         }
     }
 
-
+    // 게시글 작성
     @PostMapping("/add")
-    public BaseResponse<?> addMyCommunityInformation(
+    public BaseResponse<Long> addCommunity(
             @RequestHeader("Authorization") String authorizationHeader,
-            @RequestBody CommunityReq communityReq){
+            @RequestPart CommunityReq communityReq,
+            @RequestPart("files") List<MultipartFile> multipartFiles){
         try {
             // 헤더에서 JWT 토큰 추출
             String accessToken = authorizationHeader.replace("Bearer ", "");
@@ -58,16 +60,20 @@ public class CommunityController {
             if (jwtProvider.validateToken(accessToken))
                 userDto = jwtUtil.getUserFromToken(accessToken);
 
-            // 커뮤니티 글쓰기
-            CommunityReq communityInformation = communityService.addCommunityInformation(userDto.getUserId(), communityReq);
-
-            // 커뮤니티에 추가된 데이터 반환
-            return new BaseResponse<>(communityInformation);
+            // 추가한 커뮤니티 id 반환
+            return new BaseResponse<>(communityService.addCommunity(userDto.getUserId(), multipartFiles,communityReq));
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
             return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
+    }
+
+    // 게시글 상세조회
+    @GetMapping("/{communityId}")
+    public BaseResponse<?> getCommunityDetail(@PathVariable Long communityId)
+    {
+        return new BaseResponse<>(communityService.getCommunityDetail(communityId));
     }
 
 
