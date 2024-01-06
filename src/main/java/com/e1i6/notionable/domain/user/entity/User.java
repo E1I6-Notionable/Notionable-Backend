@@ -2,7 +2,7 @@ package com.e1i6.notionable.domain.user.entity;
 
 import javax.persistence.*;
 
-import com.e1i6.notionable.domain.cart.Entity.Cart;
+import com.e1i6.notionable.domain.cart.entity.Cart;
 import com.e1i6.notionable.domain.review.entity.Review;
 import com.e1i6.notionable.domain.template.entity.Template;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;

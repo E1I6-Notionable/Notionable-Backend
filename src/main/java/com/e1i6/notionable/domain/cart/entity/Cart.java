@@ -1,4 +1,4 @@
-package com.e1i6.notionable.domain.cart.Entity;
+package com.e1i6.notionable.domain.cart.entity;
 
 import com.e1i6.notionable.domain.user.entity.User;
 import lombok.AllArgsConstructor;
