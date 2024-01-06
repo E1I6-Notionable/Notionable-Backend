@@ -26,14 +26,16 @@ public class WebSecurityConfig {
 			"/",
 			"/login/**",
 			"/signup/**",
-		    "/auth/email",
+		  "/auth/email",
 			"/social/login",
+			"/find-password",
 
 			// template
 			"/template/recommend-free",
 			"/template/recommend-paid",
 			"/template/filter",
 			"/template/detail/*",
+			"/template/review-percent/*",
 
 			// review
 			"/template/review/list/*",
