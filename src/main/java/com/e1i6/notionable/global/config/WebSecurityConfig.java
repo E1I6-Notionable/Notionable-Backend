@@ -41,7 +41,7 @@ public class WebSecurityConfig {
 			"/template/review/list/*",
 
 			//community
-			"/community/**",
+			"/posts/**",
 
 			"/test/*",
 			"/favicon.ico"
