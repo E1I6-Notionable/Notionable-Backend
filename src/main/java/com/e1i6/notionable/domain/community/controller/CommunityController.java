@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/community")
+@RequestMapping(value = "/posts")
 @Slf4j
 public class CommunityController {
     private final CommunityServiceImpl communityService;
@@ -28,7 +28,7 @@ public class CommunityController {
     private final JwtUtil jwtUtil;
 
 //    게시글 조회
-    @GetMapping("")
+    @GetMapping("/all")
     public BaseResponse<?> getAllCommunity(@RequestParam(required = false) String keyword,
                                                             @RequestParam(required = false) String filter,
                                                          @PageableDefault(size = 5, sort = "createdAt",
