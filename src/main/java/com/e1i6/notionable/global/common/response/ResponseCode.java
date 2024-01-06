@@ -43,7 +43,10 @@ public enum ResponseCode {
 	NO_AUTHORIZATION(5002, HttpStatus.BAD_REQUEST, "해당 권한이 없습니다."),
 
 	// cart
-	DELETE_CART_ITEM_FAILED(6001, HttpStatus.BAD_REQUEST,"장바구니에서 해당 템플릿을 삭제하는데 실패하였습니다.");
+	DELETE_CART_ITEM_FAILED(6001, HttpStatus.BAD_REQUEST,"장바구니에서 해당 템플릿을 삭제하는데 실패하였습니다."),
+
+	//community
+	NO_SUCH_COMMUNITY(7001, HttpStatus.BAD_REQUEST, "해당 게시글을 찾을 수 없습니다.");
 
 	private final Integer code;
 	private final HttpStatus httpStatus;
