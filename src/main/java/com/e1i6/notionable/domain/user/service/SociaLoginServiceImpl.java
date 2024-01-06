@@ -1,6 +1,6 @@
 package com.e1i6.notionable.domain.user.service;
 
-import com.e1i6.notionable.domain.user.data.dto.request.SocialLoginReqDto;
+import com.e1i6.notionable.domain.user.data.dto.request.AddSocialLoginUserReqDto;
 import com.e1i6.notionable.domain.user.data.dto.response.SocialLoginResDto;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
@@ -41,6 +41,7 @@ public class SociaLoginServiceImpl implements SocialLoginService{
     private String KAKAO_RESOURCE_URI;
     @Value("${oauth.kakao.user-resource-uri}")
     private String KAKAO_USER_INFO;
+
     //Naver
     @Value("${oauth.naver.client-id}")
     private String NAVER_CLIENT_ID;
@@ -52,6 +53,7 @@ public class SociaLoginServiceImpl implements SocialLoginService{
     private String NAVER_RESOURCE_URI;
     @Value("${oauth.naver.user-resource-uri}")
     private String NAVER_USER_INFO;
+
     //Google
     @Value("${oauth.google.client-id}")
     private String GOOGLE_CLIENT_ID;
@@ -178,7 +180,7 @@ public class SociaLoginServiceImpl implements SocialLoginService{
         if(is_email_verified.equals("true")){
             Optional<User> userByKakao= userRepository.findUserByEmail(email);
 
-            if(userByKakao .isPresent()){
+            if(userByKakao.isPresent()){
                 User user = userByKakao.get();
                 return SocialLoginResDto.builder()
                         .jwtDto(jwtProvider.generateToken(user.getUserId()))
@@ -188,7 +190,7 @@ public class SociaLoginServiceImpl implements SocialLoginService{
                         .profile(user.getProfile())
                         .build();
             } else{
-                SocialLoginReqDto newKakaoUserDto = SocialLoginReqDto.builder()
+                AddSocialLoginUserReqDto newKakaoUserDto = AddSocialLoginUserReqDto.builder()
                         .email(email)
                         .password(bCryptPasswordEncoder.encode(UUID.randomUUID().toString()))
                         .userType(2)
@@ -228,7 +230,7 @@ public class SociaLoginServiceImpl implements SocialLoginService{
                     .profile(user.getProfile())
                     .build();
         } else{
-            SocialLoginReqDto newNaverUserDto = SocialLoginReqDto.builder()
+            AddSocialLoginUserReqDto newNaverUserDto = AddSocialLoginUserReqDto.builder()
                     .email(email)
                     .password(bCryptPasswordEncoder.encode(UUID.randomUUID().toString()))
                     .userType(3)
@@ -269,7 +271,7 @@ public class SociaLoginServiceImpl implements SocialLoginService{
                         .profile(user.getProfile())
                         .build();
             } else {
-                SocialLoginReqDto newGoogleUserDto = SocialLoginReqDto.builder()
+                AddSocialLoginUserReqDto newGoogleUserDto = AddSocialLoginUserReqDto.builder()
                         .email(email)
                         .password(bCryptPasswordEncoder.encode(UUID.randomUUID().toString()))
                         .userType(1)
