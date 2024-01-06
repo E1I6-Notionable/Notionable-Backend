@@ -21,7 +21,7 @@ public class ProfileController {
     private final JwtProvider jwtProvider;
     private final JwtUtil jwtUtil;
 
-    // 마이페이지 - 내 정보 수정
+    // 마이페이지 - 내 정보 조회
     @GetMapping("/my-profile")
     public BaseResponse<UserDto> getMyProfile(@RequestHeader("Authorization") String authorizationHeader) {
         try {
@@ -44,6 +44,7 @@ public class ProfileController {
         }
     }
 
+    // 마이페이지 - 내 정보 수정
     @PatchMapping("/my-profile/modify")
     public BaseResponse<UserDto> modifyMyProfile(@RequestHeader("Authorization") String authorizationHeader,
                                                  @RequestBody UserDto modifyUserDto){
