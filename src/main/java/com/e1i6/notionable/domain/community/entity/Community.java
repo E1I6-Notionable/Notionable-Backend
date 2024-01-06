@@ -1,6 +1,7 @@
-package com.e1i6.notionable.domain.cart.Entity;
+package com.e1i6.notionable.domain.community.entity;
 
 import com.e1i6.notionable.domain.user.entity.User;
+import com.e1i6.notionable.global.common.entity.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,23 +14,17 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "CART")
-public class Cart {
-
+public class Community extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id")
-    private Long item_Id;
-    private Long template_id;
+    private Long communityId;
 
-    private String thumbnail;
-    private String creator;
-    private String attribute;
-    private String template_url;
-    private Integer price;
+    private String category;
+    private Long communityLike;
     private String title;
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_Id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

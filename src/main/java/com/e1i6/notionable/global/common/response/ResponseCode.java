@@ -40,7 +40,10 @@ public enum ResponseCode {
 
 	// review
 	NO_SUCH_REVIEW(5001, HttpStatus.BAD_REQUEST, "해당 리뷰를 찾을 수 없습니다."),
-	NO_AUTHORIZATION(5002, HttpStatus.BAD_REQUEST, "해당 권한이 없습니다.");
+	NO_AUTHORIZATION(5002, HttpStatus.BAD_REQUEST, "해당 권한이 없습니다."),
+
+	// cart
+	DELETE_CART_ITEM_FAILED(6001, HttpStatus.BAD_REQUEST,"장바구니에서 해당 템플릿을 삭제하는데 실패하였습니다.");
 
 	private final Integer code;
 	private final HttpStatus httpStatus;
