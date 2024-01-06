@@ -43,4 +43,25 @@ public class ProfileController {
             return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
+    @PatchMapping("/my-profile/modify")
+    public BaseResponse<UserDto> modifyMyProfile(@RequestHeader("Authorization") String authorizationHeader,
+                                                 @RequestBody UserDto modifyUserDto){
+        try {
+            // 헤더에서 JWT 토큰 추출
+            String accessToken = authorizationHeader.replace("Bearer ", "");
+            UserDto userIdDto = null;
+
+            // 토큰 검증
+            if (jwtProvider.validateToken(accessToken))
+                userIdDto = jwtUtil.getUserFromToken(accessToken);
+
+
+            return new BaseResponse<>(profileService.modifyMyProfile(userIdDto.getUserId(), modifyUserDto));
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode());
+        } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
 }
