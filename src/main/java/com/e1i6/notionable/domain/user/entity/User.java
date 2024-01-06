@@ -9,6 +9,7 @@ import com.e1i6.notionable.domain.template.entity.Template;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.domain.user.data.dto.request.AddSocialLoginUserReqDto;
 import com.e1i6.notionable.global.common.entity.BaseTimeEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -39,12 +40,15 @@ public class User extends BaseTimeEntity {
 	private String profile;
 	private String phoneNumber;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true)
 	private List<Template> templateList = new ArrayList<>();
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true)
 	private List<Review> reviewList = new ArrayList<>();
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Cart> cartItems;
 
@@ -59,22 +63,19 @@ public class User extends BaseTimeEntity {
 		this.nickName = addSocialLoginUserReqDto.getNickName();
 		this.profile = addSocialLoginUserReqDto.getProfile();
 		this.phoneNumber = addSocialLoginUserReqDto.getPhoneNumber();
+		this.creator = new Creator();
 		//role
 	}
 
 	public void modifyUserProfile(UserDto userDto) {
-
 		this.nickName = userDto.getNickName();
 		this.profile = userDto.getProfile();
 	}
 
-	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private Creator creator;
 
-	// 나머지 필드...
-
-	public void linkCreator(Creator creator) {
+	public void setCreator(Creator creator) {
 		this.creator = creator;
-		creator.setUser(this);
 	}
 }

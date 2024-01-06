@@ -10,10 +10,7 @@ import com.e1i6.notionable.global.common.response.BaseResponse;
 import com.e1i6.notionable.global.common.response.ResponseCode;
 import com.e1i6.notionable.global.common.response.ResponseException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,8 +23,8 @@ public class CreatorController {
 
     @PostMapping("/creator/register")
     public BaseResponse<CreatorDto> creatorRegister(@RequestHeader("Authorization") String authorizationHeader,
-                                              CreatorDto creatorDto) {
-        try {
+                                              @RequestBody CreatorDto creatorDto) {
+
             // 헤더에서 JWT 토큰 추출
             String accessToken = authorizationHeader.replace("Bearer ", "");
             UserDto userIdDto = null;
@@ -39,10 +36,5 @@ public class CreatorController {
             CreatorDto creatordto = creatorService.creatorRegister(userIdDto.getUserId(), creatorDto);
 
             return new BaseResponse<>(creatordto);
-        } catch (ResponseException e) {
-            return new BaseResponse<>(e.getErrorCode());
-        } catch (Exception e) {
-            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
     }
 }

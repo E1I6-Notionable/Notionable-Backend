@@ -18,10 +18,6 @@ public class Creator {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long creator_id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", unique = true)
-    private User user;
     private String creatorType; // 입점형태(크리에이터 타입)
     private String bank; // 은행
     private String accountNumber; // 계좌번호
@@ -29,7 +25,7 @@ public class Creator {
     private String identificationUrl; // 신분증 사본 링크
     private String status; // accepted, rejected, waited
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
 }
