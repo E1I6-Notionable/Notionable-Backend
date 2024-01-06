@@ -1,10 +1,8 @@
 package com.e1i6.notionable.domain.community.controller;
 
-import com.e1i6.notionable.domain.cart.dto.CartDto;
 import com.e1i6.notionable.domain.community.dto.CommunityReq;
 import com.e1i6.notionable.domain.community.dto.CommunityRes;
-import com.e1i6.notionable.domain.community.entity.Community;
-import com.e1i6.notionable.domain.community.service.CommunityService;
+import com.e1i6.notionable.domain.community.service.CommunityServiceImpl;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.global.auth.JwtProvider;
 import com.e1i6.notionable.global.auth.JwtUtil;
@@ -13,12 +11,10 @@ import com.e1i6.notionable.global.common.response.ResponseCode;
 import com.e1i6.notionable.global.common.response.ResponseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -27,31 +23,32 @@ import java.util.List;
 @RequestMapping(value = "/community")
 @Slf4j
 public class CommunityController {
-    private final CommunityService communityService;
+    private final CommunityServiceImpl communityService;
     private final JwtProvider jwtProvider;
     private final JwtUtil jwtUtil;
 
+//    게시글 조회
     @GetMapping("")
-    public BaseResponse<String> getAllCommunity() {
-        log.info("여기왔나?");
-        return new BaseResponse<>("성공했습니다");
+    public BaseResponse<?> getAllCommunity(@RequestParam(required = false) String keyword,
+                                                            @RequestParam(required = false) String filter,
+                                                         @PageableDefault(size = 5, sort = "createdAt",
+                                                                    direction = Sort.Direction.DESC)
+                                                            Pageable pageable) {
+        try {
+            List<CommunityRes> communityList = communityService.getAllCommunity(keyword, filter, pageable);
+            return new BaseResponse<>(communityList);
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        }    catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
-
-//    전체글
-//    @GetMapping("")
-//    public BaseResponse<List<CommunityRes>> getAllCommunity(@RequestParam(required = false) String keyword,
-//                                                            @RequestParam(required = false) String filter,
-//                                                            @PageableDefault(size = 5, sort = "community_id",
-//                                                                    direction = Sort.Direction.DESC)
-//                                                                Pageable pageable) {
-//        log.info("여기왔나?");
-//        return new BaseResponse<>(communityService.getAllCommunity(keyword, filter, pageable));
-//    }
 
 
     @PostMapping("/add")
-    public BaseResponse<?> addMyCommunityInformation(@RequestHeader("Authorization") String authorizationHeader
-            , @RequestBody CommunityReq communityReq){
+    public BaseResponse<?> addMyCommunityInformation(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody CommunityReq communityReq){
         try {
             // 헤더에서 JWT 토큰 추출
             String accessToken = authorizationHeader.replace("Bearer ", "");

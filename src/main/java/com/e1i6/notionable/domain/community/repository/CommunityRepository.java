@@ -12,13 +12,20 @@ import java.util.List;
 
 public interface CommunityRepository extends JpaRepository<Community, Long> {
 
-    @Query("SELECT m FROM Community m WHERE (:keyword IS NULL OR m.content LIKE %:keyword% OR m.title LIKE %:keyword%) AND m.category = :filter")
+//    @Query("SELECT c FROM Community c WHERE (:keyword IS NULL OR c.content LIKE %:keyword% OR c.title LIKE %:keyword%) AND c.category = :filter")
+//    Page<Community> findByKeywordAndFilter(@Param("keyword") String keyword,
+//                                                 @Param("filter") String filter,
+//                                                 Pageable pageable);
+
+//    @Query("SELECT c FROM Community c WHERE (:keyword IS NULL OR c.content LIKE %:keyword%) OR (:keyword IS NULL OR c.title LIKE %:keyword%)")
+//    Page<Community> findKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+
+    @Query("select m from Community m where (:keyword is null or m.content like %:keyword% or m.title like %:keyword%) and " +
+            "(:filter is null or m.category = :filter)")
     Page<Community> findByKeywordAndFilter(@Param("keyword") String keyword,
                                                  @Param("filter") String filter,
                                                  Pageable pageable);
-
-    @Query("SELECT m FROM Community m WHERE (:keyword IS NULL OR m.content LIKE %:keyword% OR m.title LIKE %:keyword%)")
-    Page<Community> findByKeyword(@Param("keyword") String keyword,
-                                           Pageable pageable);
+//    List<Community> findByTitleContaining(String keyword);
 
 }
