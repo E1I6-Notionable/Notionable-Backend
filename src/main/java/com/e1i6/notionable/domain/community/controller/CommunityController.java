@@ -1,7 +1,6 @@
 package com.e1i6.notionable.domain.community.controller;
 
 import com.e1i6.notionable.domain.community.dto.community.CommunityReq;
-import com.e1i6.notionable.domain.community.dto.community.CommunityListRes;
 import com.e1i6.notionable.domain.community.service.CommunityServiceImpl;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.global.auth.JwtProvider;
@@ -32,12 +31,11 @@ public class CommunityController {
     @GetMapping("/all")
     public BaseResponse<?> getCommunity(@RequestParam(required = false) String keyword,
                                                             @RequestParam(required = false) String filter,
-                                                         @PageableDefault(size = 5, sort = "createdAt",
+                                                         @PageableDefault(size = 6, sort = "createdAt",
                                                                     direction = Sort.Direction.DESC)
                                                             Pageable pageable) {
         try {
-            List<CommunityListRes> communityList = communityService.getCommunity(keyword, filter, pageable);
-            return new BaseResponse<>(communityList);
+            return new BaseResponse<>(communityService.getCommunity(keyword, filter, pageable));
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());
         }    catch (Exception e) {
