@@ -1,8 +1,7 @@
 package com.e1i6.notionable.domain.community.service;
 
-import com.e1i6.notionable.domain.community.dto.community.CommunityDetailRes;
 import com.e1i6.notionable.domain.community.dto.community.CommunityReq;
-import com.e1i6.notionable.domain.community.dto.community.CommunityListRes;
+import com.e1i6.notionable.domain.community.dto.community.CommunityRes;
 import com.e1i6.notionable.domain.community.entity.Community;
 import com.e1i6.notionable.domain.community.repository.CommunityRepository;
 import com.e1i6.notionable.domain.user.entity.User;
@@ -19,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,13 +28,11 @@ public class CommunityServiceImpl implements CommunityService{
     private final UserRepository userRepository;
 
     //게시글 목록 조회
-    public List<CommunityListRes> getCommunity(String keyword, String filter, Pageable pageable) {
+    public CommunityRes.CommunityListRes getCommunity(String keyword, String filter, Pageable pageable) {
         Page<Community> allCommunity = communityRepository.findByKeywordAndFilter(keyword, filter, pageable);
-        List<CommunityListRes> communityResList = allCommunity.stream()
-                .map(community -> new CommunityListRes(community))
-                .collect(Collectors.toList());
-        return communityResList;
+        return CommunityRes.CommunityListRes.of(allCommunity);
     }
+
 
     //게시글 작성
     public Long addCommunity(Long userId, List<MultipartFile> multipartFiles, CommunityReq communityReq) {
@@ -64,7 +60,7 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     //게시글 상세 조회
-    public CommunityDetailRes getCommunityDetail(Long communityId) {
+    public CommunityRes.CommunityDetailRes getCommunityDetail(Long communityId) {
         Community community = communityRepository.findById(communityId). orElse(null);
         if (community == null){
             throw new ResponseException(ResponseCode.NO_SUCH_COMMUNITY);
@@ -72,7 +68,7 @@ public class CommunityServiceImpl implements CommunityService{
         else{
             List<String> imageUrlList = new ArrayList<>();
             community.getImages().forEach(image -> imageUrlList.add(awsS3Service.getUrlFromFileName(image)));
-            return new CommunityDetailRes(community, imageUrlList);
+            return CommunityRes.CommunityDetailRes.of(community, imageUrlList);
         }
     }
 }
