@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 public enum ResponseCode {
 	OK(200, HttpStatus.OK, "ok"),
 	BAD_REQUEST(400, HttpStatus.BAD_REQUEST, "bad request"),
+	UNAUTHORIZED(401, HttpStatus.UNAUTHORIZED, "unauthorized"),
+	FORBIDDEN(403, HttpStatus.FORBIDDEN, "forbidden"),
 	NOT_FOUND(404, HttpStatus.NOT_FOUND, "not found"),
 	INTERNAL_SERVER_ERROR(500, HttpStatus.INTERNAL_SERVER_ERROR, "internal server error"),
 
