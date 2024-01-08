@@ -1,7 +1,7 @@
 package com.e1i6.notionable.domain.community.controller;
 
 import com.e1i6.notionable.domain.community.dto.community.CommunityReq;
-import com.e1i6.notionable.domain.community.service.CommunityServiceImpl;
+import com.e1i6.notionable.domain.community.service.CommunityService;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.global.auth.JwtProvider;
 import com.e1i6.notionable.global.auth.JwtUtil;
@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping(value = "/posts")
 @Slf4j
 public class CommunityController {
-    private final CommunityServiceImpl communityService;
+    private final CommunityService communityService;
     private final JwtProvider jwtProvider;
     private final JwtUtil jwtUtil;
 

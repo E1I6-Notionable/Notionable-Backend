@@ -37,4 +37,8 @@ public class Community extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public void addComment() {
+        this.communityComment += 1;
+    }
 }
