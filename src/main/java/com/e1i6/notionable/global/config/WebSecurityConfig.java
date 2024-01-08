@@ -42,6 +42,7 @@ public class WebSecurityConfig {
 
 			//community
 			"/posts/**",
+			"/comments/**",
 
 			"/test/*",
 			"/favicon.ico"

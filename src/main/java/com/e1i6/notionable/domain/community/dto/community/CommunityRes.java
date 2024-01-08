@@ -71,6 +71,7 @@ public class CommunityRes {
     public static class CommunityDetailRes extends CommunityInfo{
 
         String username;
+        String profile;
         List<String> imageUrls;
 
         public static CommunityDetailRes of(Community community, List<String> imageUrlList){
@@ -85,6 +86,7 @@ public class CommunityRes {
                     .createdAt(community.getCreatedAt())
                     .username(community.getUser().getNickName())
                     .imageUrls(imageUrlList)
+                    .profile(community.getUser().getProfile())
                     .build();
         }
     }
