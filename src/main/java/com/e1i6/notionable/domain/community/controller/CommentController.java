@@ -10,6 +10,9 @@ import com.e1i6.notionable.global.common.response.ResponseCode;
 import com.e1i6.notionable.global.common.response.ResponseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,6 +44,21 @@ public class CommentController {
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    //게시글 전체 댓글 조회
+    @GetMapping("/{communityId}")
+    public BaseResponse<?> getCommunity(@PathVariable Long communityId,
+                                        @PageableDefault(size = 6, sort = "createdAt",
+                                                direction = Sort.Direction.DESC)
+                                        Pageable pageable) {
+        try {
+            return new BaseResponse<>(commentService.getAllComment(communityId, pageable));
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        }    catch (Exception e) {
             return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
