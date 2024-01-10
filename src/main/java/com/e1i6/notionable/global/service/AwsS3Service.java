@@ -52,6 +52,24 @@ public class AwsS3Service {
         return fileNameList;
     }
 
+    public String uploadFile(MultipartFile file) {
+        List<String> fileNameList = new ArrayList<>();
+
+            String fileName = createFileName(file.getOriginalFilename());
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(file.getSize());
+            objectMetadata.setContentType(file.getContentType());
+
+            try (InputStream inputStream = file.getInputStream()) {
+                amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, objectMetadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+            } catch (IOException e) {
+                throw new ResponseException(ResponseCode.AWS_S3_UPLOAD_FAIL);
+            }
+
+        return fileName;
+    }
+
     public void deleteFile(String fileName) {
         amazonS3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
     }

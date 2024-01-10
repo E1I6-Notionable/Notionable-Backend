@@ -6,6 +6,7 @@ import com.e1i6.notionable.domain.template.data.TemplateDto;
 import com.e1i6.notionable.domain.template.data.TemplateUpdateDto;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.global.common.entity.BaseTimeEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Template extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviewList = new ArrayList<>();
 

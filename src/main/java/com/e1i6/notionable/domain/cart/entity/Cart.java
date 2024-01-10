@@ -1,6 +1,7 @@
-package com.e1i6.notionable.domain.cart.Entity;
+package com.e1i6.notionable.domain.cart.entity;
 
 import com.e1i6.notionable.domain.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class Cart {
     private Integer price;
     private String title;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_Id", nullable = false)
     private User user;

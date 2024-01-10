@@ -1,6 +1,6 @@
 package com.e1i6.notionable.domain.cart.dto;
 
-import com.e1i6.notionable.domain.cart.Entity.Cart;
+import com.e1i6.notionable.domain.cart.entity.Cart;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

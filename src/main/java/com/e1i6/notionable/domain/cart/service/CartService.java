@@ -1,13 +1,11 @@
 package com.e1i6.notionable.domain.cart.service;
 
-import com.e1i6.notionable.domain.cart.Entity.Cart;
-import com.e1i6.notionable.domain.cart.Repository.CartRepository;
+import com.e1i6.notionable.domain.cart.entity.Cart;
+import com.e1i6.notionable.domain.cart.repository.CartRepository;
 import com.e1i6.notionable.domain.cart.dto.CartDto;
 import com.e1i6.notionable.domain.template.repository.TemplateRepository;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
-import com.e1i6.notionable.global.common.response.ResponseCode;
-import com.e1i6.notionable.global.common.response.ResponseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -4,6 +4,7 @@ import com.e1i6.notionable.domain.review.data.ReviewDto;
 import com.e1i6.notionable.domain.review.data.ReviewUpdateDto;
 import com.e1i6.notionable.domain.template.entity.Template;
 import com.e1i6.notionable.domain.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class Review {
     private Long reviewId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "template_id")
     private Template template;
 

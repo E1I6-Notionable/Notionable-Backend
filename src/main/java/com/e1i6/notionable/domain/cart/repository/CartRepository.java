@@ -1,6 +1,6 @@
-package com.e1i6.notionable.domain.cart.Repository;
+package com.e1i6.notionable.domain.cart.repository;
 
-import com.e1i6.notionable.domain.cart.Entity.Cart;
+import com.e1i6.notionable.domain.cart.entity.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
