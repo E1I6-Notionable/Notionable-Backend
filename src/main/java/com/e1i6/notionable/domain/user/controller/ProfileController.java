@@ -11,6 +11,7 @@ import com.e1i6.notionable.global.common.response.ResponseCode;
 import com.e1i6.notionable.global.common.response.ResponseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,7 +48,8 @@ public class ProfileController {
     // 마이페이지 - 내 정보 수정
     @PatchMapping("/my-profile/modify")
     public BaseResponse<UserDto> modifyMyProfile(@RequestHeader("Authorization") String authorizationHeader,
-                                                 @RequestBody UserDto modifyUserDto){
+                                                 @RequestPart UserDto modifyUserDto,
+                                                 @RequestPart MultipartFile newProfile){
         try {
             // 헤더에서 JWT 토큰 추출
             String accessToken = authorizationHeader.replace("Bearer ", "");
@@ -58,7 +60,7 @@ public class ProfileController {
                 userIdDto = jwtUtil.getUserFromToken(accessToken);
 
 
-            return new BaseResponse<>(profileService.modifyMyProfile(userIdDto.getUserId(), modifyUserDto));
+            return new BaseResponse<>(profileService.modifyMyProfile(userIdDto.getUserId(), modifyUserDto, newProfile));
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode());
         } catch (Exception e) {
