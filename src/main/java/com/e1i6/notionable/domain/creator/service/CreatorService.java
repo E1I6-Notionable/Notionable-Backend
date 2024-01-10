@@ -23,28 +23,38 @@ public class CreatorService {
     private final UserRepository userRepository;
 
     public CreatorDto creatorRegister(Long userId, CreatorDto creatorDto) {
+        Optional<Creator> optionalCreator = creatorRepository.findByUserUserId(userId);
         Optional<User> optionalUser = userRepository.findById(userId);
 
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
+        if (optionalCreator.isPresent()){
+            Creator creator = optionalCreator.get();
+            if(creator.getStatus() == "pending")
+                return CreatorDto.toCreatorDto(creator);
+            else
+                return null;
+        }
+        else{
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
 
-            log.info("creatorDto = {}", creatorDto);
+                log.info("creatorDto = {}", creatorDto);
 
-            Creator creator = Creator.builder()
-                    .creatorType(creatorDto.getCreatorType())
-                    .bank(creatorDto.getBank())
-                    .accountNumber(creatorDto.getAccountNumber())
-                    .bankPaperUrl(creatorDto.getBankPaperUrl())
-                    .identificationUrl(creatorDto.getIdentificationUrl())
-                    .status(creatorDto.getStatus())
-                    .user(user)
-                    .build();
+                Creator creator = Creator.builder()
+                        .creatorType(creatorDto.getCreatorType())
+                        .bank(creatorDto.getBank())
+                        .accountNumber(creatorDto.getAccountNumber())
+                        .bankPaperUrl(creatorDto.getBankPaperUrl())
+                        .identificationUrl(creatorDto.getIdentificationUrl())
+                        .status(creatorDto.getStatus())
+                        .user(user)
+                        .build();
 
-            creatorRepository.save(creator);
+                creatorRepository.save(creator);
 
-            return CreatorDto.toCreatorDto(creator);
-        } else {
-            throw new ResponseException(ResponseCode.NOT_FOUND);
+                return CreatorDto.toCreatorDto(creator);
+            } else {
+                throw new ResponseException(ResponseCode.NOT_FOUND);
+            }
         }
     }
 
