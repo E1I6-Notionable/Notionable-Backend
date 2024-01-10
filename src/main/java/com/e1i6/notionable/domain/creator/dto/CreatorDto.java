@@ -15,8 +15,8 @@ public class CreatorDto {
     private String creatorType; // 입점형태(크리에이터 타입)
     private String bank; // 은행
     private String accountNumber; // 계좌번호
-    private String bankPaperUrl; // 통장 사본 링크
-    private String identificationUrl; // 신분증 사본 링크
+    private String bankPaper; // 통장 사본 링크
+    private String identification; // 신분증 사본 링크
     private String status; // accepted, rejected, pending
 
     public static CreatorDto toCreatorDto(Creator creator) {
@@ -25,8 +25,8 @@ public class CreatorDto {
         creatorDto.setCreatorType(creator.getCreatorType());
         creatorDto.setBank(creator.getBank());
         creatorDto.setAccountNumber(creator.getAccountNumber());
-        creatorDto.setBankPaperUrl(creator.getBankPaperUrl());
-        creatorDto.setIdentificationUrl(creator.getIdentificationUrl());
+        creatorDto.setBankPaper(creator.getBankPaper());
+        creatorDto.setIdentification(creator.getIdentification());
         creatorDto.setStatus(creator.getStatus());
 
         return creatorDto;

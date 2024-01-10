@@ -12,6 +12,7 @@ import com.e1i6.notionable.global.common.response.ResponseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +27,9 @@ public class CreatorController {
     // 크리에이터 등록
     @PostMapping("/creator/register")
     public BaseResponse<?> creatorRegister(@RequestHeader("Authorization") String authorizationHeader,
-                                              @RequestBody CreatorDto creatorDto) {
+                                           @RequestPart CreatorDto creatorDto,
+                                           @RequestPart("bankPaper")MultipartFile bankPaper,
+                                           @RequestPart("identification")MultipartFile identification) {
 
             // 헤더에서 JWT 토큰 추출
             String accessToken = authorizationHeader.replace("Bearer ", "");
@@ -36,7 +39,7 @@ public class CreatorController {
             if (jwtProvider.validateToken(accessToken))
                 userIdDto = jwtUtil.getUserFromToken(accessToken);
 
-            CreatorDto returnCreatorDto = creatorService.creatorRegister(userIdDto.getUserId(), creatorDto);
+            CreatorDto returnCreatorDto = creatorService.creatorRegister(userIdDto.getUserId(), creatorDto, bankPaper, identification);
 
             if (returnCreatorDto == null)
                 return new BaseResponse<>("이미 크리에이터를 신청하셨습니다. 승인 대기 상태입니다.");
