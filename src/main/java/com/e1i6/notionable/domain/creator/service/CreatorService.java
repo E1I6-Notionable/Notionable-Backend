@@ -27,6 +27,8 @@ public class CreatorService {
     public CreatorDto creatorRegister(Long userId, CreatorDto creatorDto, MultipartFile bankPaper, MultipartFile identification) {
         Optional<Creator> optionalCreator = creatorRepository.findByUserUserId(userId);
         Optional<User> optionalUser = userRepository.findById(userId);
+        String bankPaperUrl = awsS3Service.getUrlFromFileName(awsS3Service.uploadFile(bankPaper));
+        String identificationUrl = awsS3Service.getUrlFromFileName(awsS3Service.uploadFile(identification));
 
 
         if (optionalCreator.isPresent()){
@@ -46,9 +48,9 @@ public class CreatorService {
                         .creatorType(creatorDto.getCreatorType())
                         .bank(creatorDto.getBank())
                         .accountNumber(creatorDto.getAccountNumber())
-                        .bankPaper(creatorDto.getBankPaper())
-                        .identification(creatorDto.getIdentification())
-                        .status(creatorDto.getStatus())
+                        .bankPaper(bankPaperUrl)
+                        .identification(identificationUrl)
+                        .status("pending")
                         .user(user)
                         .build();
 
