@@ -27,7 +27,7 @@ public class WebSecurityConfig {
 			"/login/**",
 			"/signup/**",
 		  "/auth/email",
-			"/social/login",
+			"/login/oauth2/social",
 			"/find-password",
 
 			// template
