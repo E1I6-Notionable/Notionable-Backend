@@ -1,1 +1,0 @@
-package com.e1i6.notionable.domain.paymenttest.repository;import org.springframework.data.jpa.repository.JpaRepository;import com.e1i6.notionable.domain.paymenttest.entity.Payment;public interface PaymentRepository extends JpaRepository<Payment, Long> {}
