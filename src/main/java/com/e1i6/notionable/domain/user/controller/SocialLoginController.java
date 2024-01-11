@@ -22,6 +22,7 @@ public class SocialLoginController {
     public BaseResponse<SocialLoginResDto> socialLogin (
             @RequestBody SocialLoginReqDto reqDto) throws JsonProcessingException {
         log.info("code: {}", reqDto.getCode());
+        log.info("type: {}", reqDto.getSocialType());
         try {
             SocialLoginResDto socialLoginResDto = socialLoginService.socialLogin(reqDto.getCode(), reqDto.getSocialType());
             return new BaseResponse<>(socialLoginResDto);
