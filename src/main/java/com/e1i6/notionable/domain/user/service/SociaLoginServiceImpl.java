@@ -75,32 +75,36 @@ public class SociaLoginServiceImpl implements SocialLoginService{
     public SocialLoginResDto socialLogin(String code, String type) throws JsonProcessingException{
         TYPE = type;
 
-        if(type == "kakao"){
+        if(type.equals("kakao")){
             CLIENT_ID = KAKAO_CLIENT_ID;
             REDIRECT_URI = KAKAO_REDIRECT_URI;
             RESOURCE_URI = KAKAO_RESOURCE_URI;
             USER_INFO = KAKAO_USER_INFO;
 
         }
-        else if(type == "naver"){
+        else if(type.equals("naver")){
             CLIENT_ID = NAVER_CLIENT_ID;
             REDIRECT_URI = NAVER_REDIRECT_URI;
             RESOURCE_URI = NAVER_RESOURCE_URI;
             USER_INFO = NAVER_USER_INFO;
         }
-        else if(type == "google"){
+        else if(type.equals("google")){
             CLIENT_ID = GOOGLE_CLIENT_ID;
             REDIRECT_URI = GOOGLE_REDIRECT_URI;
             RESOURCE_URI = GOOGLE_RESOURCE_URI;
             USER_INFO = GOOGLE_USER_INFO;
         }
 
+        log.info("get accessToekn");
+        log.info("redirect URI: {}", REDIRECT_URI);
+
         String accessTokenResponse = getAccessTokenResponse(code);
+        log.info("accessToken: {}", accessTokenResponse);
         JsonNode userInfoResponse = getUserInfoByAccessTokenResponse(accessTokenResponse);
-        if(type == "kakao"){
+        if(type.equals("kakao")){
             return kakaoLogin(userInfoResponse);
         }
-        else if(type == "naver"){
+        else if(type.equals("naver")){
             return NaverLogin(userInfoResponse);
         }
         else{ //google
@@ -118,10 +122,10 @@ public class SociaLoginServiceImpl implements SocialLoginService{
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", CLIENT_ID);
-        if (TYPE =="naver"){
+        if (TYPE.equals("naver")){
             params.add("client_secret", NAVER_CLIENT_SECRET);
         }
-        else if (TYPE =="google"){
+        else if (TYPE.equals("google")){
             params.add("client_secret", GOOGLE_CLIENT_SECRET);
         }
         params.add("redirect_uri", REDIRECT_URI);
@@ -129,6 +133,7 @@ public class SociaLoginServiceImpl implements SocialLoginService{
 
         HttpEntity<MultiValueMap<String, String>> accessTokenRequest = new HttpEntity<>(params, headers);
 
+        log.info("post request start");
         RestTemplate restTemplate = new RestTemplate();
         String responseBody = restTemplate.exchange(
                 RESOURCE_URI,
@@ -137,10 +142,13 @@ public class SociaLoginServiceImpl implements SocialLoginService{
                String.class
         ).getBody();
 
+        log.info("post request end");
+
         //액세스 토큰 파싱
         try{
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(responseBody);
+            log.info("get access token success");
             return jsonNode.get("access_token").asText();
         } catch (Exception e){
             log.info("in exception");
@@ -157,7 +165,7 @@ public class SociaLoginServiceImpl implements SocialLoginService{
         HttpHeaders headers = new HttpHeaders();;
         headers.add("Authorization", "Bearer "+accessToken);
 
-        if(TYPE =="google") {
+        if(TYPE.equals("google")) {
             HttpEntity userInfoRequest = new HttpEntity(headers);
             return restTemplate.exchange(USER_INFO, HttpMethod.GET, userInfoRequest, JsonNode.class).getBody();
         }

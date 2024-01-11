@@ -1,5 +1,7 @@
 package com.e1i6.notionable.global.config;
 
+import com.e1i6.notionable.global.auth.exception.CustomAccessDeniedHandler;
+import com.e1i6.notionable.global.auth.exception.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,8 +29,13 @@ public class WebSecurityConfig {
 			"/login/**",
 			"/signup/**",
 		  "/auth/email",
-			"/social/login",
+			"/login/oauth2/social",
 			"/find-password",
+
+			// auth
+			"/auth/not-secured",
+			"/auth/denied",
+			"/auth/reissue",
 
 			// template
 			"/template/recommend-free",
@@ -50,6 +57,9 @@ public class WebSecurityConfig {
 
 	};
 
+	private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+	private final CustomAccessDeniedHandler accessDeniedHandler;
+
 	@Bean
 	public SecurityFilterChain filterChain(
 		HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
@@ -64,7 +74,11 @@ public class WebSecurityConfig {
 			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 			.authorizeHttpRequests()
 			.antMatchers(PERMITTED_URLS).permitAll()
-			.anyRequest().authenticated();
+			.anyRequest().authenticated()
+
+			.and().exceptionHandling()
+			.authenticationEntryPoint(authenticationEntryPoint)
+			.accessDeniedHandler(accessDeniedHandler);
 		return http.build();
 	}
 
