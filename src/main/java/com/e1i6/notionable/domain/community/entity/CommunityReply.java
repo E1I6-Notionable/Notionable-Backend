@@ -14,10 +14,10 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentReply extends BaseTimeEntity {
+public class CommunityReply extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long CommentReply;
+    private Long CommunityReplyId;
 
     private String content;
 

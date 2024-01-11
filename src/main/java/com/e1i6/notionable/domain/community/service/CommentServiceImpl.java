@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService{
         return savedComment.getCommunityCommentId();
     }
 
-    //게시글 목록 조회
+    //댓글 목록 조회
     public CommentRes.CommentListRes getAllComment(Long communityId, Pageable pageable) {
         Community community = communityRepository.findById(communityId)
                 .orElseThrow(() -> new RuntimeException("Community not found with id: " + communityId));
