@@ -55,4 +55,8 @@ public class User extends BaseTimeEntity {
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Cart> cartItems;
+
+	public void changePassword(String newPassword) {
+		this.password = newPassword;
+	}
 }
