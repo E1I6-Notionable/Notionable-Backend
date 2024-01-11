@@ -1,4 +1,4 @@
 package com.e1i6.notionable.domain.inquiry.service;
 
-public class AnswerService {
+public class AnswerService{
 }
