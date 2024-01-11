@@ -95,7 +95,9 @@ public class SociaLoginServiceImpl implements SocialLoginService{
             USER_INFO = GOOGLE_USER_INFO;
         }
 
+        log.info("get accessToekn");
         String accessTokenResponse = getAccessTokenResponse(code);
+        log.info("accessToken: {}", accessTokenResponse);
         JsonNode userInfoResponse = getUserInfoByAccessTokenResponse(accessTokenResponse);
         if(type == "kakao"){
             return kakaoLogin(userInfoResponse);
@@ -129,6 +131,7 @@ public class SociaLoginServiceImpl implements SocialLoginService{
 
         HttpEntity<MultiValueMap<String, String>> accessTokenRequest = new HttpEntity<>(params, headers);
 
+        log.info("post request start");
         RestTemplate restTemplate = new RestTemplate();
         String responseBody = restTemplate.exchange(
                 RESOURCE_URI,
@@ -137,10 +140,13 @@ public class SociaLoginServiceImpl implements SocialLoginService{
                String.class
         ).getBody();
 
+        log.info("post request end");
+
         //액세스 토큰 파싱
         try{
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(responseBody);
+            log.info("get access token success");
             return jsonNode.get("access_token").asText();
         } catch (Exception e){
             log.info("in exception");
