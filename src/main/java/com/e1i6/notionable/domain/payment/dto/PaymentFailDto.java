@@ -1,0 +1,1 @@
+package com.e1i6.notionable.domain.payment.dto;import lombok.Builder;import lombok.Data;@Data@Builderpublic class PaymentFailDto {	private Integer code;	private String message;}
