@@ -1,0 +1,1 @@
+package com.e1i6.notionable.domain.paymenttest.dto;import com.e1i6.notionable.domain.paymenttest.entity.Payment;import lombok.Builder;import lombok.Data;@Data@Builderpublic class PaymentConfirmDto {	private Long templateId;	private String title;	private String thumbnail;	private String creatorName;	private Integer price;	private String approvedAt;}
