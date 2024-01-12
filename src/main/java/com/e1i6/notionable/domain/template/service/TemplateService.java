@@ -5,6 +5,7 @@ import com.e1i6.notionable.domain.template.entity.Template;
 import com.e1i6.notionable.domain.template.repository.TemplateRepository;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
+import com.e1i6.notionable.domain.usermailauth.service.MailService;
 import com.e1i6.notionable.global.common.response.ResponseCode;
 import com.e1i6.notionable.global.common.response.ResponseException;
 import com.e1i6.notionable.global.service.AwsS3Service;
@@ -28,6 +29,7 @@ import java.util.List;
 public class TemplateService {
     private final UserRepository userRepository;
     private final AwsS3Service awsS3Service;
+    private final MailService mailService;
     private final TemplateRepository templateRepository;
 
     private final List<String> categoryList = Arrays.asList(
@@ -230,5 +232,21 @@ public class TemplateService {
             return 0;
 
         return ((template.getGoodRateCount() * 100) / reviewCount);
+    }
+
+    public String getNotionUrlEmail(Long userId, Long templateId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+        String email = user.getEmail();
+
+        Template template = templateRepository.findById(templateId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_TEMPLATE));
+        String notionUrl = template.getNotionUrl();
+        log.info("send notion url: {}", notionUrl);
+        try {
+            return mailService.sendNotionUrlEmail(email, notionUrl);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }

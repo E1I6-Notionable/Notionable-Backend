@@ -52,6 +52,14 @@ public class MailService {
 		return randomString; //인증 코드 반환
 	}
 
+	public String sendNotionUrlEmail(String toEmail, String notionUrl)
+			throws MessagingException, UnsupportedEncodingException {
+		MimeMessage emailForm = createNotionUrlMail(toEmail, notionUrl);
+		javaMailSender.send(emailForm);
+
+		return "send mail success";
+	}
+
 	private MimeMessage createAuthMail(String mail) throws MessagingException, UnsupportedEncodingException {
 		generateRandomCode();
 		MimeMessage message = javaMailSender.createMimeMessage();
@@ -59,33 +67,40 @@ public class MailService {
 		message.setFrom(new InternetAddress(senderEmail, "notionable"));
 		message.setRecipients(MimeMessage.RecipientType.TO, mail);
 		message.setSubject("[notionable] 이메일 인증");
-		message.setText(setContext(randomString), "utf-8", "html");
+
+		Context context = new Context();
+		context.setVariable("code", randomString);
+		message.setText(templateEngine.process("mail", context), "utf-8", "html");
 
 		return message;
-
-		/*
-		String body = "";
-		body += "<h3>" + "요청하신 인증코드입니다." + "</h3>";
-		body += "<h1>" + randomString + "</h1>";
-		body += "<h3>" + "감사합니다." + "</h3>";
-		message.setText(body, "UTF-8", "html");*/
-
 	}
 
 	private MimeMessage createPasswordMail(String mail, String password)
 			throws MessagingException, UnsupportedEncodingException {
-
 		MimeMessage message = javaMailSender.createMimeMessage();
 		senderEmail = env.getProperty("spring.mail.username");
-
 		message.setFrom(new InternetAddress(senderEmail, "notionable"));
 		message.setRecipients(MimeMessage.RecipientType.TO, mail);
-		message.setSubject("[notionable] 이메일 인증");
-		String body = "";
-		body += "<h3>" + "임시로 설정된 비밀번호입니다. 이후에 비밀번호를 변경해 주세요." + "</h3>";
-		body += "<h1>" + password + "</h1>";
-		body += "<h3>" + "감사합니다." + "</h3>";
-		message.setText(body, "UTF-8", "html");
+		message.setSubject("[notionable] 비밀번호 찾기 안내");
+
+		Context context = new Context();
+		context.setVariable("password", password);
+		message.setText(templateEngine.process("password", context), "utf-8", "html");
+
+		return message;
+	}
+
+	private MimeMessage createNotionUrlMail(String mail, String notionUrl)
+			throws MessagingException, UnsupportedEncodingException {
+		MimeMessage message = javaMailSender.createMimeMessage();
+		senderEmail = env.getProperty("spring.mail.username");
+		message.setFrom(new InternetAddress(senderEmail, "notionable"));
+		message.setRecipients(MimeMessage.RecipientType.TO, mail);
+		message.setSubject("[notionable] 요청하신 템플릿 링크를 보내드립니다");
+
+		Context context = new Context();
+		context.setVariable("url", notionUrl);
+		message.setText(templateEngine.process("notion-url", context), "utf-8", "html");
 
 		return message;
 	}
@@ -101,13 +116,5 @@ public class MailService {
 		}
 
 		randomString = sb.toString();
-	}
-
-	//타임리프를 이용한 context 설정
-	public String setContext(String code) {
-		Context context = new Context();
-		context.setVariable("code", code);
-
-		return templateEngine.process("mail", context); //mail.html
 	}
 }
