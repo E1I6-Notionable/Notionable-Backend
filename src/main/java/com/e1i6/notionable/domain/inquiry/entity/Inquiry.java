@@ -22,6 +22,6 @@ public class Inquiry {
     private Long inquiry_id;
     private String title;
     private String content;
-    private LocalDateTime createdAt; // 작성일
+    private LocalDateTime createdAt; // 문의 작성일
     private String status; // 답변유무 (Yes, No)
 }
