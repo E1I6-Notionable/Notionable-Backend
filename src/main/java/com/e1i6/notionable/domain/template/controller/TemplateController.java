@@ -77,8 +77,16 @@ public class TemplateController {
 
     @GetMapping("/detail/{templateId}")
     public BaseResponse<TemplateDetailDto> getTemplateDetail(@PathVariable Long templateId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = null;
+        if (authentication.getName().equals("anonymousUser")) {
+            log.info("is anonymousUser");
+        } else {
+            userId = Long.parseLong(authentication.getName());
+        }
+
         try {
-            TemplateDetailDto resDto = templateService.getTemplateDetail(templateId);
+            TemplateDetailDto resDto = templateService.getTemplateDetail(userId, templateId);
             return new BaseResponse<>(resDto);
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());

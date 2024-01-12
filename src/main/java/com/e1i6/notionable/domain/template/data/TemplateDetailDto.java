@@ -17,5 +17,6 @@ public class TemplateDetailDto {
     private Integer price;
     private String content;
     private List<String> imageUrls;
+    private boolean isPaid;
     private String createdAt;
 }
