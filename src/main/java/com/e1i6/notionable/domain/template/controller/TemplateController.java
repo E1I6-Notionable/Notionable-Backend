@@ -130,4 +130,18 @@ public class TemplateController {
             return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
+    @GetMapping("/url-mail/{templateId}")
+    public BaseResponse<String> sendNotionUrlEmail(@PathVariable Long templateId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+
+        try {
+            return new BaseResponse<>(templateService.getNotionUrlEmail(userId, templateId));
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
 }
