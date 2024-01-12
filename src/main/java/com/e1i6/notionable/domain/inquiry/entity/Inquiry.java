@@ -1,5 +1,6 @@
 package com.e1i6.notionable.domain.inquiry.entity;
 
+import com.e1i6.notionable.domain.answer.entity.Answer;
 import com.e1i6.notionable.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,7 @@ public class Inquiry {
     private Long inquiry_id;
     private String title;
     private String content;
+    private String fileUrl;
     private LocalDateTime createdAt; // 문의 작성일
     private String status; // 답변유무 (Yes, No)
 
