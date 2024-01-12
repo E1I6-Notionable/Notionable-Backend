@@ -81,7 +81,7 @@ public class Template extends BaseTimeEntity {
                 .build();
     }
 
-    public static TemplateDetailDto toDetailTemplateDto(Template template, List<String> imageUrlList) {
+    public static TemplateDetailDto toDetailTemplateDto(Template template, List<String> imageUrlList, boolean isPaid) {
         return TemplateDetailDto.builder()
                 .templateId(template.getTemplateId())
                 .nickName(template.user.getNickName())
@@ -92,6 +92,7 @@ public class Template extends BaseTimeEntity {
                 .price(template.getPrice())
                 .content(template.getContent())
                 .imageUrls(imageUrlList)
+                .isPaid(isPaid)
                 .createdAt(template.getCreatedAt().toString())
                 .build();
     }
