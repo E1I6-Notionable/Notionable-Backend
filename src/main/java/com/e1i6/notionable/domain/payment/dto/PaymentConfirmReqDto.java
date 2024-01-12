@@ -7,6 +7,5 @@ public class PaymentConfirmReqDto {
     private String orderId;
     private Integer amount;
     private String paymentKey;
-    private Long sellerId;
     private Long templateId;
 }
