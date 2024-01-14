@@ -40,8 +40,13 @@ public class CommunityServiceImpl implements CommunityService{
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
-        List<String> uploadedFileNames = awsS3Service.uploadFiles(multipartFiles);
-        String thumbnailUrl = awsS3Service.getUrlFromFileName(uploadedFileNames.get(0));
+        List<String> uploadedFileNames = new ArrayList<>();
+        String thumbnailUrl = null;
+
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
+            uploadedFileNames = awsS3Service.uploadFiles(multipartFiles);
+            thumbnailUrl = awsS3Service.getUrlFromFileName(uploadedFileNames.get(0));
+        }
 
         Community community = Community.builder()
                 .category(communityReq.getCategory())
@@ -53,7 +58,6 @@ public class CommunityServiceImpl implements CommunityService{
                 .content(communityReq.getContent())
                 .user(user)
                 .build();
-
         Community savedCommunity = communityRepository.save(community);
 
         return savedCommunity.getCommunityId();
