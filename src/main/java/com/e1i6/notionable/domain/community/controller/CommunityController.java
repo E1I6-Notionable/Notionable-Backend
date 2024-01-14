@@ -48,7 +48,7 @@ public class CommunityController {
     public BaseResponse<Long> addCommunity(
             @RequestHeader("Authorization") String authorizationHeader,
             @RequestPart CommunityReq communityReq,
-            @RequestPart("files") List<MultipartFile> multipartFiles){
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles){
         try {
             // 헤더에서 JWT 토큰 추출
             String accessToken = authorizationHeader.replace("Bearer ", "");
