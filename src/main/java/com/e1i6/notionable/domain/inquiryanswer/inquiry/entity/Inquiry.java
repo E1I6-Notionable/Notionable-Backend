@@ -28,6 +28,7 @@ public class Inquiry {
     private String fileUrl;
     private LocalDateTime createdAt; // 문의 작성일
     private Long template_id;
+    private Long creator_id;
     private String status; // 답변유무 (Yes, No)
 
 //    @ManyToOne

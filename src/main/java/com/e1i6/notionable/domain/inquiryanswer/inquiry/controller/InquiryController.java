@@ -49,7 +49,7 @@ public class InquiryController {
         }
     }
 
-    // 유저 자신의 모든 문의 내역 조회
+    // 마이페이지(유저) - 유저 자신의 모든 문의 및 답변 조회
     @GetMapping("/inquiry-answer")
     public BaseResponse<List<InquiryAnswerDto>> getAllInquiryAnswer(@RequestHeader("Authorization") String authorizationHeader){
         try {

@@ -20,7 +20,8 @@ public class InquiryDto {
     private String fileUrl;
     private LocalDateTime createdAt; // 문의 작성일
     private String status; // 답변유무 (Yes, No)
-    private User user;
+    private Long user_id;
+    private Long creator_id;
     private Long template_id;
 
     public static InquiryDto toInquiryDto(Inquiry inquiry) {
@@ -32,7 +33,8 @@ public class InquiryDto {
         inquiryDto.setFileUrl(inquiry.getFileUrl());
         inquiryDto.setCreatedAt(inquiry.getCreatedAt());
         inquiryDto.setStatus(inquiry.getStatus());
-        inquiryDto.setUser(inquiry.getUser());
+        inquiryDto.setUser_id(inquiry.getUser().getUserId());
+        inquiryDto.setCreator_id(inquiry.getCreator_id());
         inquiryDto.setTemplate_id(inquiry.getTemplate_id());
 
         return inquiryDto;
