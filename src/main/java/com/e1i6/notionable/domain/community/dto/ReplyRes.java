@@ -1,4 +1,4 @@
-package com.e1i6.notionable.domain.community.dto.community;
+package com.e1i6.notionable.domain.community.dto;
 
 import com.e1i6.notionable.domain.community.entity.CommunityReply;
 import lombok.AllArgsConstructor;

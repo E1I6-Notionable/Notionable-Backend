@@ -1,7 +1,7 @@
 package com.e1i6.notionable.domain.community.service;
 
-import com.e1i6.notionable.domain.community.dto.community.CommentReq;
-import com.e1i6.notionable.domain.community.dto.community.CommentRes;
+import com.e1i6.notionable.domain.community.dto.CommentReq;
+import com.e1i6.notionable.domain.community.dto.CommentRes;
 import com.e1i6.notionable.domain.community.entity.Community;
 import com.e1i6.notionable.domain.community.entity.CommunityComment;
 import com.e1i6.notionable.domain.community.repository.CommentRepository;
