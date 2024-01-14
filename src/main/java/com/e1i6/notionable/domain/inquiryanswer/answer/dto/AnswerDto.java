@@ -1,14 +1,10 @@
-package com.e1i6.notionable.domain.answer.dto;
+package com.e1i6.notionable.domain.inquiryanswer.answer.dto;
 
-import com.e1i6.notionable.domain.answer.entity.Answer;
-import com.e1i6.notionable.domain.creator.entity.Creator;
-import com.e1i6.notionable.domain.inquiry.dto.InquiryDto;
-import com.e1i6.notionable.domain.inquiry.entity.Inquiry;
+import com.e1i6.notionable.domain.inquiryanswer.answer.entity.Answer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data

@@ -1,9 +1,7 @@
-package com.e1i6.notionable.domain.answer.controller;
+package com.e1i6.notionable.domain.inquiryanswer.answer.controller;
 
-import com.e1i6.notionable.domain.answer.dto.AnswerDto;
-import com.e1i6.notionable.domain.answer.service.AnswerService;
-import com.e1i6.notionable.domain.inquiry.dto.InquiryDto;
-import com.e1i6.notionable.domain.inquiry.service.InquiryService;
+import com.e1i6.notionable.domain.inquiryanswer.answer.dto.AnswerDto;
+import com.e1i6.notionable.domain.inquiryanswer.answer.service.AnswerService;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.global.auth.JwtProvider;
 import com.e1i6.notionable.global.auth.JwtUtil;

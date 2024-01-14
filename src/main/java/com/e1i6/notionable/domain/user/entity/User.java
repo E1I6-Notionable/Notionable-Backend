@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 import com.e1i6.notionable.domain.cart.entity.Cart;
 import com.e1i6.notionable.domain.creator.entity.Creator;
-import com.e1i6.notionable.domain.inquiry.entity.Inquiry;
+import com.e1i6.notionable.domain.inquiryanswer.inquiry.entity.Inquiry;
 import com.e1i6.notionable.domain.review.entity.Review;
 import com.e1i6.notionable.domain.template.entity.Template;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;

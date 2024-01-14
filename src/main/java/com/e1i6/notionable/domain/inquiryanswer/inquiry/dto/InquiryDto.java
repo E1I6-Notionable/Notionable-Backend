@@ -1,17 +1,12 @@
-package com.e1i6.notionable.domain.inquiry.dto;
+package com.e1i6.notionable.domain.inquiryanswer.inquiry.dto;
 
-import com.e1i6.notionable.domain.answer.entity.Answer;
-import com.e1i6.notionable.domain.cart.dto.CartDto;
-import com.e1i6.notionable.domain.cart.entity.Cart;
-import com.e1i6.notionable.domain.inquiry.entity.Inquiry;
-import com.e1i6.notionable.domain.template.entity.Template;
+import com.e1i6.notionable.domain.inquiryanswer.answer.entity.Answer;
+import com.e1i6.notionable.domain.inquiryanswer.inquiry.entity.Inquiry;
 import com.e1i6.notionable.domain.user.entity.User;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data

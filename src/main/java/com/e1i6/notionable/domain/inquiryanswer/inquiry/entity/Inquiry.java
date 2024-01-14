@@ -1,8 +1,6 @@
-package com.e1i6.notionable.domain.inquiry.entity;
+package com.e1i6.notionable.domain.inquiryanswer.inquiry.entity;
 
-import com.e1i6.notionable.domain.answer.entity.Answer;
-import com.e1i6.notionable.domain.template.entity.Template;
-import com.e1i6.notionable.domain.user.data.dto.UserDto;
+import com.e1i6.notionable.domain.inquiryanswer.answer.entity.Answer;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

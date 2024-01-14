@@ -1,13 +1,12 @@
-package com.e1i6.notionable.domain.answer.service;
+package com.e1i6.notionable.domain.inquiryanswer.answer.service;
 
-import com.e1i6.notionable.domain.answer.dto.AnswerDto;
-import com.e1i6.notionable.domain.answer.entity.Answer;
-import com.e1i6.notionable.domain.answer.repository.AnswerRepository;
+import com.e1i6.notionable.domain.inquiryanswer.answer.dto.AnswerDto;
+import com.e1i6.notionable.domain.inquiryanswer.answer.entity.Answer;
+import com.e1i6.notionable.domain.inquiryanswer.answer.repository.AnswerRepository;
 import com.e1i6.notionable.domain.creator.entity.Creator;
 import com.e1i6.notionable.domain.creator.repository.CreatorRepository;
-import com.e1i6.notionable.domain.inquiry.entity.Inquiry;
-import com.e1i6.notionable.domain.inquiry.repository.InquiryRepository;
-import com.e1i6.notionable.domain.user.entity.User;
+import com.e1i6.notionable.domain.inquiryanswer.inquiry.entity.Inquiry;
+import com.e1i6.notionable.domain.inquiryanswer.inquiry.repository.InquiryRepository;
 import com.e1i6.notionable.global.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

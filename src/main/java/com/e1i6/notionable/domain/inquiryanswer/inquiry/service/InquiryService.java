@@ -1,10 +1,8 @@
-package com.e1i6.notionable.domain.inquiry.service;
+package com.e1i6.notionable.domain.inquiryanswer.inquiry.service;
 
-import com.e1i6.notionable.domain.inquiry.dto.InquiryDto;
-import com.e1i6.notionable.domain.inquiry.entity.Inquiry;
-import com.e1i6.notionable.domain.inquiry.repository.InquiryRepository;
-import com.e1i6.notionable.domain.template.entity.Template;
-import com.e1i6.notionable.domain.template.repository.TemplateRepository;
+import com.e1i6.notionable.domain.inquiryanswer.inquiry.dto.InquiryDto;
+import com.e1i6.notionable.domain.inquiryanswer.inquiry.entity.Inquiry;
+import com.e1i6.notionable.domain.inquiryanswer.inquiry.repository.InquiryRepository;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
 import com.e1i6.notionable.global.service.AwsS3Service;

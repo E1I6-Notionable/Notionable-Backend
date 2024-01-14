@@ -1,7 +1,7 @@
-package com.e1i6.notionable.domain.answer.entity;
+package com.e1i6.notionable.domain.inquiryanswer.answer.entity;
 
 import com.e1i6.notionable.domain.creator.entity.Creator;
-import com.e1i6.notionable.domain.inquiry.entity.Inquiry;
+import com.e1i6.notionable.domain.inquiryanswer.inquiry.entity.Inquiry;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

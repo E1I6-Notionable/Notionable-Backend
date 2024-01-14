@@ -1,8 +1,7 @@
-package com.e1i6.notionable.domain.inquiry.controller;
+package com.e1i6.notionable.domain.inquiryanswer.inquiry.controller;
 
-import com.e1i6.notionable.domain.cart.dto.CartDto;
-import com.e1i6.notionable.domain.inquiry.dto.InquiryDto;
-import com.e1i6.notionable.domain.inquiry.service.InquiryService;
+import com.e1i6.notionable.domain.inquiryanswer.inquiry.dto.InquiryDto;
+import com.e1i6.notionable.domain.inquiryanswer.inquiry.service.InquiryService;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.global.auth.JwtProvider;
 import com.e1i6.notionable.global.auth.JwtUtil;
