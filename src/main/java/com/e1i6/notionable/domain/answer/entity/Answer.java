@@ -23,6 +23,7 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "answer_id")
     private Long answer_id;
+    private Long template_id;
     private String title;
     private String content;
     private LocalDateTime createdAt; // 답변 작성일

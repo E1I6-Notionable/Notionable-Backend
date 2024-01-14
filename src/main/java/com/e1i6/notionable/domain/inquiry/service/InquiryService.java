@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class InquiryService {
     private final UserRepository userRepository;
     private final AwsS3Service awsS3Service;
 
+    @Transactional
     public InquiryDto writeInquiry(Long userId, InquiryDto inquiryDto, MultipartFile file) {
         Optional<User> optionalUser = userRepository.findById(userId);
         // Optional<Template> optionalTemplate = templateRepository.findById(template_id);
