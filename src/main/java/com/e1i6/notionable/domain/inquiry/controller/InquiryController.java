@@ -49,4 +49,26 @@ public class InquiryController {
         }
     }
 
+    // 유저 자신의 모든 문의 내역 조회
+    @GetMapping("/get-all-inquiry")
+    public BaseResponse<List<InquiryDto>> getAllInquiry(@RequestHeader("Authorization") String authorizationHeader){
+        try {
+            // 헤더에서 JWT 토큰 추출
+            String accessToken = authorizationHeader.replace("Bearer ", "");
+            UserDto userDto = null;
+
+            // 토큰 검증
+            if (jwtProvider.validateToken(accessToken))
+                userDto = jwtUtil.getUserFromToken(accessToken);
+
+            // 유저 자신의 모든 문의 내역 반환
+            List<InquiryDto> inquiryDtoList = inquiryService.getAllInquiry(userDto.getUserId());
+
+            return new BaseResponse<>(inquiryDtoList);
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
 }

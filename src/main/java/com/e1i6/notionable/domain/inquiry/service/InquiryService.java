@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -52,5 +54,16 @@ public class InquiryService {
         inquiryRepository.save(inquiry);
 
         return InquiryDto.toInquiryDto(inquiry);
+    }
+
+    public List<InquiryDto> getAllInquiry(Long userId) {
+        List<Inquiry> inquiryEntityList = inquiryRepository.findByUser_UserId(userId);
+        List<InquiryDto> inquiryDtoList = new ArrayList<>();
+
+        for (Inquiry inquiry : inquiryEntityList) {
+            inquiryDtoList.add(InquiryDto.toInquiryDto(inquiry));
+        }
+
+        return inquiryDtoList;
     }
 }
