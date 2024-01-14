@@ -1,6 +1,7 @@
 package com.e1i6.notionable.domain.creator.entity;
 
 import com.e1i6.notionable.domain.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,5 +28,6 @@ public class Creator {
 
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
+    @JsonIgnore
     private User user;
 }

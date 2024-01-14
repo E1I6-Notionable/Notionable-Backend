@@ -36,6 +36,10 @@ Template extends BaseTimeEntity {
     @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviewList = new ArrayList<>();
 
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Inquiry> inquiries = new ArrayList<>();
+
     @NotNull
     private String title;
 
