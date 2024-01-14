@@ -1,6 +1,6 @@
 package com.e1i6.notionable.domain.community.controller;
 
-import com.e1i6.notionable.domain.community.dto.community.CommentReq;
+import com.e1i6.notionable.domain.community.dto.CommentReq;
 import com.e1i6.notionable.domain.community.service.CommentService;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.global.auth.JwtProvider;

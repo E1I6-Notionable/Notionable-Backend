@@ -1,15 +1,15 @@
-package com.e1i6.notionable.domain.community.dto.community;
+package com.e1i6.notionable.domain.community.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-//댓글 작성 형식
+//대댓글 작성 형식
 @Data
 @Builder
 @AllArgsConstructor
-public class CommentReq {
+public class ReplyReq {
     private String content;
 
-    public CommentReq() {}
+    public ReplyReq(){}
 }

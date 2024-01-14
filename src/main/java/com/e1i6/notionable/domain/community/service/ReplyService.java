@@ -1,7 +1,7 @@
 package com.e1i6.notionable.domain.community.service;
 
-import com.e1i6.notionable.domain.community.dto.community.ReplyReq;
-import com.e1i6.notionable.domain.community.dto.community.ReplyRes;
+import com.e1i6.notionable.domain.community.dto.ReplyReq;
+import com.e1i6.notionable.domain.community.dto.ReplyRes;
 import org.springframework.data.domain.Pageable;
 
 public interface ReplyService {

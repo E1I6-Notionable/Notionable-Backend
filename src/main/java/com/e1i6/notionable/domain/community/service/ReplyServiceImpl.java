@@ -1,7 +1,7 @@
 package com.e1i6.notionable.domain.community.service;
 
-import com.e1i6.notionable.domain.community.dto.community.ReplyReq;
-import com.e1i6.notionable.domain.community.dto.community.ReplyRes;
+import com.e1i6.notionable.domain.community.dto.ReplyReq;
+import com.e1i6.notionable.domain.community.dto.ReplyRes;
 import com.e1i6.notionable.domain.community.entity.CommunityReply;
 import com.e1i6.notionable.domain.community.entity.CommunityComment;
 import com.e1i6.notionable.domain.community.repository.CommentRepository;
@@ -49,7 +49,6 @@ public class ReplyServiceImpl implements ReplyService{
     public ReplyRes.ReplyListRes getAllReply(Long commentId, Pageable pageable) {
         CommunityComment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found with id: " + commentId));
-        log.info("레포지토리 탓인가요");
         Page<CommunityReply> allReply = replyRepository.findByCommunityComment_CommunityCommentId(comment.getCommunityCommentId(), pageable);
         return ReplyRes.ReplyListRes.of(allReply);
     }
