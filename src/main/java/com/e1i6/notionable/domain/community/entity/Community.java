@@ -41,4 +41,12 @@ public class Community extends BaseTimeEntity {
     public void addComment() {
         this.communityComment += 1;
     }
+
+    public void addLike() {
+        this.communityLike += 1;
+    }
+
+    public void subLike() {
+        this.communityLike -= 1;
+    }
 }

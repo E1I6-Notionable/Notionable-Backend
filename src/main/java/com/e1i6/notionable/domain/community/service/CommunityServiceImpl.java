@@ -2,8 +2,11 @@ package com.e1i6.notionable.domain.community.service;
 
 import com.e1i6.notionable.domain.community.dto.CommunityReq;
 import com.e1i6.notionable.domain.community.dto.CommunityRes;
+import com.e1i6.notionable.domain.community.dto.LikeRes;
 import com.e1i6.notionable.domain.community.entity.Community;
+import com.e1i6.notionable.domain.community.entity.CommunityLike;
 import com.e1i6.notionable.domain.community.repository.CommunityRepository;
+import com.e1i6.notionable.domain.community.repository.LikeRepository;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
 import com.e1i6.notionable.global.common.response.ResponseCode;
@@ -26,11 +29,16 @@ public class CommunityServiceImpl implements CommunityService{
     private final CommunityRepository communityRepository;
     private final AwsS3Service awsS3Service;
     private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
 
     //게시글 목록 조회
-    public CommunityRes.CommunityListRes getCommunity(String keyword, String filter, Pageable pageable) {
+    public CommunityRes.CommunityListRes getCommunity(Long userId, String keyword, String filter, Pageable pageable) {
         Page<Community> allCommunity = communityRepository.findByKeywordAndFilter(keyword, filter, pageable);
-        return CommunityRes.CommunityListRes.of(allCommunity);
+        User user = null;
+        if (userId != null) {
+            user = userRepository.findById(userId). orElse(null);
+        }
+        return CommunityRes.CommunityListRes.of(allCommunity, likeRepository, user);
     }
 
 
@@ -64,7 +72,12 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     //게시글 상세 조회
-    public CommunityRes.CommunityDetailRes getCommunityDetail(Long communityId) {
+    public CommunityRes.CommunityDetailRes getCommunityDetail(Long userId, Long communityId) {
+        User user = null;
+        if (userId != null) {
+            user = userRepository.findById(userId). orElse(null);
+        }
+
         Community community = communityRepository.findById(communityId). orElse(null);
         if (community == null){
             throw new ResponseException(ResponseCode.NO_SUCH_COMMUNITY);
@@ -72,7 +85,35 @@ public class CommunityServiceImpl implements CommunityService{
         else{
             List<String> imageUrlList = new ArrayList<>();
             community.getImages().forEach(image -> imageUrlList.add(awsS3Service.getUrlFromFileName(image)));
-            return CommunityRes.CommunityDetailRes.of(community, imageUrlList);
+
+            boolean existLike = likeRepository.existsByUserAndCommunity(user, community);
+            return CommunityRes.CommunityDetailRes.of(community, imageUrlList, existLike);
         }
+    }
+
+    //게시물 좋아요
+    public LikeRes likeCommunity(Long userId, Long communityId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new RuntimeException("community not found with id: " + communityId));
+
+        boolean existLike = likeRepository.existsByUserAndCommunity(user, community);
+        if(existLike){
+            community.subLike();
+            likeRepository.deleteByUserAndCommunity(user, community);
+        }
+        else{
+            community.addLike();
+            CommunityLike newLike = CommunityLike.builder()
+                    .community(community)
+                    .user(user)
+                    .build();
+            likeRepository.save(newLike);
+        }
+
+        return new LikeRes(community.getCommunityId(), community.getCommunityLike(), !existLike);
     }
 }

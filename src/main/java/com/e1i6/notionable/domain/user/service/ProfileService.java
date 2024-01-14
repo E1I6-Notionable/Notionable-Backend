@@ -3,6 +3,7 @@ package com.e1i6.notionable.domain.user.service;
 import com.e1i6.notionable.domain.community.dto.CommunityRes;
 import com.e1i6.notionable.domain.community.entity.Community;
 import com.e1i6.notionable.domain.community.repository.CommunityRepository;
+import com.e1i6.notionable.domain.community.repository.LikeRepository;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
@@ -24,6 +25,8 @@ public class ProfileService {
 
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
+    private final LikeRepository likeRepository;
+
 
 
     public UserDto getMyProfile(Long userId) {
@@ -56,7 +59,8 @@ public class ProfileService {
 
     // 마이페이지 - 내가 쓴 글
     public CommunityRes.CommunityListRes getMyCommunity(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId). orElse(null);
         Page<Community> allMyCommunity = communityRepository.findByUser_UserId(userId, pageable);
-        return CommunityRes.CommunityListRes.of(allMyCommunity);
+        return CommunityRes.CommunityListRes.of(allMyCommunity, likeRepository, user);
     }
 }
