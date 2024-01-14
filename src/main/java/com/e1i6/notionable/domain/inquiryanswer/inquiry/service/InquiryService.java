@@ -1,5 +1,9 @@
 package com.e1i6.notionable.domain.inquiryanswer.inquiry.service;
 
+import com.e1i6.notionable.domain.inquiryanswer.InquiryAnswerDto;
+import com.e1i6.notionable.domain.inquiryanswer.answer.dto.AnswerDto;
+import com.e1i6.notionable.domain.inquiryanswer.answer.entity.Answer;
+import com.e1i6.notionable.domain.inquiryanswer.answer.repository.AnswerRepository;
 import com.e1i6.notionable.domain.inquiryanswer.inquiry.dto.InquiryDto;
 import com.e1i6.notionable.domain.inquiryanswer.inquiry.entity.Inquiry;
 import com.e1i6.notionable.domain.inquiryanswer.inquiry.repository.InquiryRepository;
@@ -23,6 +27,7 @@ import java.util.Optional;
 public class InquiryService {
 
     private final InquiryRepository inquiryRepository;
+    private final AnswerRepository answerRepository;
     private final UserRepository userRepository;
     private final AwsS3Service awsS3Service;
 
@@ -56,14 +61,30 @@ public class InquiryService {
         return InquiryDto.toInquiryDto(inquiry);
     }
 
-    public List<InquiryDto> getAllInquiry(Long userId) {
+    public List<InquiryAnswerDto> getAllInquiryAnswer(Long userId) {
         List<Inquiry> inquiryEntityList = inquiryRepository.findByUser_UserId(userId);
-        List<InquiryDto> inquiryDtoList = new ArrayList<>();
+        List<InquiryAnswerDto> inquiryAnswerDtoList = new ArrayList<>();
 
         for (Inquiry inquiry : inquiryEntityList) {
-            inquiryDtoList.add(InquiryDto.toInquiryDto(inquiry));
+            log.info("inquiry = {}", inquiry.getContent());
+            InquiryAnswerDto inquiryAnswerDto = new InquiryAnswerDto();
+
+            // 문의
+            inquiryAnswerDto.setInquiry(InquiryDto.toInquiryDto(inquiry));
+
+            Optional<Answer> optionalAnswer = answerRepository.findAnswerByInquiryId(inquiry.getInquiry_id());
+
+            if(optionalAnswer.isPresent()){
+                log.info("answer = {}", optionalAnswer.get());
+                inquiryAnswerDto.setAnswer(AnswerDto.toAnswerDto(optionalAnswer.get()));
+            }
+            else{
+                inquiryAnswerDto.setAnswer(null);
+            }
+
+            inquiryAnswerDtoList.add(inquiryAnswerDto);
         }
 
-        return inquiryDtoList;
+        return inquiryAnswerDtoList;
     }
 }

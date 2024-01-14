@@ -22,7 +22,6 @@ public class InquiryDto {
     private String status; // 답변유무 (Yes, No)
     private User user;
     private Long template_id;
-    private Answer answer;
 
     public static InquiryDto toInquiryDto(Inquiry inquiry) {
         InquiryDto inquiryDto = new InquiryDto();
@@ -35,7 +34,6 @@ public class InquiryDto {
         inquiryDto.setStatus(inquiry.getStatus());
         inquiryDto.setUser(inquiry.getUser());
         inquiryDto.setTemplate_id(inquiry.getTemplate_id());
-        inquiryDto.setAnswer(inquiry.getAnswer());
 
         return inquiryDto;
     }

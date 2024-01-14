@@ -1,5 +1,6 @@
 package com.e1i6.notionable.domain.inquiryanswer.inquiry.controller;
 
+import com.e1i6.notionable.domain.inquiryanswer.InquiryAnswerDto;
 import com.e1i6.notionable.domain.inquiryanswer.inquiry.dto.InquiryDto;
 import com.e1i6.notionable.domain.inquiryanswer.inquiry.service.InquiryService;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
@@ -49,8 +50,8 @@ public class InquiryController {
     }
 
     // 유저 자신의 모든 문의 내역 조회
-    @GetMapping("/get-all-inquiry")
-    public BaseResponse<List<InquiryDto>> getAllInquiry(@RequestHeader("Authorization") String authorizationHeader){
+    @GetMapping("/inquiry-answer")
+    public BaseResponse<List<InquiryAnswerDto>> getAllInquiryAnswer(@RequestHeader("Authorization") String authorizationHeader){
         try {
             // 헤더에서 JWT 토큰 추출
             String accessToken = authorizationHeader.replace("Bearer ", "");
@@ -61,9 +62,9 @@ public class InquiryController {
                 userDto = jwtUtil.getUserFromToken(accessToken);
 
             // 유저 자신의 모든 문의 내역 반환
-            List<InquiryDto> inquiryDtoList = inquiryService.getAllInquiry(userDto.getUserId());
+            List<InquiryAnswerDto> inquiryAnswerDtoList = inquiryService.getAllInquiryAnswer(userDto.getUserId());
 
-            return new BaseResponse<>(inquiryDtoList);
+            return new BaseResponse<>(inquiryAnswerDtoList);
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
