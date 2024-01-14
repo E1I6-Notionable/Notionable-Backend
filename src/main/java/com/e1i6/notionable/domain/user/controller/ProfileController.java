@@ -10,6 +10,9 @@ import com.e1i6.notionable.global.common.response.BaseResponse;
 import com.e1i6.notionable.global.common.response.ResponseCode;
 import com.e1i6.notionable.global.common.response.ResponseException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -65,4 +68,27 @@ public class ProfileController {
             return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
+    // 마이페이지 - 내가 쓴 글
+    @GetMapping("/community")
+    public BaseResponse<?> getCommunity(@RequestHeader("Authorization") String authorizationHeader,
+                                        @PageableDefault(size = 5, sort = "createdAt",
+                                                direction = Sort.Direction.DESC)
+                                        Pageable pageable) {
+        try {
+            // 헤더에서 JWT 토큰 추출
+            String accessToken = authorizationHeader.replace("Bearer ", "");
+            UserDto userDto = null;
+
+            // 토큰 검증
+            if (jwtProvider.validateToken(accessToken))
+                userDto = jwtUtil.getUserFromToken(accessToken);
+            return new BaseResponse<>(profileService.getMyCommunity(userDto.getUserId(), pageable));
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        }    catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
 }

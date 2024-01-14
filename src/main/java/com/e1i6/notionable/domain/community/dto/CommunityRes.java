@@ -47,7 +47,7 @@ public class CommunityRes {
 
     }
 
-    //게시글 목록 조회에 사용
+    //게시글 목록 조회, 내가 쓴 게시글 조회에 사용
     @Getter
     @Builder
     public static class CommunityListRes{
