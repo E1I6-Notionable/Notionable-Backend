@@ -1,5 +1,6 @@
 package com.e1i6.notionable.domain.template.entity;
 
+import com.e1i6.notionable.domain.inquiry.entity.Inquiry;
 import com.e1i6.notionable.domain.review.entity.Review;
 import com.e1i6.notionable.domain.template.data.TemplateDetailDto;
 import com.e1i6.notionable.domain.template.data.TemplateDto;
@@ -34,6 +35,10 @@ public class Template extends BaseTimeEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviewList = new ArrayList<>();
+
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Inquiry> inquiries = new ArrayList<>();
 
     @NotNull
     private String title;

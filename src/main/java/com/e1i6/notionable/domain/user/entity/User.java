@@ -54,8 +54,12 @@ public class User extends BaseTimeEntity {
 	private List<Cart> cartItems;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Inquiry> inquiries = new ArrayList<>();
+
+	@JsonIgnore
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	private Creator creator;
 
 	public void changePassword(String newPassword) {
 		this.password = newPassword;
@@ -76,9 +80,6 @@ public class User extends BaseTimeEntity {
 		this.nickName = userDto.getNickName();
 		this.profile = userDto.getProfile();
 	}
-
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-	private Creator creator;
 
 	public void setCreator(Creator creator) {
 		this.creator = creator;
