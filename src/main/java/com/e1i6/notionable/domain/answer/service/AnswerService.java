@@ -36,6 +36,7 @@ public class AnswerService{
         Creator creator = null;
         if(optionalInquiry.isPresent() && optionalCreator.isPresent()){
             inquiry = optionalInquiry.get();
+            inquiry.modifyInquiryStatus("Yes");
             creator = optionalCreator.get();
         }
 

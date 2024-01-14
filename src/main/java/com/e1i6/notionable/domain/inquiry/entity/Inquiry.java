@@ -2,6 +2,7 @@ package com.e1i6.notionable.domain.inquiry.entity;
 
 import com.e1i6.notionable.domain.answer.entity.Answer;
 import com.e1i6.notionable.domain.template.entity.Template;
+import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -46,4 +47,8 @@ public class Inquiry {
     @OneToOne(mappedBy = "inquiry", cascade = CascadeType.ALL)
     @JsonIgnore
     private Answer answer;
+
+    public void modifyInquiryStatus(String status) {
+        this.status = status;
+    }
 }
