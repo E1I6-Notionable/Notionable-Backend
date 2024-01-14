@@ -14,4 +14,5 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
                                                  @Param("filter") String filter,
                                                  Pageable pageable);
 
+    Page<Community> findByUser_UserId(Long userId, Pageable pageable);
 }
