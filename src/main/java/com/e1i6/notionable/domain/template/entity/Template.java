@@ -22,7 +22,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Template extends BaseTimeEntity {
+public class
+Template extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long templateId;
@@ -34,6 +35,10 @@ public class Template extends BaseTimeEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviewList = new ArrayList<>();
+
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Inquiry> inquiries = new ArrayList<>();
 
     @NotNull
     private String title;

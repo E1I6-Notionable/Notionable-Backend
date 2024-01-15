@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -24,6 +25,7 @@ public class CreatorService {
     private final CreatorRepository creatorRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public CreatorDto creatorRegister(Long userId, CreatorDto creatorDto, MultipartFile bankPaper, MultipartFile identification) {
         Optional<Creator> optionalCreator = creatorRepository.findByUserUserId(userId);
         Optional<User> optionalUser = userRepository.findById(userId);
