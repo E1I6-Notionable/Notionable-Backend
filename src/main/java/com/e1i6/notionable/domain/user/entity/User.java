@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import com.e1i6.notionable.domain.cart.entity.Cart;
 import com.e1i6.notionable.domain.creator.entity.Creator;
+import com.e1i6.notionable.domain.inquiryanswer.inquiry.entity.Inquiry;
 import com.e1i6.notionable.domain.review.entity.Review;
 import com.e1i6.notionable.domain.template.entity.Template;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
@@ -52,6 +53,14 @@ public class User extends BaseTimeEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Cart> cartItems;
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Inquiry> inquiries = new ArrayList<>();
+
+	@JsonIgnore
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	private Creator creator;
+
 	public void changePassword(String newPassword) {
 		this.password = newPassword;
 	}
@@ -71,9 +80,6 @@ public class User extends BaseTimeEntity {
 		this.nickName = userDto.getNickName();
 		this.profile = userDto.getProfile();
 	}
-
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-	private Creator creator;
 
 	public void setCreator(Creator creator) {
 		this.creator = creator;

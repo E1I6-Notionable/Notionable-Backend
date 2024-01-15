@@ -4,14 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+//댓글 작성 형식
 @Data
 @Builder
 @AllArgsConstructor
-public class CommunityReq {
-    private String category;
-    private String title;
+public class CommentReq {
     private String content;
 
-    public CommunityReq (){}
-
+    public CommentReq() {}
 }
