@@ -62,8 +62,7 @@ public class WebSecurityConfig {
 		HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
 		http
 			.httpBasic().disable()
-			.cors().configurationSource(corsConfigurationSource)
-			.and()
+			.cors().disable()
 
 			.csrf().disable() // // token을 사용하는 방식이기 때문에 csrf를 disable
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션을 사용하지 않기 때문에 STATELESS로 설정
