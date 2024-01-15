@@ -4,6 +4,7 @@ import com.e1i6.notionable.global.auth.exception.CustomAccessDeniedHandler;
 import com.e1i6.notionable.global.auth.exception.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -67,6 +68,7 @@ public class WebSecurityConfig {
 			.addFilterBefore(new RequestUrlLogFilter(), UsernamePasswordAuthenticationFilter.class)
 			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 			.authorizeHttpRequests()
+			.antMatchers(HttpMethod.OPTIONS, "/**").permitAll() // for preflight cors
 			.antMatchers(PERMITTED_URLS).permitAll()
 			.anyRequest().authenticated()
 

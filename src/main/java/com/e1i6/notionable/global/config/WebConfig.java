@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP method
-                .allowedHeaders("*");
+                .allowedHeaders("Content-Type", "X-AUTH-TOKEN", "Authorization");
     }
 
     @Bean
