@@ -77,8 +77,16 @@ public class TemplateController {
 
     @GetMapping("/detail/{templateId}")
     public BaseResponse<TemplateDetailDto> getTemplateDetail(@PathVariable Long templateId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = null;
+        if (authentication.getName().equals("anonymousUser")) {
+            log.info("is anonymousUser");
+        } else {
+            userId = Long.parseLong(authentication.getName());
+        }
+
         try {
-            TemplateDetailDto resDto = templateService.getTemplateDetail(templateId);
+            TemplateDetailDto resDto = templateService.getTemplateDetail(userId, templateId);
             return new BaseResponse<>(resDto);
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());
@@ -124,6 +132,20 @@ public class TemplateController {
     public BaseResponse<Integer> getGoodReviewPercent(@PathVariable Long templateId){
         try {
             return new BaseResponse<>(templateService.getGoodReviewPercent(templateId));
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @GetMapping("/url-mail/{templateId}")
+    public BaseResponse<String> sendNotionUrlEmail(@PathVariable Long templateId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+
+        try {
+            return new BaseResponse<>(templateService.getNotionUrlEmail(userId, templateId));
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
