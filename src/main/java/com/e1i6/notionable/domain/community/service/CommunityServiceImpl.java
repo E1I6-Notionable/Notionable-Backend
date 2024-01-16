@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -40,7 +41,6 @@ public class CommunityServiceImpl implements CommunityService{
         }
         return CommunityRes.CommunityListRes.of(allCommunity, likeRepository, user);
     }
-
 
     //게시글 작성
     public Long addCommunity(Long userId, List<MultipartFile> multipartFiles, CommunityReq communityReq) {
@@ -115,5 +115,15 @@ public class CommunityServiceImpl implements CommunityService{
         }
 
         return new LikeRes(community.getCommunityId(), community.getCommunityLike(), !existLike);
+    }
+
+    //5일이내 게시글 중 좋아요 수 top5
+    public List<CommunityRes.CommunityInfo> getTopCommunity(Long userId) {
+        List<Community> topCommunity = communityRepository.findTop5ByCreatedDateAndOrderByCommunityLikeDesc();
+        User user = null;
+        if (userId != null) {
+            user = userRepository.findById(userId). orElse(null);
+        }
+        return CommunityRes.CommunityInfo.of(topCommunity, likeRepository, user).stream().limit(5).collect(Collectors.toList());
     }
 }

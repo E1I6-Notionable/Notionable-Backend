@@ -29,6 +29,7 @@ public class CommunityRes {
         private LocalDateTime createdAt;
         private boolean existLike;
 
+        // + top5 게시글 목록 조회에 사용
         public static List<CommunityInfo> of(List<Community> communityList, LikeRepository likeRepository, User user){
             return communityList.stream()
                     .map(community -> of(community, likeRepository, user))
