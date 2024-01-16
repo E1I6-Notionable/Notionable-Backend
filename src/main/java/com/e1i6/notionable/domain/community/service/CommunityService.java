@@ -13,4 +13,5 @@ public interface CommunityService {
     Long addCommunity(Long userId, List<MultipartFile> multipartFiles, CommunityReq communityReq);
     CommunityRes.CommunityDetailRes getCommunityDetail(Long userId, Long communityId);
     LikeRes likeCommunity(Long userId, Long communityId);
+    List<CommunityRes.CommunityInfo> getTopCommunity(Long userId);
 }

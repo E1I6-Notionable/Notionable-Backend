@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface CommunityRepository extends JpaRepository<Community, Long> {
     @Query("select m from Community m where (:keyword is null or m.content like %:keyword% or m.title like %:keyword%) and " +
             "(:filter is null or m.category = :filter)")
@@ -15,4 +17,8 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
                                                  Pageable pageable);
 
     Page<Community> findByUser_UserId(Long userId, Pageable pageable);
+
+    @Query("SELECT c FROM Community c WHERE c.createdAt >= CURRENT_DATE - 5 ORDER BY c.communityLike DESC, c.createdAt DESC")
+    List<Community> findTop5ByCreatedDateAndOrderByCommunityLikeDesc();
+
 }

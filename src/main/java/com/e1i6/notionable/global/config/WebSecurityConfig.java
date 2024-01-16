@@ -53,6 +53,11 @@ public class WebSecurityConfig {
 		// review
 		"/template/review/list/*",
 
+		//community
+		"/posts/**",
+		"/comments/**",
+		"/reply/**",
+
 		"/test/*",
 		"/favicon.ico"
 	};

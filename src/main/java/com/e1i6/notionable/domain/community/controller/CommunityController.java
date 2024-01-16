@@ -27,7 +27,7 @@ public class CommunityController {
     private final JwtProvider jwtProvider;
     private final JwtUtil jwtUtil;
 
-//    게시글 목록 조회
+     //게시글 목록 조회
     @GetMapping("/all")
     public BaseResponse<?> getCommunity(@RequestHeader(value = "Authorization", required = false) String authorizationHeader,
                                         @RequestParam(required = false) String keyword,
@@ -83,16 +83,29 @@ public class CommunityController {
         }
     }
 
+    //5일이내 게시글 중 좋아요 수 top5
+    @GetMapping("/hot")
+    public BaseResponse<?> getCommunity(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        try {
+            return new BaseResponse<>(communityService.getTopCommunity(getUserIdFromToken(authorizationHeader)));
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        }    catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+
     public Long getUserIdFromToken(String authorizationHeader) {
         if(authorizationHeader != null){
             String accessToken = authorizationHeader.replace("Bearer ", "");
             UserDto userDto = null;
 
             // 토큰 검증
-            if (jwtProvider.validateToken(accessToken))
+            if (jwtProvider.validateToken(accessToken)){
                 userDto = jwtUtil.getUserFromToken(accessToken);
-            return userDto.getUserId();
-        }
+            return userDto.getUserId();}
+            }
         return null;
     }
 
