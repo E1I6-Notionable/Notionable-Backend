@@ -224,7 +224,6 @@ public class SociaLoginServiceImpl implements SocialLoginService{
 
         String email = userResourceNode.get("response").get("email").asText();
         String nickName = userResourceNode.get("response").get("nickname").asText();
-        String phoneNumber = userResourceNode.get("response").get("mobile").asText();
         String profile_image = userResourceNode.get("response").get("profile_image").asText();
 
         Optional<User> userByNaver= userRepository.findUserByEmail(email);
@@ -234,7 +233,6 @@ public class SociaLoginServiceImpl implements SocialLoginService{
                     .jwtDto(jwtProvider.generateToken(user.getUserId()))
                     .email(user.getEmail())
                     .nickName(user.getNickName())
-                    .phoneNumber(user.getPhoneNumber())
                     .profile(user.getProfile())
                     .build();
         } else{
@@ -242,7 +240,6 @@ public class SociaLoginServiceImpl implements SocialLoginService{
                     .email(email)
                     .password(bCryptPasswordEncoder.encode(UUID.randomUUID().toString()))
                     .userType(3)
-                    .phoneNumber(phoneNumber)
                     .profile(profile_image)
                     .nickName(nickName)
                     .build();
@@ -252,7 +249,6 @@ public class SociaLoginServiceImpl implements SocialLoginService{
                     .jwtDto(jwtProvider.generateToken(newNaverUser.getUserId()))
                     .email(newNaverUser.getEmail())
                     .nickName(newNaverUser.getNickName())
-                    .phoneNumber(newNaverUser.getPhoneNumber())
                     .profile(newNaverUser.getProfile())
                     .build();
         }
