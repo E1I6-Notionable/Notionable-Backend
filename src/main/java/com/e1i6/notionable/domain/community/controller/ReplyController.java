@@ -31,16 +31,8 @@ public class ReplyController {
             @PathVariable Long commentId,
             @RequestBody ReplyReq replyReq){
         try {
-            // 헤더에서 JWT 토큰 추출
-            String accessToken = authorizationHeader.replace("Bearer ", "");
-            UserDto userDto = null;
-
-            // 토큰 검증
-            if (jwtProvider.validateToken(accessToken))
-                userDto = jwtUtil.getUserFromToken(accessToken);
-
             // 추가한 대댓글 id 반환
-            return new BaseResponse<>(replyService.addReply(userDto.getUserId(), commentId,replyReq));
+            return new BaseResponse<>(replyService.addReply(getUserIdFromToken(authorizationHeader), commentId,replyReq));
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
@@ -61,5 +53,24 @@ public class ReplyController {
         }    catch (Exception e) {
             return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
+    }
+
+    //대댓글 삭제
+    @DeleteMapping("/{replyId}")
+    public BaseResponse<String> deleteReply(@RequestHeader("Authorization") String authorizationHeader,@PathVariable Long replyId){
+        return new BaseResponse<>(replyService.deleteReply(getUserIdFromToken(authorizationHeader), replyId));
+    }
+
+    //헤더에서 토큰 추출 & 검증
+    public Long getUserIdFromToken(String authorizationHeader) {
+        if(authorizationHeader != null){
+            String accessToken = authorizationHeader.replace("Bearer ", "");
+            UserDto userDto = null;
+
+            if (jwtProvider.validateToken(accessToken)){
+                userDto = jwtUtil.getUserFromToken(accessToken);
+                return userDto.getUserId();}
+        }
+        return null;
     }
 }

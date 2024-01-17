@@ -34,7 +34,6 @@ public class CommentController {
             // 헤더에서 JWT 토큰 추출
             String accessToken = authorizationHeader.replace("Bearer ", "");
             UserDto userDto = null;
-
             // 토큰 검증
             if (jwtProvider.validateToken(accessToken))
                 userDto = jwtUtil.getUserFromToken(accessToken);

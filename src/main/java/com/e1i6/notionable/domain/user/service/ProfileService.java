@@ -59,11 +59,4 @@ public class ProfileService {
             throw new ResponseException(ResponseCode.NOT_FOUND);
         }
     }
-
-    // 마이페이지 - 내가 쓴 글
-    public CommunityRes.CommunityListRes getMyCommunity(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId). orElse(null);
-        Page<Community> allMyCommunity = communityRepository.findByUser_UserId(userId, pageable);
-        return CommunityRes.CommunityListRes.of(allMyCommunity, likeRepository, user);
-    }
 }

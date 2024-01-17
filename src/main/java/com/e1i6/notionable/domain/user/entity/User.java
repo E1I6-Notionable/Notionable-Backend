@@ -3,6 +3,10 @@ package com.e1i6.notionable.domain.user.entity;
 import javax.persistence.*;
 
 import com.e1i6.notionable.domain.cart.entity.Cart;
+import com.e1i6.notionable.domain.community.entity.Community;
+import com.e1i6.notionable.domain.community.entity.CommunityComment;
+import com.e1i6.notionable.domain.community.entity.CommunityLike;
+import com.e1i6.notionable.domain.community.entity.CommunityReply;
 import com.e1i6.notionable.domain.creator.entity.Creator;
 import com.e1i6.notionable.domain.inquiryanswer.inquiry.entity.Inquiry;
 import com.e1i6.notionable.domain.review.entity.Review;
@@ -60,6 +64,18 @@ public class User extends BaseTimeEntity {
 	@JsonIgnore
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private Creator creator;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true)
+	private List<Community> communityList = new ArrayList<>();
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true)
+	private List<CommunityComment> communityCommentList = new ArrayList<>();
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true)
+	private List<CommunityLike> communityLikeList = new ArrayList<>();
 
 	public void changePassword(String newPassword) {
 		this.password = newPassword;

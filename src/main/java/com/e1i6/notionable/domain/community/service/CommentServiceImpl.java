@@ -8,12 +8,13 @@ import com.e1i6.notionable.domain.community.repository.CommentRepository;
 import com.e1i6.notionable.domain.community.repository.CommunityRepository;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
+import com.e1i6.notionable.global.common.response.ResponseCode;
+import com.e1i6.notionable.global.common.response.ResponseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -25,13 +26,12 @@ public class CommentServiceImpl implements CommentService{
     private final CommentRepository commentRepository;
 
     //댓글 작성
-    @Transactional
     public Long addComment(Long userId, Long communityId, CommentReq commentReq){
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
 
         Community community = communityRepository.findById(communityId)
-                .orElseThrow(() -> new RuntimeException("Community not found with id: " + communityId));
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMUNITY));
 
         CommunityComment comment = CommunityComment.builder()
                 .content(commentReq.getContent())
@@ -40,7 +40,6 @@ public class CommentServiceImpl implements CommentService{
                 .build();
 
         CommunityComment savedComment = commentRepository.save(comment);
-        community.addComment();
 
         return savedComment.getCommunityCommentId();
     }
@@ -48,8 +47,8 @@ public class CommentServiceImpl implements CommentService{
     //댓글 목록 조회
     public CommentRes.CommentListRes getAllComment(Long communityId, Pageable pageable) {
         Community community = communityRepository.findById(communityId)
-                .orElseThrow(() -> new RuntimeException("Community not found with id: " + communityId));
-        Page<CommunityComment> allComment = commentRepository.findByCommunity_CommunityId(community.getCommunityId(), pageable);
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMUNITY));
+        Page<CommunityComment> allComment = commentRepository.findByCommunity(community, pageable);
         return CommentRes.CommentListRes.of(allComment);
     }
 }

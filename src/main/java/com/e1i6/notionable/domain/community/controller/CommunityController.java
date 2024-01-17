@@ -96,12 +96,12 @@ public class CommunityController {
     }
 
 
+    //헤더에서 토큰 추출 & 검증
     public Long getUserIdFromToken(String authorizationHeader) {
         if(authorizationHeader != null){
             String accessToken = authorizationHeader.replace("Bearer ", "");
             UserDto userDto = null;
 
-            // 토큰 검증
             if (jwtProvider.validateToken(accessToken)){
                 userDto = jwtUtil.getUserFromToken(accessToken);
             return userDto.getUserId();}
