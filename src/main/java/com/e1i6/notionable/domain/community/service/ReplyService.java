@@ -6,6 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface ReplyService {
     Long addReply(Long userId, Long commentId, ReplyReq replyReq);
-
     ReplyRes.ReplyListRes getAllReply(Long commentId, Pageable pageable);
+    String deleteReply(Long userId, Long replyId);
 }

@@ -48,7 +48,10 @@ public enum ResponseCode {
 	DELETE_CART_ITEM_FAILED(6001, HttpStatus.BAD_REQUEST,"장바구니에서 해당 템플릿을 삭제하는데 실패하였습니다."),
 
 	//community
-	NO_SUCH_COMMUNITY(7001, HttpStatus.BAD_REQUEST, "해당 게시글을 찾을 수 없습니다.");
+	NO_SUCH_COMMUNITY(7001, HttpStatus.BAD_REQUEST, "해당 게시글을 찾을 수 없습니다."),
+	NO_SUCH_COMMENT(7002, HttpStatus.BAD_REQUEST, "해당 댓글을 찾을 수 없습니다."),
+	NO_SUCH_REPLY(7003, HttpStatus.BAD_REQUEST, "해당 대댓글을 찾을 수 없습니다."),
+	NO_AUTHORITY(7004, HttpStatus.BAD_REQUEST, "권한이 없습니다.");
 
 	private final Integer code;
 	private final HttpStatus httpStatus;

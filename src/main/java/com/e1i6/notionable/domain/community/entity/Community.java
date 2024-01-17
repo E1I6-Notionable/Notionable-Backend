@@ -24,8 +24,6 @@ public class Community extends BaseTimeEntity {
     private Long communityId;
 
     private String category;
-    private Long communityLike;
-    private Long communityComment;
     private String title;
     private String content;
     private String thumbnail;
@@ -38,15 +36,12 @@ public class Community extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public void addComment() {
-        this.communityComment += 1;
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityComment> comments = new ArrayList<>();
 
-    public void addLike() {
-        this.communityLike += 1;
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityLike> likes = new ArrayList<>();
 
-    public void subLike() {
-        this.communityLike -= 1;
-    }
 }

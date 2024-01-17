@@ -1,6 +1,7 @@
 package com.e1i6.notionable.domain.community.repository;
 
 import com.e1i6.notionable.domain.community.entity.Community;
+import com.e1i6.notionable.domain.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,9 +17,14 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
                                                  @Param("filter") String filter,
                                                  Pageable pageable);
 
-    Page<Community> findByUser_UserId(Long userId, Pageable pageable);
+    Page<Community> findByUser(User user, Pageable pageable);
 
-    @Query("SELECT c FROM Community c WHERE c.createdAt >= CURRENT_DATE - 5 ORDER BY c.communityLike DESC, c.createdAt DESC")
-    List<Community> findTop5ByCreatedDateAndOrderByCommunityLikeDesc();
+    @Query("SELECT c, COUNT(cl) as likeCount " +
+            "FROM Community c " +
+            "LEFT JOIN CommunityLike cl ON c.communityId = cl.community.communityId " +
+            "WHERE c.createdAt >= CURRENT_DATE - 5 " +
+            "GROUP BY c " +
+            "ORDER BY likeCount DESC, c.createdAt DESC")
+    List<Community> findTop5CommunitiesWithLikes();
 
 }

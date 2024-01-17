@@ -17,13 +17,17 @@ import javax.persistence.*;
 public class CommunityReply extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long CommunityReplyId;
+    private Long communityReplyId;
 
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_comment_id", nullable = false)
     private CommunityComment communityComment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "community_id", nullable = false)
+    private Community community;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

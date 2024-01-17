@@ -1,5 +1,6 @@
 package com.e1i6.notionable.domain.user.controller;
 
+import com.e1i6.notionable.domain.community.service.CommunityService;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.domain.user.data.dto.request.EmailLoginReqDto;
 import com.e1i6.notionable.domain.user.data.dto.response.EmailLoginResDto;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProfileController {
 
     private final ProfileService profileService;
+    private final CommunityService communityService;
     private final JwtProvider jwtProvider;
     private final JwtUtil jwtUtil;
 
@@ -81,11 +83,10 @@ public class ProfileController {
             // 헤더에서 JWT 토큰 추출
             String accessToken = authorizationHeader.replace("Bearer ", "");
             UserDto userDto = null;
-
             // 토큰 검증
             if (jwtProvider.validateToken(accessToken))
                 userDto = jwtUtil.getUserFromToken(accessToken);
-            return new BaseResponse<>(profileService.getMyCommunity(userDto.getUserId(), pageable));
+            return new BaseResponse<>(communityService.getMyCommunity(userDto.getUserId(), pageable));
         } catch (ResponseException e) {
             return new BaseResponse<>(e.getErrorCode(), e.getMessage());
         }    catch (Exception e) {
