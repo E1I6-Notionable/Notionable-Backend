@@ -77,6 +77,10 @@ public class User extends BaseTimeEntity {
 	@OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true)
 	private List<CommunityLike> communityLikeList = new ArrayList<>();
 
+	@JsonIgnore
+	@OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true)
+	private List<CommunityReply> communityReplyList = new ArrayList<>();
+
 	public void changePassword(String newPassword) {
 		this.password = newPassword;
 	}

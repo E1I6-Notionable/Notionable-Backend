@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 public interface CommentService {
     Long addComment(Long userId, Long communityId, CommentReq commentReq);
     CommentRes.CommentListRes getAllComment(Long communityId, Pageable pageable);
+    String deleteComment(Long userId, Long commentId);
 }
