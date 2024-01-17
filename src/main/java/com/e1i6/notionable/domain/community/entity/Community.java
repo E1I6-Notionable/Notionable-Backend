@@ -44,4 +44,8 @@ public class Community extends BaseTimeEntity {
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommunityLike> likes = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommunityReply> replies = new ArrayList<>();
+
 }

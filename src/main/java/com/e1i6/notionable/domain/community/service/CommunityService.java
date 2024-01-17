@@ -14,4 +14,5 @@ public interface CommunityService {
     boolean likeCommunity(Long userId, Long communityId);
     List<CommunityRes.CommunityInfo> getTopCommunity(Long userId);
     CommunityRes.CommunityListRes getMyCommunity(Long userId, Pageable pageable);
+    String deleteCommunity(Long userId, Long communityId);
 }

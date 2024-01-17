@@ -4,6 +4,7 @@ import com.e1i6.notionable.domain.community.dto.CommunityReq;
 import com.e1i6.notionable.domain.community.dto.CommunityRes;
 import com.e1i6.notionable.domain.community.entity.Community;
 import com.e1i6.notionable.domain.community.entity.CommunityLike;
+import com.e1i6.notionable.domain.community.entity.CommunityReply;
 import com.e1i6.notionable.domain.community.repository.CommentRepository;
 import com.e1i6.notionable.domain.community.repository.CommunityRepository;
 import com.e1i6.notionable.domain.community.repository.LikeRepository;
@@ -113,7 +114,6 @@ public class CommunityServiceImpl implements CommunityService{
     //5일이내 게시글 중 좋아요 수 top5
     public List<CommunityRes.CommunityInfo> getTopCommunity(Long userId) {
         List<Community> topCommunity = communityRepository.findTop5CommunitiesWithLikes();
-
         return topCommunity.stream()
                 .map(community -> CommunityRes.CommunityInfo.of(community,
                         getCommunityInfo(userId, community)))
@@ -141,5 +141,23 @@ public class CommunityServiceImpl implements CommunityService{
                 .communityComment(commentRepository.countByCommunity(community) + replyRepository.countByCommunity(community))
                 .existLike(likeRepository.existsByUserAndCommunity(user, community))
                 .build();
+    }
+
+    //커뮤니티 삭제
+    @Transactional
+    public String deleteCommunity(Long userId, Long communityId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMUNITY));
+
+        if (!user.equals(community.getUser())) {
+            throw new ResponseException(ResponseCode.NO_AUTHORITY);
+        }
+
+        communityRepository.delete(community);
+        return "커뮤니티가 삭제되었습니다.";
+
     }
 }

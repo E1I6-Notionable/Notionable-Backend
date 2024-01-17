@@ -4,6 +4,7 @@ import com.e1i6.notionable.domain.community.dto.CommentReq;
 import com.e1i6.notionable.domain.community.dto.CommentRes;
 import com.e1i6.notionable.domain.community.entity.Community;
 import com.e1i6.notionable.domain.community.entity.CommunityComment;
+import com.e1i6.notionable.domain.community.entity.CommunityReply;
 import com.e1i6.notionable.domain.community.repository.CommentRepository;
 import com.e1i6.notionable.domain.community.repository.CommunityRepository;
 import com.e1i6.notionable.domain.user.entity.User;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -50,5 +52,23 @@ public class CommentServiceImpl implements CommentService{
                 .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMUNITY));
         Page<CommunityComment> allComment = commentRepository.findByCommunity(community, pageable);
         return CommentRes.CommentListRes.of(allComment);
+    }
+
+    //댓글 삭제
+    @Transactional
+    public String deleteComment(Long userId, Long commentId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+
+        CommunityComment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMENT));
+
+        if (!user.equals(comment.getUser())) {
+            throw new ResponseException(ResponseCode.NO_AUTHORITY);
+        }
+
+        commentRepository.delete(comment);
+        return "댓글이 삭제되었습니다.";
+
     }
 }

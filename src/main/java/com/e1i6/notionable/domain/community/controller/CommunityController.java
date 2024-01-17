@@ -95,6 +95,12 @@ public class CommunityController {
         }
     }
 
+    //대댓글 삭제
+    @DeleteMapping("/{communityId}")
+    public BaseResponse<String> deleteReply(@RequestHeader("Authorization") String authorizationHeader,@PathVariable Long communityId){
+        return new BaseResponse<>(communityService.deleteCommunity(getUserIdFromToken(authorizationHeader), communityId));
+    }
+
 
     //헤더에서 토큰 추출 & 검증
     public Long getUserIdFromToken(String authorizationHeader) {
