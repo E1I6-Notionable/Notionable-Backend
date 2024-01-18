@@ -1,6 +1,7 @@
 package com.e1i6.notionable.domain.cart.controller;
 
 import com.e1i6.notionable.domain.cart.dto.CartDto;
+import com.e1i6.notionable.domain.cart.dto.DeleteCartListDto;
 import com.e1i6.notionable.domain.cart.service.CartService;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.global.auth.JwtProvider;
@@ -75,7 +76,8 @@ public class CartController {
     }
 
     @DeleteMapping("/my-cart/delete")
-    public BaseResponse<String> deleteMyCartInformation(@RequestHeader("Authorization") String authorizationHeader, @RequestBody CartDto cartDto) {
+    public BaseResponse<String> deleteMyCartInformation(@RequestHeader("Authorization") String authorizationHeader,
+                                                        @RequestBody DeleteCartListDto cartDto) {
 
         try {
             // 헤더에서 JWT 토큰 추출

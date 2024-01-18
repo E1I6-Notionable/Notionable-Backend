@@ -17,9 +17,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM Cart c WHERE c.user.userId = :userId AND c.item_Id = :item_Id")
-    void deleteCartItem(@Param("userId")Long userId, @Param("item_Id")Long item_Id);
+    @Query("DELETE FROM Cart c WHERE c.user.userId = :userId AND c.item_Id IN :item_Id")
+    void deleteCartItem(@Param("userId") Long userId, @Param("item_Id") List<Long> item_Id);
 
-    @Query("SELECT COUNT(c) > 0 FROM Cart c WHERE c.user.userId = :userId AND c.item_Id = :item_Id")
-    boolean existsByUserIdAndItemId(@Param("userId") Long userId, @Param("item_Id") Long item_Id);
 }

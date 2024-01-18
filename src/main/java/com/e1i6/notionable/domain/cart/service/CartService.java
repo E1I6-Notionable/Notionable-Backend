@@ -65,13 +65,10 @@ public class CartService {
         return CartDto.mapCartToDto(savedCart);
     }
 
-    public String deleteMyCartInformation(Long user_id, Long item_Id) {
+    public String deleteMyCartInformation(Long user_id, List<Long> item_Id) {
+        log.info("item_id = {}", item_Id);
 
-        if (cartRepository.existsByUserIdAndItemId(user_id, item_Id)) {
-            cartRepository.deleteCartItem(user_id, item_Id);
-            return "Deleted successfully";
-        } else {
-            return "Item not found";
-        }
+        cartRepository.deleteCartItem(user_id, item_Id);
+        return "Deleted successfully";
     }
 }
