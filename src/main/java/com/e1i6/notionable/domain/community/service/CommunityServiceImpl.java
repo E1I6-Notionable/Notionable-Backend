@@ -37,6 +37,19 @@ public class CommunityServiceImpl implements CommunityService{
     private final CommentRepository commentRepository;
     private final ReplyRepository replyRepository;
 
+    public User findUser(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+        return user;
+    }
+
+    public Community findCommunity(Long communityId){
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMUNITY));
+        return community;
+    }
+
+
     //게시글 목록 조회
     public CommunityRes.CommunityListRes getCommunity(Long userId, String keyword, String filter, Pageable pageable) {
         Page<Community> allCommunity = communityRepository.findByKeywordAndFilter(keyword, filter, pageable);
@@ -50,8 +63,7 @@ public class CommunityServiceImpl implements CommunityService{
     //게시글 작성
     public Long addCommunity(Long userId, List<MultipartFile> multipartFiles, CommunityReq communityReq) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+        User user = findUser(userId);
 
         List<String> uploadedFileNames = new ArrayList<>();
         String thumbnailUrl = null;
@@ -77,8 +89,7 @@ public class CommunityServiceImpl implements CommunityService{
     //게시글 상세 조회
     public CommunityRes.CommunityDetailRes getCommunityDetail(Long userId, Long communityId) {
 
-        Community community = communityRepository.findById(communityId)
-                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMUNITY));
+        Community community = findCommunity(communityId);
 
         List<String> imageUrlList = new ArrayList<>();
         community.getImages().forEach(image -> imageUrlList.add(awsS3Service.getUrlFromFileName(image)));
@@ -90,11 +101,8 @@ public class CommunityServiceImpl implements CommunityService{
     @Transactional
     public boolean likeCommunity(Long userId, Long communityId) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
-
-        Community community = communityRepository.findById(communityId)
-                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMUNITY));
+        User user = findUser(userId);
+        Community community = findCommunity(communityId);
 
         boolean existLike = likeRepository.existsByUserAndCommunity(user, community);
         if(existLike){
@@ -123,8 +131,7 @@ public class CommunityServiceImpl implements CommunityService{
 
     // 마이페이지 - 내가 쓴 글
     public CommunityRes.CommunityListRes getMyCommunity(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+        User user = findUser(userId);
         Page<Community> allMyCommunity = communityRepository.findByUser(user, pageable);
         List<CommunityRes.CommunityInfo> communityList = allMyCommunity.getContent().stream()
                 .map(community -> CommunityRes.CommunityInfo.of(community,
@@ -146,11 +153,8 @@ public class CommunityServiceImpl implements CommunityService{
     //커뮤니티 삭제
     @Transactional
     public String deleteCommunity(Long userId, Long communityId){
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
-
-        Community community = communityRepository.findById(communityId)
-                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMUNITY));
+        User user = findUser(userId);
+        Community community = findCommunity(communityId);
 
         if (!user.equals(community.getUser())) {
             throw new ResponseException(ResponseCode.NO_AUTHORITY);
@@ -158,6 +162,5 @@ public class CommunityServiceImpl implements CommunityService{
 
         communityRepository.delete(community);
         return "커뮤니티가 삭제되었습니다.";
-
     }
 }

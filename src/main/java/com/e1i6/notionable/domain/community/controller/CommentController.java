@@ -26,8 +26,7 @@ public class CommentController {
 
     //댓글 작성
     @PostMapping("/{communityId}")
-    public BaseResponse<Long> addComment(
-            @RequestHeader("Authorization") String authorizationHeader,
+    public BaseResponse<Long> addComment(@RequestHeader("Authorization") String authorizationHeader,
             @PathVariable Long communityId,
             @RequestBody CommentReq commentReq){
         try {
@@ -57,9 +56,26 @@ public class CommentController {
 
     //대댓글 삭제
     @DeleteMapping("/{commentId}")
-    public BaseResponse<String> deleteReply(@RequestHeader("Authorization") String authorizationHeader,@PathVariable Long commentId){
+    public BaseResponse<String> deleteReply(@RequestHeader("Authorization") String authorizationHeader,
+                                            @PathVariable Long commentId){
         return new BaseResponse<>(commentService.deleteComment(getUserIdFromToken(authorizationHeader), commentId));
     }
+
+    //댓글 수정
+    @PutMapping("/{commentId}")
+    public BaseResponse<String> modifyComment(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @PathVariable Long commentId,
+            @RequestBody CommentReq commentReq){
+        try {
+            return new BaseResponse<>(commentService.modifyComment(getUserIdFromToken(authorizationHeader), commentId,commentReq));
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
 
     //헤더에서 토큰 추출 & 검증
     public Long getUserIdFromToken(String authorizationHeader) {
@@ -73,4 +89,5 @@ public class CommentController {
         }
         return null;
     }
+
 }

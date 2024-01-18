@@ -1,5 +1,7 @@
 package com.e1i6.notionable.domain.community.entity;
 
+import com.e1i6.notionable.domain.community.dto.CommentReq;
+import com.e1i6.notionable.domain.community.dto.ReplyReq;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.global.common.entity.BaseTimeEntity;
 import lombok.AllArgsConstructor;
@@ -32,4 +34,8 @@ public class CommunityReply extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public void updateReply(ReplyReq replyReq){
+        this.content = replyReq.getContent();
+    }
 }
