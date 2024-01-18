@@ -27,13 +27,29 @@ public class CommentServiceImpl implements CommentService{
     private final CommunityRepository communityRepository;
     private final CommentRepository commentRepository;
 
-    //댓글 작성
-    public Long addComment(Long userId, Long communityId, CommentReq commentReq){
+    public User findUser(Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+        return user;
+    }
 
+    public Community findCommunity(Long communityId){
         Community community = communityRepository.findById(communityId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMUNITY));
+        return community;
+    }
+
+    public CommunityComment findComment(Long commentId){
+        CommunityComment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMENT));
+        return comment;
+    }
+
+
+    //댓글 작성
+    public Long addComment(Long userId, Long communityId, CommentReq commentReq){
+        User user = findUser(userId);
+        Community community = findCommunity(communityId);
 
         CommunityComment comment = CommunityComment.builder()
                 .content(commentReq.getContent())
@@ -42,14 +58,12 @@ public class CommentServiceImpl implements CommentService{
                 .build();
 
         CommunityComment savedComment = commentRepository.save(comment);
-
         return savedComment.getCommunityCommentId();
     }
 
     //댓글 목록 조회
     public CommentRes.CommentListRes getAllComment(Long communityId, Pageable pageable) {
-        Community community = communityRepository.findById(communityId)
-                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMUNITY));
+        Community community = findCommunity(communityId);
         Page<CommunityComment> allComment = commentRepository.findByCommunity(community, pageable);
         return CommentRes.CommentListRes.of(allComment);
     }
@@ -57,11 +71,8 @@ public class CommentServiceImpl implements CommentService{
     //댓글 삭제
     @Transactional
     public String deleteComment(Long userId, Long commentId){
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
-
-        CommunityComment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_COMMENT));
+        User user = findUser(userId);
+        CommunityComment comment = findComment(commentId);
 
         if (!user.equals(comment.getUser())) {
             throw new ResponseException(ResponseCode.NO_AUTHORITY);
@@ -69,6 +80,19 @@ public class CommentServiceImpl implements CommentService{
 
         commentRepository.delete(comment);
         return "댓글이 삭제되었습니다.";
+    }
 
+    //댓글 수정
+    public String modifyComment(Long userId, Long commentId, CommentReq commentReq){
+        User user = findUser(userId);
+        CommunityComment comment = findComment(commentId);
+
+        if (!user.equals(comment.getUser())) {
+            throw new ResponseException(ResponseCode.NO_AUTHORITY);
+        }
+
+        comment.updateComment(commentReq);
+        commentRepository.save(comment);
+        return "댓글이 수정되었습니다.";
     }
 }

@@ -1,5 +1,6 @@
 package com.e1i6.notionable.domain.community.controller;
 
+import com.e1i6.notionable.domain.community.dto.CommentReq;
 import com.e1i6.notionable.domain.community.dto.ReplyReq;
 import com.e1i6.notionable.domain.community.service.ReplyService;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
@@ -60,6 +61,22 @@ public class ReplyController {
     public BaseResponse<String> deleteReply(@RequestHeader("Authorization") String authorizationHeader,@PathVariable Long replyId){
         return new BaseResponse<>(replyService.deleteReply(getUserIdFromToken(authorizationHeader), replyId));
     }
+
+    //대댓글 수정
+    @PutMapping("/{replyId}")
+        public BaseResponse<String> modifyReply(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @PathVariable Long replyId,
+            @RequestBody ReplyReq replyReq){
+        try {
+            return new BaseResponse<>(replyService.modifyReply(getUserIdFromToken(authorizationHeader), replyId, replyReq));
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
 
     //헤더에서 토큰 추출 & 검증
     public Long getUserIdFromToken(String authorizationHeader) {
