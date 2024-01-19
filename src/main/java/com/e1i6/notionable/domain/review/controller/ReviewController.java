@@ -49,6 +49,21 @@ public class ReviewController {
         }
     }
 
+    @GetMapping("/list")
+    public BaseResponse<List<ReviewDto>> getMyReview() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+
+        try {
+            return new BaseResponse<>(reviewService.getMyReview(userId));
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+
     @PutMapping("/{reviewId}")
     public BaseResponse<String> updateReview(
             @PathVariable Long reviewId,

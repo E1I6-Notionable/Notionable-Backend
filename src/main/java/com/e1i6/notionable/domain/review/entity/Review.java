@@ -4,6 +4,7 @@ import com.e1i6.notionable.domain.review.data.ReviewDto;
 import com.e1i6.notionable.domain.review.data.ReviewUpdateDto;
 import com.e1i6.notionable.domain.template.entity.Template;
 import com.e1i6.notionable.domain.user.entity.User;
+import com.e1i6.notionable.global.common.entity.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Review {
+public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
@@ -54,6 +55,7 @@ public class Review {
                 .content(review.getContent())
                 .rate(review.getRate())
                 .imageUrls(imageUrls)
+                .createdAt(review.getCreatedAt().toString())
                 .build();
     }
 }

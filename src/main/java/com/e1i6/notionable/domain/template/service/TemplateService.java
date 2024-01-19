@@ -143,7 +143,11 @@ public class TemplateService {
         boolean isPaid = false;
         if (userId != null) {
             log.info("userId: {}", userId);
-            isPaid = paymentService.isPaidUser(userId, templateId);
+            if (template.getPrice() == 0) {
+                isPaid = true;
+            } else {
+                isPaid = paymentService.isPaidUser(userId, templateId);
+            }
         }
 
         List<String> imageUrlList = new ArrayList<>();

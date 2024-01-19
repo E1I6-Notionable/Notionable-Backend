@@ -89,6 +89,21 @@ public class ReviewService {
         return reviewDtoList;
     }
 
+    public List<ReviewDto> getMyReview(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+
+        List<Review> reviewList = reviewRepository.findAllByUser(user);
+        List<ReviewDto> reviewDtoList = new ArrayList<>();
+        reviewList.forEach(review -> {
+            List<String> imageUrls = new ArrayList<>();
+            review.getImages().forEach(image -> imageUrls.add(awsS3Service.getUrlFromFileName(image)));
+            reviewDtoList.add(Review.toReviewDto(review, review.getUser(), imageUrls));
+        });
+
+        return reviewDtoList;
+    }
+
     @Transactional
     public String updateReview(
             Long userId,
