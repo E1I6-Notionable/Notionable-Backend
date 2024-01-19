@@ -28,6 +28,9 @@ public class CommentServiceImpl implements CommentService{
     private final CommentRepository commentRepository;
 
     public User findUser(Long userId){
+        if (userId == null) {
+            throw new ResponseException(ResponseCode.INVALID_USER);
+        }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
         return user;
