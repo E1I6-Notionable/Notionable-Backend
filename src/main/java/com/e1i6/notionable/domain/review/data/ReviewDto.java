@@ -14,4 +14,5 @@ public class ReviewDto {
     private String rate;
     private String content;
     private List<String> imageUrls;
+    private String createdAt;
 }
