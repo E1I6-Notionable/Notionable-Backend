@@ -95,10 +95,26 @@ public class CommunityController {
         }
     }
 
-    //대댓글 삭제
+    //게시글 삭제
     @DeleteMapping("/{communityId}")
     public BaseResponse<String> deleteReply(@RequestHeader("Authorization") String authorizationHeader,@PathVariable Long communityId){
         return new BaseResponse<>(communityService.deleteCommunity(getUserIdFromToken(authorizationHeader), communityId));
+    }
+
+    // 게시글 수정
+    @PutMapping("/{communityId}")
+    public BaseResponse<String> modifyCommunity(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @PathVariable Long communityId,
+            @RequestPart CommunityReq communityReq,
+            @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles){
+        try {
+            return new BaseResponse<>(communityService.modifyCommunity(getUserIdFromToken(authorizationHeader), communityId, multipartFiles,communityReq));
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
 

@@ -15,4 +15,5 @@ public interface CommunityService {
     List<CommunityRes.CommunityInfo> getTopCommunity(Long userId);
     CommunityRes.CommunityListRes getMyCommunity(Long userId, Pageable pageable);
     String deleteCommunity(Long userId, Long communityId);
+    String modifyCommunity(Long userId, Long communityId, List<MultipartFile> multipartFiles, CommunityReq communityReq);
 }

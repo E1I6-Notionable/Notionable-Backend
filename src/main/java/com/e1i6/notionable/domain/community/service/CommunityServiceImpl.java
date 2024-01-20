@@ -166,4 +166,29 @@ public class CommunityServiceImpl implements CommunityService{
         communityRepository.delete(community);
         return "커뮤니티가 삭제되었습니다.";
     }
+
+    //게시글 수정
+    public String modifyCommunity(Long userId, Long communityId, List<MultipartFile> multipartFiles, CommunityReq communityReq) {
+
+        User user = findUser(userId);
+        Community community = findCommunity(communityId);
+
+        if (!user.equals(community.getUser())) {
+            throw new ResponseException(ResponseCode.NO_AUTHORITY);
+        }
+
+        List<String> uploadedFileNames = new ArrayList<>();
+        String thumbnailUrl = null;
+
+        community.getImages().forEach(awsS3Service::deleteFile);
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
+            uploadedFileNames = awsS3Service.uploadFiles(multipartFiles);
+            thumbnailUrl = awsS3Service.getUrlFromFileName(uploadedFileNames.get(0));
+        }
+
+        community.updateCommunity(communityReq , thumbnailUrl, uploadedFileNames);
+        communityRepository.save(community);
+
+        return "커뮤니티가 수정되었습니다.";
+    }
 }
