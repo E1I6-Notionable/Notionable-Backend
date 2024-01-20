@@ -1,5 +1,7 @@
 package com.e1i6.notionable.domain.community.entity;
 
+import com.e1i6.notionable.domain.community.dto.CommentReq;
+import com.e1i6.notionable.domain.community.dto.CommunityReq;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.global.common.entity.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -47,5 +49,14 @@ public class Community extends BaseTimeEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommunityReply> replies = new ArrayList<>();
+
+    public void updateCommunity(CommunityReq communityReq, String thumbnail, List<String> images){
+        this.content = communityReq.getContent();
+        this.title = communityReq.getTitle();
+        this.category = communityReq.getCategory();
+        this.thumbnail = thumbnail;
+        this.images = images;
+
+    }
 
 }
