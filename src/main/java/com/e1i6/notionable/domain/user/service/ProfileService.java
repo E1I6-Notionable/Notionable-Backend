@@ -4,6 +4,9 @@ import com.e1i6.notionable.domain.community.dto.CommunityRes;
 import com.e1i6.notionable.domain.community.entity.Community;
 import com.e1i6.notionable.domain.community.repository.CommunityRepository;
 import com.e1i6.notionable.domain.community.repository.LikeRepository;
+import com.e1i6.notionable.domain.inquiryanswer.inquiry.repository.InquiryRepository;
+import com.e1i6.notionable.domain.payment.repository.PaymentRepository;
+import com.e1i6.notionable.domain.user.data.dto.ListCountDto;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
@@ -27,6 +30,8 @@ public class ProfileService {
 
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
+    private final PaymentRepository paymentRepository;
+    private final InquiryRepository inquiryRepository;
     private final LikeRepository likeRepository;
     private final AwsS3Service awsS3Service;
 
@@ -58,5 +63,16 @@ public class ProfileService {
         } else {
             throw new ResponseException(ResponseCode.NOT_FOUND);
         }
+    }
+
+    public ListCountDto getListCount(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseException(ResponseCode.NO_SUCH_USER));
+
+        return ListCountDto.builder()
+                .paymentCount(paymentRepository.countAllByBuyerId(userId))
+                .postCount(communityRepository.countAllByUser(user))
+                .inquiryCount(inquiryRepository.countAllByUser(user))
+                .build();
     }
 }
