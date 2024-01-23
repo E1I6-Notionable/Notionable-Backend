@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
 @Slf4j
 public class CreatorController {
 
@@ -25,7 +24,7 @@ public class CreatorController {
     private final JwtUtil jwtUtil;
 
     // 크리에이터 등록
-    @PostMapping("/creator/register")
+    @PostMapping("/user/creator/register")
     public BaseResponse<?> creatorRegister(@RequestHeader("Authorization") String authorizationHeader,
                                            @RequestPart CreatorDto creatorDto,
                                            @RequestPart("bankPaper")MultipartFile bankPaper,
@@ -49,8 +48,8 @@ public class CreatorController {
     }
 
     // 크리에이터로 전환 (유저 -> 크리에이터)
-    @GetMapping("/change-creator")
-    public BaseResponse<?> changeCreator(@RequestHeader("Authorization") String authorizationHeader) {
+    @GetMapping("/user/change-creator")
+    public BaseResponse<?> changeToCreator(@RequestHeader("Authorization") String authorizationHeader) {
 
         // 헤더에서 JWT 토큰 추출
         String accessToken = authorizationHeader.replace("Bearer ", "");
@@ -60,12 +59,32 @@ public class CreatorController {
         if (jwtProvider.validateToken(accessToken))
             userIdDto = jwtUtil.getUserFromToken(accessToken);
 
-        CreatorDto returnCreatorDto = creatorService.changeCreator(userIdDto.getUserId());
+        CreatorDto returnCreatorDto = creatorService.changeToCreator(userIdDto.getUserId());
 
         if (returnCreatorDto == null)
             return new BaseResponse<>("크리에이터가 아닙니다.");
         else
             return new BaseResponse<>(returnCreatorDto);
+    }
+
+    // 구매자로 전환 (크리에이터 -> 유저)
+    @GetMapping("/creator/change-user")
+    public BaseResponse<?> changeToUser(@RequestHeader("Authorization") String authorizationHeader) {
+
+        // 헤더에서 JWT 토큰 추출
+        String accessToken = authorizationHeader.replace("Bearer ", "");
+        UserDto userIdDto = null;
+
+        // 토큰 검증
+        if (jwtProvider.validateToken(accessToken))
+            userIdDto = jwtUtil.getUserFromToken(accessToken);
+
+        UserDto returnUserDto = creatorService.changeToUser(userIdDto.getUserId());
+
+        if (returnUserDto == null)
+            return new BaseResponse<>("정상적으로 이루어지지 않았습니다.");
+        else
+            return new BaseResponse<>(returnUserDto);
     }
 
 }

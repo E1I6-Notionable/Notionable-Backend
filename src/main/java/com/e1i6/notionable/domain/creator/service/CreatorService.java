@@ -3,6 +3,7 @@ package com.e1i6.notionable.domain.creator.service;
 import com.e1i6.notionable.domain.creator.dto.CreatorDto;
 import com.e1i6.notionable.domain.creator.entity.Creator;
 import com.e1i6.notionable.domain.creator.repository.CreatorRepository;
+import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.domain.user.entity.Role;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
@@ -68,7 +69,7 @@ public class CreatorService {
         }
     }
 
-    public CreatorDto changeCreator(Long userId) {
+    public CreatorDto changeToCreator(Long userId) {
         Optional<Creator> optionalCreator = creatorRepository.findByUserUserId(userId);
         if (optionalCreator.isPresent()){
             Creator creator = optionalCreator.get();
@@ -80,6 +81,9 @@ public class CreatorService {
         }
         else
             return null;
+    }
+
+    public UserDto changeToUser(Long userId) {
     }
 }
 
