@@ -42,32 +42,30 @@ public class CreatorController {
             CreatorDto returnCreatorDto = creatorService.creatorRegister(userIdDto.getUserId(), creatorDto, bankPaper, identification);
 
             if (returnCreatorDto == null)
-                return new BaseResponse<>("이미 크리에이터를 신청하셨습니다. 승인 대기 상태입니다.");
+                return new BaseResponse<>("이미 크리에이터입니다.");
+//                return new BaseResponse<>("이미 크리에이터를 신청하셨습니다. 승인 대기 상태입니다.");
             else
                 return new BaseResponse<>(returnCreatorDto);
     }
 
-//    // 크리에이터로 전환 (유저 -> 크리에이터)
-//    @GetMapping("/change-creator")
-//    public BaseResponse<?> changeCreator(@RequestHeader("Authorization") String authorizationHeader,
-//                                           @RequestPart CreatorDto creatorDto,
-//                                           @RequestPart("bankPaper")MultipartFile bankPaper,
-//                                           @RequestPart("identification")MultipartFile identification) {
-//
-//        // 헤더에서 JWT 토큰 추출
-//        String accessToken = authorizationHeader.replace("Bearer ", "");
-//        UserDto userIdDto = null;
-//
-//        // 토큰 검증
-//        if (jwtProvider.validateToken(accessToken))
-//            userIdDto = jwtUtil.getUserFromToken(accessToken);
-//
-//        CreatorDto returnCreatorDto = creatorService.creatorRegister(userIdDto.getUserId(), creatorDto, bankPaper, identification);
-//
-//        if (returnCreatorDto == null)
-//            return new BaseResponse<>("이미 크리에이터를 신청하셨습니다. 승인 대기 상태입니다.");
-//        else
-//            return new BaseResponse<>(returnCreatorDto);
-//    }
+    // 크리에이터로 전환 (유저 -> 크리에이터)
+    @GetMapping("/change-creator")
+    public BaseResponse<?> changeCreator(@RequestHeader("Authorization") String authorizationHeader) {
+
+        // 헤더에서 JWT 토큰 추출
+        String accessToken = authorizationHeader.replace("Bearer ", "");
+        UserDto userIdDto = null;
+
+        // 토큰 검증
+        if (jwtProvider.validateToken(accessToken))
+            userIdDto = jwtUtil.getUserFromToken(accessToken);
+
+        CreatorDto returnCreatorDto = creatorService.changeCreator(userIdDto.getUserId());
+
+        if (returnCreatorDto == null)
+            return new BaseResponse<>("크리에이터가 아닙니다.");
+        else
+            return new BaseResponse<>(returnCreatorDto);
+    }
 
 }

@@ -3,6 +3,7 @@ package com.e1i6.notionable.domain.creator.service;
 import com.e1i6.notionable.domain.creator.dto.CreatorDto;
 import com.e1i6.notionable.domain.creator.entity.Creator;
 import com.e1i6.notionable.domain.creator.repository.CreatorRepository;
+import com.e1i6.notionable.domain.user.entity.Role;
 import com.e1i6.notionable.domain.user.entity.User;
 import com.e1i6.notionable.domain.user.repository.UserRepository;
 import com.e1i6.notionable.global.common.response.ResponseCode;
@@ -35,10 +36,10 @@ public class CreatorService {
 
         if (optionalCreator.isPresent()){
             Creator creator = optionalCreator.get();
-            if(creator.getStatus() == "pending")
-                return CreatorDto.toCreatorDto(creator);
-            else
-                return null;
+//            if(creator.getStatus() == "waited")
+//                return CreatorDto.toCreatorDto(creator);
+//            else
+            return null;
         }
         else{
             if (optionalUser.isPresent()) {
@@ -52,8 +53,10 @@ public class CreatorService {
                         .accountNumber(creatorDto.getAccountNumber())
                         .bankPaper(bankPaperUrl)
                         .identification(identificationUrl)
-                        .status("pending")
+                        //.status("waited")
+                        .status("accepted")
                         .user(user)
+                        .role(Role.ROLE_CREATOR)
                         .build();
 
                 creatorRepository.save(creator);
@@ -65,5 +68,18 @@ public class CreatorService {
         }
     }
 
+    public CreatorDto changeCreator(Long userId) {
+        Optional<Creator> optionalCreator = creatorRepository.findByUserUserId(userId);
+        if (optionalCreator.isPresent()){
+            Creator creator = optionalCreator.get();
+
+            if(creator.getStatus().equals("accepted"))
+                return CreatorDto.toCreatorDto(creator);
+            else
+                return null;
+        }
+        else
+            return null;
+    }
 }
 

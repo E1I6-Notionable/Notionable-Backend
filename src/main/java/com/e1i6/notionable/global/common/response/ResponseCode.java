@@ -52,7 +52,10 @@ public enum ResponseCode {
 	NO_SUCH_COMMUNITY(7001, HttpStatus.BAD_REQUEST, "해당 게시글을 찾을 수 없습니다."),
 	NO_SUCH_COMMENT(7002, HttpStatus.BAD_REQUEST, "해당 댓글을 찾을 수 없습니다."),
 	NO_SUCH_REPLY(7003, HttpStatus.BAD_REQUEST, "해당 대댓글을 찾을 수 없습니다."),
-	NO_AUTHORITY(7004, HttpStatus.BAD_REQUEST, "권한이 없습니다.");
+	NO_AUTHORITY(7004, HttpStatus.BAD_REQUEST, "권한이 없습니다."),
+
+	// creator
+	NO_SUCH_CREATOR(8001, HttpStatus.BAD_REQUEST, "크리에이터가 아닙니다.");
 
 	private final Integer code;
 	private final HttpStatus httpStatus;
