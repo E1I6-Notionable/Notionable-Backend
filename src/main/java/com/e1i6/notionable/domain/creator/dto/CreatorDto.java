@@ -2,6 +2,7 @@ package com.e1i6.notionable.domain.creator.dto;
 
 import com.e1i6.notionable.domain.creator.entity.Creator;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
+import com.e1i6.notionable.domain.user.entity.Role;
 import com.e1i6.notionable.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class CreatorDto {
     private String bankPaper; // 통장 사본 링크
     private String identification; // 신분증 사본 링크
     private String status; // accepted, rejected, pending
+    private Role role; // ROLE_CREATOR
 
     public static CreatorDto toCreatorDto(Creator creator) {
         CreatorDto creatorDto = new CreatorDto();
@@ -28,6 +30,7 @@ public class CreatorDto {
         creatorDto.setBankPaper(creator.getBankPaper());
         creatorDto.setIdentification(creator.getIdentification());
         creatorDto.setStatus(creator.getStatus());
+        creatorDto.setRole(creator.getRole());
 
         return creatorDto;
     }
