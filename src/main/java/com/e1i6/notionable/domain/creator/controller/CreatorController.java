@@ -81,10 +81,7 @@ public class CreatorController {
 
         UserDto returnUserDto = creatorService.changeToUser(userIdDto.getUserId());
 
-        if (returnUserDto == null)
-            return new BaseResponse<>("정상적으로 이루어지지 않았습니다.");
-        else
-            return new BaseResponse<>(returnUserDto);
+        return new BaseResponse<>(returnUserDto);
     }
 
 }

@@ -84,6 +84,15 @@ public class CreatorService {
     }
 
     public UserDto changeToUser(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            return UserDto.toUserDto(user);
+        } else {
+            throw new ResponseException(ResponseCode.NOT_FOUND);
+        }
     }
 }
 
