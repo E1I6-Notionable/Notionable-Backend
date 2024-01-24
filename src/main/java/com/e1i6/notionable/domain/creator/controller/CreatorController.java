@@ -84,4 +84,21 @@ public class CreatorController {
         return new BaseResponse<>(returnUserDto);
     }
 
+    // 크리에이터 유무
+    @GetMapping("/verify-Creator")
+    public BaseResponse<?> verifyCreator(@RequestHeader("Authorization") String authorizationHeader) {
+
+        // 헤더에서 JWT 토큰 추출
+        String accessToken = authorizationHeader.replace("Bearer ", "");
+        UserDto userIdDto = null;
+
+        // 토큰 검증
+        if (jwtProvider.validateToken(accessToken))
+            userIdDto = jwtUtil.getUserFromToken(accessToken);
+
+        UserDto returnUserDto = creatorService.verifyCreator(userIdDto.getUserId());
+
+        return new BaseResponse<>(returnUserDto);
+    }
+
 }

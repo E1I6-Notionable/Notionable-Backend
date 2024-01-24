@@ -94,5 +94,14 @@ public class CreatorService {
             throw new ResponseException(ResponseCode.NOT_FOUND);
         }
     }
+
+    public Boolean verifyCreator(Long userId) {
+        Optional<Creator> optionalCreator = creatorRepository.findByUserUserId(userId);
+
+        if(optionalCreator.isPresent())
+            return Boolean.TRUE;
+        else
+            return Boolean.FALSE;
+    }
 }
 
