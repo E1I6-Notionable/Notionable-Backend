@@ -70,7 +70,7 @@ public class CommunityController {
     }
 
     //게시물 좋아요
-    @GetMapping("/like/{communityId}")
+    @PostMapping("/like/{communityId}")
     public BaseResponse<?> likeCommunity(
             @RequestHeader("Authorization") String authorizationHeader,
             @PathVariable Long communityId){
