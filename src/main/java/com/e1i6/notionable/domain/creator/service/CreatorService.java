@@ -1,6 +1,7 @@
 package com.e1i6.notionable.domain.creator.service;
 
 import com.e1i6.notionable.domain.creator.dto.CreatorDto;
+import com.e1i6.notionable.domain.creator.dto.VerifyCreatorDto;
 import com.e1i6.notionable.domain.creator.entity.Creator;
 import com.e1i6.notionable.domain.creator.repository.CreatorRepository;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
@@ -95,13 +96,15 @@ public class CreatorService {
         }
     }
 
-    public Boolean verifyCreator(Long userId) {
+    public VerifyCreatorDto verifyCreator(Long userId) {
         Optional<Creator> optionalCreator = creatorRepository.findByUserUserId(userId);
-
+        VerifyCreatorDto verifyCreatorDto = new VerifyCreatorDto();
         if(optionalCreator.isPresent())
-            return Boolean.TRUE;
+            verifyCreatorDto.setIsCreator(Boolean.TRUE);
         else
-            return Boolean.FALSE;
+            verifyCreatorDto.setIsCreator(Boolean.FALSE);
+
+        return verifyCreatorDto;
     }
 }
 
