@@ -107,7 +107,7 @@ public class WebSecurityConfig {
 		CorsConfiguration config = new CorsConfiguration();
 
 		config.setAllowCredentials(true);
-		config.setAllowedOrigins(List.of("http://localhost:9000", "13.209.29.227:9000"));
+		config.setAllowedOrigins(List.of("http://localhost:9000", "http://13.209.29.227:9000"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setExposedHeaders(List.of("*"));
