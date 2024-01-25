@@ -1,9 +1,13 @@
 package com.e1i6.notionable.domain.creator.service;
 
 import com.e1i6.notionable.domain.creator.dto.CreatorDto;
+import com.e1i6.notionable.domain.creator.dto.CreatorListCountDto;
 import com.e1i6.notionable.domain.creator.dto.VerifyCreatorDto;
 import com.e1i6.notionable.domain.creator.entity.Creator;
 import com.e1i6.notionable.domain.creator.repository.CreatorRepository;
+import com.e1i6.notionable.domain.inquiryanswer.answer.repository.AnswerRepository;
+import com.e1i6.notionable.domain.inquiryanswer.inquiry.repository.InquiryRepository;
+import com.e1i6.notionable.domain.payment.repository.PaymentRepository;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.domain.user.entity.Role;
 import com.e1i6.notionable.domain.user.entity.User;
@@ -27,6 +31,9 @@ public class CreatorService {
     private final AwsS3Service awsS3Service;
     private final CreatorRepository creatorRepository;
     private final UserRepository userRepository;
+    private final PaymentRepository paymentRepository;
+    private final AnswerRepository answerRepository;
+    private final InquiryRepository inquiryRepository;
 
     @Transactional
     public CreatorDto creatorRegister(Long userId, CreatorDto creatorDto, MultipartFile bankPaper, MultipartFile identification) {
@@ -105,6 +112,25 @@ public class CreatorService {
             verifyCreatorDto.setIsCreator(Boolean.FALSE);
 
         return verifyCreatorDto;
+    }
+
+    public CreatorListCountDto returnCreatorListCount(Long userId) {
+        Optional<Creator> optionalCreator = creatorRepository.findByUserUserId(userId);
+        CreatorListCountDto creatorListCountDto = new CreatorListCountDto();
+        creatorListCountDto.setSellCount(0L);
+        creatorListCountDto.setAnswerCount(0L);
+        creatorListCountDto.setInquiryCount(0L);
+
+        if (optionalCreator.isPresent()) {
+            Creator creator = optionalCreator.get();
+            creatorListCountDto.setSellCount(paymentRepository.countAllBySellerId(userId));
+            creatorListCountDto.setAnswerCount(answerRepository.countAnswersByCreatorId(creator.getCreator_id()));
+            creatorListCountDto.setInquiryCount(inquiryRepository.countInquiryByCreatorId(creator.getCreator_id()));
+
+            return creatorListCountDto;
+        } else {
+            throw new ResponseException(ResponseCode.NOT_FOUND);
+        }
     }
 }
 

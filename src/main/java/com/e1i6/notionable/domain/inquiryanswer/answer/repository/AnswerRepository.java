@@ -13,4 +13,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
     @Query("SELECT a FROM Answer a WHERE a.inquiry.inquiry_id = :inquiryId")
     Optional<Answer> findAnswerByInquiryId(@Param("inquiryId") Long inquiryId);
+
+    @Query("SELECT COUNT(a) FROM Answer a WHERE a.creator.creator_id = :creatorId")
+    Long countAnswersByCreatorId(@Param("creatorId") Long creatorId);
 }

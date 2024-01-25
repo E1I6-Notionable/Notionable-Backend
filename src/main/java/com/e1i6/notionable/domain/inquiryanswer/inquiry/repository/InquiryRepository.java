@@ -15,4 +15,7 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
     List<Inquiry> findInquiriesByCreatorId(@Param("creatorId") Long creatorId);
 
     Integer countAllByUser(User user);
+
+    @Query("SELECT COUNT(i) FROM Inquiry i WHERE i.creator_id = :creatorId")
+    Long countInquiryByCreatorId(@Param("creatorId") Long creatorId);
 }

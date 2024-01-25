@@ -2,6 +2,7 @@ package com.e1i6.notionable.domain.creator.controller;
 
 import com.e1i6.notionable.domain.cart.dto.CartDto;
 import com.e1i6.notionable.domain.creator.dto.CreatorDto;
+import com.e1i6.notionable.domain.creator.dto.CreatorListCountDto;
 import com.e1i6.notionable.domain.creator.dto.VerifyCreatorDto;
 import com.e1i6.notionable.domain.creator.service.CreatorService;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
@@ -102,4 +103,20 @@ public class CreatorController {
         return new BaseResponse<>(verifyCreatorDto);
     }
 
+    // 판매 내역, 응답 내역, 문의 내역 개수 조회
+    @GetMapping("/creator/list/count")
+    public BaseResponse<?> returnCreatorListCount(@RequestHeader("Authorization") String authorizationHeader) {
+
+        // 헤더에서 JWT 토큰 추출
+        String accessToken = authorizationHeader.replace("Bearer ", "");
+        UserDto userIdDto = null;
+
+        // 토큰 검증
+        if (jwtProvider.validateToken(accessToken))
+            userIdDto = jwtUtil.getUserFromToken(accessToken);
+
+        CreatorListCountDto creatorListCountDto = creatorService.returnCreatorListCount(userIdDto.getUserId());
+
+        return new BaseResponse<>(creatorListCountDto);
+    }
 }
