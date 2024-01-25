@@ -27,4 +27,5 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
             "ORDER BY likeCount DESC, c.createdAt DESC")
     List<Community> findTop5CommunitiesWithLikes();
 
+    Integer countAllByUser(User user);
 }

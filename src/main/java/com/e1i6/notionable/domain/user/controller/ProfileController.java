@@ -1,6 +1,7 @@
 package com.e1i6.notionable.domain.user.controller;
 
 import com.e1i6.notionable.domain.community.service.CommunityService;
+import com.e1i6.notionable.domain.user.data.dto.ListCountDto;
 import com.e1i6.notionable.domain.user.data.dto.UserDto;
 import com.e1i6.notionable.domain.user.data.dto.request.EmailLoginReqDto;
 import com.e1i6.notionable.domain.user.data.dto.response.EmailLoginResDto;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -94,4 +97,17 @@ public class ProfileController {
         }
     }
 
+    @GetMapping("/list/count")
+    public BaseResponse<ListCountDto> getListCount() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+
+        try {
+            return new BaseResponse<>(profileService.getListCount(userId));
+        } catch (ResponseException e) {
+            return new BaseResponse<>(e.getErrorCode(), e.getMessage());
+        }    catch (Exception e) {
+            return new BaseResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
 }
