@@ -60,10 +60,10 @@ public class TemplateController {
     public BaseResponse<List<TemplateDto>> getTemplateListWithFilter (
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
-            @RequestParam(value = "template-type", required = false, defaultValue = "") String templateType,
+            @RequestParam(value = "template_type", required = false, defaultValue = "") String templateType,
             @RequestParam(value = "category", required = false, defaultValue = "") String category,
             @RequestParam(value = "criteria", required = false, defaultValue = "createdAt") String criteria,
-            @RequestParam(value = "criteria-option", required = false, defaultValue = "desc") String criteriaOption) {
+            @RequestParam(value = "criteria_option", required = false, defaultValue = "desc") String criteriaOption) {
 
         try {
             return new BaseResponse<>(templateService.getTemplatesWithFilter(
